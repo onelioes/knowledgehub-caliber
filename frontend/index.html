@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Chandra Asri KnowledgeHub — Plant Intelligence</title>
   
-  <!-- Single Unified Modern Font: Plus Jakarta Sans -->
+  <!-- Unified Clean Modern Font: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,17 +14,16 @@
 </head>
 <body>
 
-  <!-- Ambient Pastel Accents -->
-  <div class="pastel-ambient" aria-hidden="true">
-    <div class="ambient-blob blob-butter"></div>
-    <div class="ambient-blob blob-lavender"></div>
-    <div class="ambient-blob blob-peach"></div>
-    <div class="ambient-blob blob-mint"></div>
+  <!-- Ambient Blue & Green Decorative Glows -->
+  <div class="ambient-glows" aria-hidden="true">
+    <div class="glow-orb orb-blue-1"></div>
+    <div class="glow-orb orb-blue-2"></div>
+    <div class="glow-orb orb-green"></div>
   </div>
 
   <div class="app-shell">
 
-    <!-- Top Header Bar -->
+    <!-- Top App Bar -->
     <header class="app-header">
       <div class="user-greeting-pill">
         <div class="avatar-wrap">
@@ -37,7 +36,7 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs (Desktop Header) -->
+      <!-- Navigation Tabs (Header) -->
       <nav class="top-nav-pills" aria-label="Navigasi Utama">
         <button class="nav-pill active" data-tab="dashboard">Dashboard</button>
         <button class="nav-pill" data-tab="data-flow">Data Flow</button>
@@ -55,7 +54,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           <span class="notif-dot"></span>
         </button>
-        <button class="pill-btn primary-dark" onclick="switchTab('ai-copilot')">
+        <button class="pill-btn accent-green" onclick="switchTab('ai-copilot')">
           <span>Ask Copilot</span>
         </button>
       </div>
@@ -69,122 +68,190 @@
       <!-- ================================================================ -->
       <section id="dashboard" class="screen active">
         
-        <!-- Minimalist Hero Title Section -->
-        <div class="hero-minimal-block">
-          <span class="date-chip">Shift A &middot; Petrochemical Operations</span>
-          <h1 class="hero-heading">
+        <!-- Hero Banner: Dominant Blue with Green Accent (Image 1 Style) -->
+        <div class="hero-blue-card">
+          <div class="hero-top-meta">
+            <span class="shift-chip">Shift A &middot; Olefins &amp; PE Plant</span>
+            <div class="speech-bubble-tag">Verified SOP &amp; Telemetry</div>
+          </div>
+
+          <h1 class="hero-headline">
             Operational intelligence for your daily shift
           </h1>
-          <p class="hero-paragraph">
-            Centralized plant knowledge hub for P&amp;ID engineering, startup SOPs, and equipment reliability at Chandra Asri Cilegon.
+
+          <p class="hero-caption">
+            Centralized engineering portal for P&amp;ID verification, startup procedures, and failure prevention at Chandra Asri Cilegon.
           </p>
 
-          <!-- Quick Plant Unit Pills -->
-          <div class="mood-pills-row">
-            <button class="mood-pill active" data-unit="olefins">Olefins Complex</button>
-            <button class="mood-pill" data-unit="pe">Polyethylene PE-1</button>
-            <button class="mood-pill" data-unit="furnace">Cracker Furnace</button>
-            <button class="mood-pill" data-unit="splitter">C2 Splitter</button>
-            <button class="mood-pill" data-unit="utility">Utilities &amp; Offsite</button>
+          <div class="hero-actions-row">
+            <button class="pill-btn accent-green-large" onclick="switchTab('ai-copilot')">
+              <span>Start Copilot</span>
+              <span class="arrow-icon">&rarr;</span>
+            </button>
+            <button class="pill-btn outline-light" onclick="switchTab('data-flow')">
+              <span>View Data Flow</span>
+            </button>
           </div>
         </div>
 
-        <!-- 2 Bento Side-by-Side Cards (Sleep Duration & Stress Indicator style) -->
-        <div class="two-bento-row">
+        <!-- Plant Unit Filter Pills (Spacious) -->
+        <div class="plant-unit-selector">
+          <span class="selector-title">Plant Complex:</span>
+          <div class="unit-pills-row">
+            <button class="unit-pill active" data-unit="olefins">Olefins Complex</button>
+            <button class="unit-pill" data-unit="pe">Polyethylene PE-1</button>
+            <button class="unit-pill" data-unit="furnace">Cracker Furnace</button>
+            <button class="unit-pill" data-unit="splitter">C2 Splitter</button>
+            <button class="unit-pill" data-unit="utility">Utilities &amp; Offsite</button>
+          </div>
+        </div>
+
+        <!-- Layered Stacked Cards Section (Creative Shapes from Image 1) -->
+        <div class="stacked-deck-section">
+          <div class="deck-header">
+            <h2 class="section-title">Critical Equipment Status</h2>
+            <span class="section-sub">Active shift verification</span>
+          </div>
+
+          <div class="stacked-cards-container">
+            <!-- Card 1 (Green Accent): P-101A -->
+            <div class="deck-card deck-card-green" onclick="switchTab('assets-docs')">
+              <div class="deck-card-top">
+                <span class="deck-tag">Primary Feed Pump</span>
+                <span class="deck-badge normal">Verified</span>
+              </div>
+              <h3 class="deck-title">Pump P-101A Startup Checklist</h3>
+              <p class="deck-desc">Lube oil reservoir verified at 65% with pressure at 2.1 bar. Plan 53A barrier fluid active.</p>
+              <div class="deck-footer">
+                <span>Rev 4.2 &middot; SOP-MECH-P101</span>
+                <span class="deck-arrow">&rarr;</span>
+              </div>
+            </div>
+
+            <!-- Card 2 (Soft Blue): K-102 -->
+            <div class="deck-card deck-card-blue" onclick="switchTab('ai-copilot')">
+              <div class="deck-card-top">
+                <span class="deck-tag">Syngas Compressor</span>
+                <span class="deck-badge safe">Safe Limit</span>
+              </div>
+              <h3 class="deck-title">Compressor K-102 Vibration</h3>
+              <p class="deck-desc">Radial bearing vibration steady at 45 &mu;m (below 68 &mu;m trip limit). Recycle temperature stable.</p>
+              <div class="deck-footer">
+                <span>Rev 3.1 &middot; INST-K102-SPEC</span>
+                <span class="deck-arrow">&rarr;</span>
+              </div>
+            </div>
+
+            <!-- Card 3 (Soft Purple): F-101 -->
+            <div class="deck-card deck-card-purple" onclick="switchTab('failure-memory')">
+              <div class="deck-card-top">
+                <span class="deck-tag">Cracking Furnace</span>
+                <span class="deck-badge optimal">Mitigated</span>
+              </div>
+              <h3 class="deck-title">Furnace F-101 Decoking Cycle</h3>
+              <p class="deck-desc">Scheduled thermal steam-air decoking every 60 operational days. TMT stabilized at 1080&deg;C.</p>
+              <div class="deck-footer">
+                <span>Rev 5.0 &middot; RCFA-MITIGATION</span>
+                <span class="deck-arrow">&rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Bento Side-by-Side Cards (Spacious, Image 2 Style) -->
+        <div class="two-bento-grid">
           
-          <!-- Card 1 (Peach): Suction Pressure & Lube Oil -->
-          <div class="bento-metric-card card-peach">
-            <div class="bmc-header">
-              <span class="bmc-title">Suction Lube Oil (P-101A)</span>
-              <span class="status-tag normal">Normal</span>
+          <!-- Card 1 (Blue Tone): Suction Pressure & Lube Oil -->
+          <div class="bento-box bento-blue">
+            <div class="bbox-header">
+              <span class="bbox-title">Suction Lube Oil (P-101A)</span>
+              <span class="status-pill green">Normal</span>
             </div>
 
-            <!-- Minimalist Rounded Bar Chart Visual -->
-            <div class="mini-bar-visual">
-              <div class="vbar" style="height: 45%"></div>
-              <div class="vbar" style="height: 70%"></div>
-              <div class="vbar" style="height: 55%"></div>
-              <div class="vbar active-vbar" style="height: 85%"></div>
-              <div class="vbar" style="height: 60%"></div>
-              <div class="vbar" style="height: 75%"></div>
-              <div class="vbar" style="height: 65%"></div>
+            <div class="mini-bar-chart">
+              <div class="mbar" style="height: 40%"></div>
+              <div class="mbar" style="height: 65%"></div>
+              <div class="mbar" style="height: 50%"></div>
+              <div class="mbar active-green" style="height: 85%"></div>
+              <div class="mbar" style="height: 60%"></div>
+              <div class="mbar" style="height: 70%"></div>
+              <div class="mbar" style="height: 55%"></div>
             </div>
 
-            <div class="bmc-bottom">
-              <div class="bmc-number">2.1 <span class="bmc-unit">bar</span></div>
-              <span class="bmc-label">Standard Range: 1.8 - 2.4 bar</span>
+            <div class="bbox-bottom">
+              <div class="bbox-val">2.1 <span class="bbox-unit">bar</span></div>
+              <span class="bbox-note">Standard Operating Range: 1.8 - 2.4 bar</span>
             </div>
           </div>
 
-          <!-- Card 2 (Lavender): Vibration Threshold (K-102) -->
-          <div class="bento-metric-card card-lavender">
-            <div class="bmc-header">
-              <span class="bmc-title">Vibration Level (K-102)</span>
-              <span class="status-tag safe">Safe</span>
+          <!-- Card 2 (Mint Tone): Vibration Indicator -->
+          <div class="bento-box bento-green">
+            <div class="bbox-header">
+              <span class="bbox-title">Vibration Level (K-102)</span>
+              <span class="status-pill green">Safe</span>
             </div>
 
-            <!-- Ascending Minimalist Bar Chart Visual -->
-            <div class="mini-bar-visual">
-              <div class="vbar" style="height: 25%"></div>
-              <div class="vbar" style="height: 35%"></div>
-              <div class="vbar" style="height: 50%"></div>
-              <div class="vbar" style="height: 62%"></div>
-              <div class="vbar active-vbar" style="height: 70%"></div>
-              <div class="vbar" style="height: 40%"></div>
-              <div class="vbar" style="height: 30%"></div>
+            <div class="mini-bar-chart">
+              <div class="mbar" style="height: 25%"></div>
+              <div class="mbar" style="height: 35%"></div>
+              <div class="mbar" style="height: 50%"></div>
+              <div class="mbar" style="height: 60%"></div>
+              <div class="mbar active-green" style="height: 72%"></div>
+              <div class="mbar" style="height: 45%"></div>
+              <div class="mbar" style="height: 30%"></div>
             </div>
 
-            <div class="bmc-bottom">
-              <div class="bmc-number">45 <span class="bmc-unit">&mu;m</span></div>
-              <span class="bmc-label">Alarm Threshold: 48 &mu;m &middot; Trip: 68 &mu;m</span>
+            <div class="bbox-bottom">
+              <div class="bbox-val">45 <span class="bbox-unit">&mu;m</span></div>
+              <span class="bbox-note">Warning Limit: 48 &mu;m &middot; ESD Trip: 68 &mu;m</span>
             </div>
           </div>
 
         </div>
 
-        <!-- Monthly Summary Style Card (Mint Green from Reference) -->
-        <div class="summary-mint-card">
-          <div class="smc-header">
-            <span class="smc-sub">Plant Operations Summary</span>
-            <h2 class="smc-title">Optimal</h2>
-            <p class="smc-desc">
-              All safety interlocks, distributed control systems (DCS), and mechanical seals are functioning within verified engineering limits across Cilegon &amp; Ciwandan.
+        <!-- Plant Summary Card (Mint/Green Accent, Spacious) -->
+        <div class="summary-highlight-card">
+          <div class="shc-header">
+            <span class="shc-pre">Plant Operations Summary</span>
+            <h2 class="shc-main">Optimal Status</h2>
+            <p class="shc-text">
+              Safety interlocks and DCS parameters are operating within standard tolerance limits across Cilegon &amp; Ciwandan complexes.
             </p>
           </div>
 
-          <div class="smc-stats-grid">
-            <div class="smc-stat-col">
-              <span class="smc-stat-label">Active Assets</span>
-              <span class="smc-stat-val">1,420</span>
-              <span class="smc-stat-note">Monitored 24/7</span>
+          <div class="shc-metrics-row">
+            <div class="shc-metric-item">
+              <span class="shc-m-label">Active Assets</span>
+              <span class="shc-m-val">1,420</span>
+              <span class="shc-m-sub">Continuous Monitoring</span>
             </div>
-            <div class="smc-stat-col">
-              <span class="smc-stat-label">Indexed Documents</span>
-              <span class="smc-stat-val">3,892</span>
-              <span class="smc-stat-note">P&amp;ID &amp; SOP Active</span>
+            <div class="shc-metric-item">
+              <span class="shc-m-label">Indexed Documents</span>
+              <span class="shc-m-val">3,892</span>
+              <span class="shc-m-sub">P&amp;ID &amp; SOP Active</span>
             </div>
-            <div class="smc-stat-col">
-              <span class="smc-stat-label">RCFA Actions</span>
-              <span class="smc-stat-val">142/148</span>
-              <span class="smc-stat-note">96% Mitigated</span>
+            <div class="shc-metric-item">
+              <span class="shc-m-label">RCFA Actions</span>
+              <span class="shc-m-val">142/148</span>
+              <span class="shc-m-sub">96% Mitigated</span>
             </div>
           </div>
         </div>
 
-        <!-- Quick Question / Verification Card (Bottom card in Reference) -->
-        <div class="verification-quiz-card">
-          <div class="vqc-header">
-            <span class="vqc-badge">Pre-Startup Verification</span>
-            <span class="vqc-step">Checklist 1 of 5</span>
+        <!-- Quick Operational Checklist Action Card -->
+        <div class="pre-verification-card">
+          <div class="pvc-meta">
+            <span class="pvc-tag">Pre-Startup Verification</span>
+            <span class="pvc-step">Checklist 1 of 5</span>
           </div>
-          <h3 class="vqc-question">
+          <h3 class="pvc-title">
             Have lube oil reservoir levels (&ge;65%) and Plan 53A barrier fluid pressures been verified before starting primary feed pump P-101A?
           </h3>
-          <div class="vqc-actions">
-            <button class="pill-btn primary-dark" onclick="alert('Verification logged: Standard checklist confirmed for P-101A.')">
+          <div class="pvc-buttons">
+            <button class="pill-btn accent-green" onclick="alert('Verification logged: Checklist confirmed for P-101A.')">
               Verified
             </button>
-            <button class="pill-btn secondary-light" onclick="switchTab('ai-copilot')">
+            <button class="pill-btn outline-dark" onclick="switchTab('ai-copilot')">
               Consult SOP Details
             </button>
           </div>
@@ -196,33 +263,32 @@
       <!-- TAB 2: ORGANIC NON-STIFF FLOWCHART (DATA & AUTHENTICATION FLOW) -->
       <!-- ================================================================ -->
       <section id="data-flow" class="screen">
-        <div class="hero-minimal-block">
-          <span class="date-chip">Zero-Trust Architecture &middot; Cryptographic Integrity</span>
-          <h1 class="hero-heading">
+        <div class="hero-blue-card compact-hero">
+          <span class="shift-chip">Zero-Trust Protocol &middot; Cryptographic Integrity</span>
+          <h1 class="hero-headline">
             Data and authentication flow
           </h1>
-          <p class="hero-paragraph">
-            Fluid, organic data pipeline connecting field DCS telemetry, cryptographic SHA-256 document hashing, role clearance, and grounded AI retrieval.
+          <p class="hero-caption">
+            Fluid data pipeline connecting field DCS telemetry, cryptographic SHA-256 document hashing, role clearance, and grounded AI retrieval.
           </p>
 
-          <div class="mood-pills-row">
-            <button class="mood-pill active" id="triggerFlowPulseBtn">Run Pipeline Flow</button>
-            <button class="mood-pill" id="triggerFlowTestBtn">Test Hash Verification</button>
+          <div class="hero-actions-row">
+            <button class="pill-btn accent-green" id="triggerFlowPulseBtn">Run Pipeline Flow</button>
+            <button class="pill-btn outline-light" id="triggerFlowTestBtn">Test Hash Verification</button>
           </div>
         </div>
 
         <!-- Non-Stiff Organic Flow Canvas -->
-        <div class="flowchart-minimal-container">
+        <div class="flowchart-spacious-panel">
           
           <div class="flow-svg-canvas-wrap">
             <svg viewBox="0 0 1000 280" class="organic-flow-svg" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="flowLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#FB7185" />
-                  <stop offset="25%" stop-color="#FBBF24" />
-                  <stop offset="50%" stop-color="#A78BFA" />
-                  <stop offset="75%" stop-color="#34D399" />
-                  <stop offset="100%" stop-color="#38BDF8" />
+                  <stop offset="0%" stop-color="#2563EB" />
+                  <stop offset="30%" stop-color="#38BDF8" />
+                  <stop offset="65%" stop-color="#22C55E" />
+                  <stop offset="100%" stop-color="#10B981" />
                 </linearGradient>
               </defs>
 
@@ -230,11 +296,11 @@
               <path class="flow-path-active" id="flowBezierPath" d="M 60 140 C 200 40, 300 240, 460 120 C 600 20, 720 240, 940 130" />
             </svg>
 
-            <!-- 5 Organic Cards with Minimalist Typography (No emojis) -->
+            <!-- 5 Organic Nodes (Spacious & Clean) -->
             <div class="flow-nodes-wrapper">
               
               <!-- Step 1 -->
-              <div class="organic-node-card node-peach tilt-left" data-step="1">
+              <div class="organic-node-card node-card-blue tilt-left" data-step="1">
                 <div class="node-number-pill">01</div>
                 <div class="node-title">Source Ingestion</div>
                 <div class="node-body">DCS Honeywell, SCADA Gateway, SAP PM, Lab LIMS</div>
@@ -245,7 +311,7 @@
               </div>
 
               <!-- Step 2 -->
-              <div class="organic-node-card node-yellow tilt-right active-node" data-step="2">
+              <div class="organic-node-card node-card-green tilt-right active-node" data-step="2">
                 <div class="node-number-pill">02</div>
                 <div class="node-title">Cryptographic Hash</div>
                 <div class="node-body">SHA-256 checksum calculated on document ingestion</div>
@@ -256,7 +322,7 @@
               </div>
 
               <!-- Step 3 -->
-              <div class="organic-node-card node-lavender tilt-none" data-step="3">
+              <div class="organic-node-card node-card-blue tilt-none" data-step="3">
                 <div class="node-number-pill">03</div>
                 <div class="node-title">RBAC Clearance</div>
                 <div class="node-body">3-Tier Matrix for Operator, Engineer, and Superintendent</div>
@@ -267,7 +333,7 @@
               </div>
 
               <!-- Step 4 -->
-              <div class="organic-node-card node-mint tilt-left" data-step="4">
+              <div class="organic-node-card node-card-green tilt-left" data-step="4">
                 <div class="node-number-pill">04</div>
                 <div class="node-title">RAG AI Guardrail</div>
                 <div class="node-body">Grounded citations with confidence threshold &ge;85%</div>
@@ -278,7 +344,7 @@
               </div>
 
               <!-- Step 5 -->
-              <div class="organic-node-card node-blue tilt-right" data-step="5">
+              <div class="organic-node-card node-card-blue tilt-right" data-step="5">
                 <div class="node-number-pill">05</div>
                 <div class="node-title">Immutable Audit</div>
                 <div class="node-body">Write Once Read Many log storage for ISO 27001 &amp; OSHA</div>
@@ -298,7 +364,7 @@
                 <span class="drawer-pill-badge" id="drawerStageBadge">Stage 02 of 05</span>
                 <h3 id="drawerStageTitle">Cryptographic Hashing &amp; Document Integrity</h3>
               </div>
-              <button class="pill-btn secondary-light" id="runLiveHashSampleBtn">Test Hash Verification</button>
+              <button class="pill-btn accent-green" id="runLiveHashSampleBtn">Test Hash Verification</button>
             </div>
             <p id="drawerStageDesc" class="drawer-desc">
               When engineering drawings or SOPs are ingested, a cryptographic SHA-256 checksum is generated. If any safety parameter or threshold is altered illegally, verification is automatically locked and logged.
@@ -312,31 +378,31 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- TAB 3: AI COPILOT -->
+      <!-- TAB 3: AI COPILOT (FIXED & FULLY FUNCTIONAL) -->
       <!-- ================================================================ -->
       <section id="ai-copilot" class="screen">
-        <div class="hero-minimal-block">
-          <span class="date-chip">Retrieval-Augmented Generation &middot; Official Archive</span>
-          <h1 class="hero-heading">
-            Engineering assistant
+        <div class="hero-blue-card compact-hero">
+          <span class="shift-chip">RAG Assistant &middot; Connected to Live Plant API</span>
+          <h1 class="hero-headline">
+            Engineering AI Copilot
           </h1>
-          <p class="hero-paragraph">
-            Ask operational procedures, trip limits, or past failure mitigations grounded in Chandra Asri plant manuals.
+          <p class="hero-caption">
+            Ask operational procedures, startup sequences, trip limits, or failure mitigations backed by official Chandra Asri manuals.
           </p>
 
-          <div class="mood-pills-row">
-            <div id="backendStatusPill" class="mood-pill active">
-              <span class="status-indicator-dot"></span> Backend: http://localhost:8000/api/chat
+          <div class="hero-actions-row">
+            <div id="backendStatusPill" class="live-status-chip">
+              <span class="status-indicator-dot"></span> Backend Live: http://localhost:8000
             </div>
           </div>
         </div>
 
-        <div class="copilot-creative-panel">
+        <div class="copilot-workspace-panel">
           
-          <div class="copilot-top-bar">
-            <div class="asset-pill-selector">
-              <label for="assetTagSelect">Target Asset:</label>
-              <select id="assetTagSelect" class="styled-select">
+          <div class="copilot-controls-row">
+            <div class="asset-selector-group">
+              <label for="assetTagSelect">Target Equipment:</label>
+              <select id="assetTagSelect" class="styled-select-blue">
                 <option value="P-101A" selected>P-101A &middot; Primary Naphtha Feed Pump</option>
                 <option value="K-102">K-102 &middot; Syngas Ethylene Compressor</option>
                 <option value="F-101">F-101 &middot; Naphtha Cracking Furnace</option>
@@ -346,16 +412,14 @@
               </select>
             </div>
 
-            <div class="quick-status-note">
-              <span>Grounding: <b>Verified Engineering Archive</b></span>
-            </div>
+            <span class="grounding-badge">Grounding: Official Engineering Archive</span>
           </div>
 
           <!-- Chat Stream Log -->
-          <div class="chat-log-modern" id="chatLog">
+          <div class="chat-log-spacious" id="chatLog">
             <!-- Sample User Row -->
             <div class="chat-row user-row">
-              <div class="chat-bubble user-bubble">
+              <div class="chat-bubble user-bubble-blue">
                 <div class="chat-bubble-tag">Asset: P-101A</div>
                 <div class="chat-bubble-text">What are the critical verification steps prior to starting up primary naphtha pump P-101A?</div>
               </div>
@@ -363,7 +427,7 @@
 
             <!-- Sample Bot Row -->
             <div class="chat-row bot-row">
-              <div class="chat-bubble bot-bubble">
+              <div class="chat-bubble bot-bubble-spacious">
                 <div class="bot-header-meta">
                   <span class="bot-avatar-chip">AI Copilot</span>
                   <span class="verified-pill">Verified SOP</span>
@@ -409,7 +473,7 @@
 
           <!-- Quick Suggestion Prompts -->
           <div class="quick-prompts-bar">
-            <span class="qp-label">Quick Prompts:</span>
+            <span class="qp-label">Quick Inquiries:</span>
             <button class="quick-prompt-pill" data-asset="P-101A" data-prompt="Check SOP Startup and bearing temperature limits for Pump P-101A">
               SOP Startup P-101A
             </button>
@@ -427,7 +491,7 @@
           <!-- Compose Bar -->
           <form id="chatForm" class="copilot-compose-box">
             <input type="text" id="chatInput" placeholder="Ask about startup SOP, P&amp;ID specifications, or failure mitigations..." autocomplete="off">
-            <button type="submit" id="sendChatBtn" class="pill-btn send-btn">
+            <button type="submit" id="sendChatBtn" class="pill-btn accent-green">
               <span>Send</span>
               <span>&rarr;</span>
             </button>
@@ -439,30 +503,30 @@
       <!-- TAB 4: ASSETS & ENGINEERING DOCS -->
       <!-- ================================================================ -->
       <section id="assets-docs" class="screen">
-        <div class="hero-minimal-block">
-          <span class="date-chip">Digital Archive &middot; 3,892 Records</span>
-          <h1 class="hero-heading">
+        <div class="hero-blue-card compact-hero">
+          <span class="shift-chip">Digital Archive &middot; 3,892 Records</span>
+          <h1 class="hero-headline">
             P&amp;ID, SOP and engineering manuals
           </h1>
-          <p class="hero-paragraph">
-            Technical documentation indexed and verified for operational accuracy and RAG retrieval.
+          <p class="hero-caption">
+            Official technical documentation indexed and verified for operational accuracy and instant RAG retrieval.
           </p>
 
-          <div class="mood-pills-row">
-            <button class="pill-btn primary-dark" onclick="alert('DMS synchronization complete.')">
+          <div class="hero-actions-row">
+            <button class="pill-btn accent-green" onclick="alert('DMS synchronization complete.')">
               Sync DMS Archive
             </button>
           </div>
         </div>
 
-        <div class="creative-dropzone">
+        <div class="creative-dropzone-blue">
           <h3>Upload Engineering Documentation</h3>
           <p>Supports PDF, DWG, DOCX, or archive packages from Chandra Asri Engineering Cloud</p>
-          <button class="pill-btn secondary-light" onclick="alert('Select files from your workstation.')">Select Files</button>
+          <button class="pill-btn outline-dark" onclick="alert('Select files from your workstation.')">Select Files</button>
         </div>
 
         <div class="search-filter-card">
-          <input type="text" id="docSearchInput" class="styled-search-input" placeholder="Search by asset tag (P-101A, K-102), SOP title, or document number...">
+          <input type="text" id="docSearchInput" class="styled-search-input-blue" placeholder="Search by asset tag (P-101A, K-102), SOP title, or document number...">
         </div>
 
         <div class="table-creative-card">
@@ -479,7 +543,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="tag-badge peach">P-101A</span></td>
+                <td><span class="tag-badge blue">P-101A</span></td>
                 <td><b>CAP-SOP-MECH-P101-STARTUP.pdf</b></td>
                 <td>Olefins (Cilegon)</td>
                 <td>Rev 4.2 (2025)</td>
@@ -487,7 +551,7 @@
                 <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
-                <td><span class="tag-badge yellow">K-102</span></td>
+                <td><span class="tag-badge green">K-102</span></td>
                 <td><b>CAP-INST-K102-VIBRATION-SPEC.pdf</b></td>
                 <td>Polyethylene (PE-1)</td>
                 <td>Rev 3.1 (2024)</td>
@@ -495,7 +559,7 @@
                 <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
-                <td><span class="tag-badge lavender">F-101</span></td>
+                <td><span class="tag-badge blue">F-101</span></td>
                 <td><b>CAP-FURNACE-F101-INTEGRITY-REPORT.pdf</b></td>
                 <td>Cracker Complex</td>
                 <td>Rev 5.0 (2025)</td>
@@ -503,7 +567,7 @@
                 <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
-                <td><span class="tag-badge mint">C-201</span></td>
+                <td><span class="tag-badge green">C-201</span></td>
                 <td><b>CAP-PID-C201-FRACTIONATION.dwg.pdf</b></td>
                 <td>Olefins Fractionation</td>
                 <td>Rev 6.1 (2024)</td>
@@ -527,31 +591,31 @@
       <!-- TAB 5: FAILURE MEMORY (RCFA) -->
       <!-- ================================================================ -->
       <section id="failure-memory" class="screen">
-        <div class="hero-minimal-block">
-          <span class="date-chip">RCFA Database &middot; 148 Cases</span>
-          <h1 class="hero-heading">
+        <div class="hero-blue-card compact-hero">
+          <span class="shift-chip">RCFA Database &middot; 148 Cases</span>
+          <h1 class="hero-headline">
             Failure memory records
           </h1>
-          <p class="hero-paragraph">
+          <p class="hero-caption">
             Historical root cause analyses and verified corrective actions to prevent recurrence of critical plant failures.
           </p>
 
-          <div class="mood-pills-row">
-            <button class="pill-btn primary-dark" onclick="alert('Exporting verified RCFA database.')">
+          <div class="hero-actions-row">
+            <button class="pill-btn accent-green" onclick="alert('Exporting verified RCFA database.')">
               Export Database
             </button>
           </div>
         </div>
 
         <div class="search-filter-card">
-          <input type="text" id="failureSearchInput" class="styled-search-input" placeholder="Search by asset tag, failure mode, or root cause...">
+          <input type="text" id="failureSearchInput" class="styled-search-input-blue" placeholder="Search by asset tag, failure mode, or root cause...">
         </div>
 
         <div class="failure-records-grid">
           
-          <div class="failure-card-item card-peach-soft">
+          <div class="failure-card-item card-blue-soft">
             <div class="fc-header">
-              <span class="tag-badge peach">P-101A</span>
+              <span class="tag-badge blue">P-101A</span>
               <span class="fc-severity crit">Critical (Tier 2)</span>
             </div>
             <h3 class="fc-title">Catastrophic Mechanical Seal Leakage (Primary Naphtha Pump)</h3>
@@ -567,9 +631,9 @@
             </div>
           </div>
 
-          <div class="failure-card-item card-yellow-soft">
+          <div class="failure-card-item card-green-soft">
             <div class="fc-header">
-              <span class="tag-badge yellow">K-102</span>
+              <span class="tag-badge green">K-102</span>
               <span class="fc-severity wait">Major (Tier 3)</span>
             </div>
             <h3 class="fc-title">Radial Bearing Vibration Spike &amp; Interlock Trip (Syngas Compressor)</h3>
@@ -585,9 +649,9 @@
             </div>
           </div>
 
-          <div class="failure-card-item card-mint-soft">
+          <div class="failure-card-item card-blue-soft">
             <div class="fc-header">
-              <span class="tag-badge mint">F-101</span>
+              <span class="tag-badge blue">F-101</span>
               <span class="fc-severity ok">Fully Mitigated</span>
             </div>
             <h3 class="fc-title">Radiant Coil Tube Metal Hotspot (Cracking Furnace)</h3>
@@ -610,12 +674,12 @@
       <!-- TAB 6: SETTINGS -->
       <!-- ================================================================ -->
       <section id="settings" class="screen">
-        <div class="hero-minimal-block">
-          <span class="date-chip">System Parameters &middot; Model Engine</span>
-          <h1 class="hero-heading">
+        <div class="hero-blue-card compact-hero">
+          <span class="shift-chip">System Parameters &middot; Model Engine</span>
+          <h1 class="hero-headline">
             Configuration and models
           </h1>
-          <p class="hero-paragraph">
+          <p class="hero-caption">
             Backend connection parameters, model selection, and retrieval confidence filters.
           </p>
         </div>
@@ -654,7 +718,7 @@
             </div>
           </div>
 
-          <button id="saveSettingsBtn" class="pill-btn primary-dark">Save Configuration</button>
+          <button id="saveSettingsBtn" class="pill-btn accent-green">Save Configuration</button>
         </div>
       </section>
 
@@ -672,7 +736,7 @@
     </main>
 
     <!-- ================================================================ -->
-    <!-- MINIMALIST FLOATING BOTTOM DOCK (Reference Screen 2 & 3 style)   -->
+    <!-- MINIMALIST FLOATING BOTTOM DOCK -->
     <!-- ================================================================ -->
     <nav class="floating-bottom-dock" aria-label="Bottom Navigation">
       <button class="dock-btn active" data-tab="dashboard" title="Dashboard">

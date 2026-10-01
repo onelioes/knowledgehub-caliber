@@ -424,7 +424,7 @@ function appendChatBubble(role, text, assetTag, citations = []) {
 
   if (role === 'user') {
     row.innerHTML = `
-      <div class="chat-bubble user-bubble">
+      <div class="chat-bubble user-bubble-blue">
         <div class="chat-bubble-tag">Asset: ${escapeHtml(assetTag)}</div>
         <div class="chat-bubble-text">${escapeHtml(text)}</div>
       </div>
@@ -453,7 +453,7 @@ function appendChatBubble(role, text, assetTag, citations = []) {
     }
 
     row.innerHTML = `
-      <div class="chat-bubble bot-bubble">
+      <div class="chat-bubble bot-bubble-spacious">
         <div class="bot-header-meta">
           <span class="bot-avatar-chip">AI Copilot</span>
           <span class="verified-pill">Verified SOP</span>
