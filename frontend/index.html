@@ -3,242 +3,465 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Chandra Asri KnowledgeHub — Manufacturing Intelligence (CALIBER 2026)</title>
-  <!-- Google Fonts: Fraunces & Inter -->
+  <title>Chandra Asri KnowledgeHub — Plant Intelligence &amp; Flow (CALIBER 2026)</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Atmospheric floating bubbles -->
-  <div class="bubbles" aria-hidden="true">
-    <div class="b" style="width:240px;height:240px;left:-60px;top:6%"></div>
-    <div class="b" style="width:130px;height:130px;right:10%;top:7%;animation-delay:-4s"></div>
-    <div class="b" style="width:320px;height:320px;right:-100px;top:40%;animation-delay:-8s"></div>
-    <div class="b" style="width:100px;height:100px;left:35%;bottom:7%;animation-delay:-2s"></div>
-    <div class="b" style="width:170px;height:170px;left:14%;bottom:-40px;animation-delay:-6s"></div>
-    <div class="b" style="width:60px;height:60px;left:55%;top:12%;animation-delay:-10s"></div>
+  <!-- Ambient Organic Pastel Blobs -->
+  <div class="pastel-ambient" aria-hidden="true">
+    <div class="ambient-blob blob-butter"></div>
+    <div class="ambient-blob blob-lavender"></div>
+    <div class="ambient-blob blob-peach"></div>
+    <div class="ambient-blob blob-mint"></div>
   </div>
 
-  <div class="app">
-    <!-- Sidebar Navigation -->
-    <nav class="side">
-      <div class="brand-wrapper">
-        <div class="brand">Knowledge<span>Hub</span></div>
-        <div class="sub-brand">Chandra Asri · CALIBER 2026</div>
-      </div>
+  <div class="app-shell">
 
-      <button class="nav active" data-tab="dashboard">
-        <span class="ico">📊</span>
-        <span>Dashboard</span>
-      </button>
-
-      <button class="nav" data-tab="assets-docs">
-        <span class="ico">📑</span>
-        <span>Asset & Docs</span>
-      </button>
-
-      <button class="nav" data-tab="ai-copilot">
-        <span class="ico">✦</span>
-        <span>AI Copilot</span>
-      </button>
-
-      <button class="nav" data-tab="failure-memory">
-        <span class="ico">⚡</span>
-        <span>Failure Memory</span>
-      </button>
-
-      <button class="nav" data-tab="settings">
-        <span class="ico">⚙</span>
-        <span>Settings</span>
-      </button>
-
-      <div class="sidefoot">
-        <b>PT Chandra Asri Pacific Tbk</b>
-        <span>Plant Cilegon & Ciwandan</span>
-        <div class="status-badge">
-          <span class="dot"></span> Telemetri Aktif · 1,420 Aset
+    <!-- Top App Bar / Header -->
+    <header class="app-header">
+      <div class="user-greeting-pill">
+        <div class="avatar-wrap">
+          <span class="avatar-emoji">👷</span>
+          <span class="online-indicator"></span>
         </div>
-        <div class="auth-meta-wrap">
-          <button type="button" class="subtle-link-btn" id="openAuthFlowBtn">Flow Autentikasi Data</button>
+        <div class="greeting-text">
+          <span class="greeting-title">Hello, Plant Engineer!</span>
+          <span class="greeting-subtitle">Chandra Asri Pacific · Plant Cilegon</span>
         </div>
       </div>
-    </nav>
+
+      <!-- Center Quick Category Pills (Desktop) -->
+      <nav class="top-nav-pills" aria-label="Kategori Utama">
+        <button class="nav-pill active" data-tab="dashboard">Dashboard</button>
+        <button class="nav-pill" data-tab="data-flow">Data Flow</button>
+        <button class="nav-pill" data-tab="ai-copilot">AI Copilot</button>
+        <button class="nav-pill" data-tab="assets-docs">Assets &amp; Docs</button>
+        <button class="nav-pill" data-tab="failure-memory">RCFA Memory</button>
+      </nav>
+
+      <!-- Action Icons -->
+      <div class="header-actions">
+        <button class="icon-circle-btn" id="headerSearchBtn" title="Cari data atau dokumen" aria-label="Pencarian">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+        <button class="icon-circle-btn has-badge" id="headerNotifBtn" title="Notifikasi telemetri" aria-label="Notifikasi">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="pill-btn primary-dark" onclick="switchTab('ai-copilot')">
+          <span>✦ Tanya AI</span>
+        </button>
+      </div>
+    </header>
 
     <!-- Main Content Area -->
-    <main class="main">
+    <main class="main-content">
 
       <!-- ================================================================ -->
       <!-- TAB 1: DASHBOARD -->
       <!-- ================================================================ -->
       <section id="dashboard" class="screen active">
-        <div class="head">
-          <div class="head-title">
-            <h1>Manufacturing Knowledge Overview</h1>
-            <p>Pusat intelegensi operasional, dokumen teknis, dan catatan kegagalan Chandra Asri</p>
+        
+        <!-- Hero Title Section (Styled like "Activities just for your taste") -->
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">CALIBER 2026 · Manufacturing Intelligence</span>
+            <h1 class="hero-title">
+              Plant intelligence <br>
+              <span class="italic-serif">just for your operations</span>
+            </h1>
+            <p class="hero-desc">Pusat kontrol terpadu untuk dokumen teknik P&amp;ID, SOP operasi, dan analisis kegagalan peralatan kritis Chandra Asri.</p>
           </div>
-          <div class="head-meta">
-            <button class="pill" onclick="switchTab('ai-copilot')">✦ Buka AI Copilot</button>
+
+          <div class="hero-quick-tags">
+            <span class="cute-tag yellow">⚡ 1,420 Aset Aktif</span>
+            <span class="cute-tag pink">📄 3,892 SOP &amp; P&amp;ID</span>
+            <span class="cute-tag mint">🛡️ 99.4% Akurasi RAG</span>
+            <span class="cute-tag lavender">🏭 Kompleks Olefins &amp; PE</span>
           </div>
         </div>
 
-        <div class="stats">
-          <div class="glass stat">
-            <div class="orb"></div>
-            <div class="num">1,420</div>
-            <div class="lbl">Aset Terdaftar</div>
+        <!-- Playful Organic Sticky & Sticker Canvas (Like Top-Middle in Reference) -->
+        <div class="playful-hero-canvas">
+          
+          <!-- Sticky Note 1 (Yellow Post-It with slight tilt) -->
+          <div class="sticky-note postit-yellow" onclick="switchTab('assets-docs')" title="Buka detail Pompa P-101A">
+            <div class="pin-dot"></div>
+            <div class="postit-tag">SOP Startup Wajib</div>
+            <div class="postit-title">Pompa Naphtha P-101A</div>
+            <div class="postit-sub">Plan 53A Pressure &amp; Venting casing sebelum start motor 350 kW</div>
+            <div class="postit-meta">
+              <span>Rev 4.2 (2025)</span>
+              <span class="arrow-circle">➔</span>
+            </div>
           </div>
-          <div class="glass stat">
-            <div class="orb"></div>
-            <div class="num">3,892</div>
-            <div class="lbl">Dokumen P&ID & SOP</div>
+
+          <!-- Organic Starburst Sticker (Pink) -->
+          <div class="starburst-sticker pink-burst">
+            <div class="burst-text">
+              <b>Live DCS</b>
+              <span>30/05 Shift A</span>
+            </div>
           </div>
-          <div class="glass stat accent-stat">
-            <div class="orb"></div>
-            <div class="num">148</div>
-            <div class="lbl">RCFA Failure Memory</div>
+
+          <!-- Circular Pill Bubble (Baby Blue) -->
+          <div class="circle-bubble blue-bubble" onclick="switchTab('failure-memory')">
+            <div class="circle-inner">
+              <span class="circle-badge">⚡ RCFA</span>
+              <b>148 Kasus</b>
+              <small>Mitigasi Terverifikasi</small>
+            </div>
           </div>
-          <div class="glass stat">
-            <div class="orb"></div>
-            <div class="num">99.4%</div>
-            <div class="lbl">Akurasi RAG Copilot</div>
+
+          <!-- Interactive Action Card -->
+          <div class="promo-action-card">
+            <p class="promo-text">Butuh panduan operasional cepat untuk insiden lapangan?</p>
+            <button class="pill-btn black-pill" onclick="switchTab('ai-copilot')">
+              <span>Mulai Copilot</span>
+              <span class="btn-arrow">➔</span>
+            </button>
           </div>
         </div>
 
-        <div class="two">
-          <div class="glass pad card">
-            <h3>
-              <span>Aktivitas Pertanyaan Lapangan Terkini</span>
-              <span class="tag blue">Live Feed</span>
-            </h3>
-            <div class="row">
-              <div>
-                <span class="asset-pill">P-101A</span>
-                <span>Prosedur priming & venting sebelum startup pompa Naphtha</span>
-              </div>
-              <small>Unit Olefins · 8 mnt lalu</small>
+        <!-- Audience & Telemetry Flow (Like Top-Right in Reference) -->
+        <div class="card-bento telemetry-flow-card">
+          <div class="card-header-flex">
+            <div>
+              <h2 class="card-title">Plant Telemetry &amp; Document Flow</h2>
+              <p class="card-subtitle">Frekuensi verifikasi parameter &amp; konsultasi AI per unit kerja</p>
             </div>
-            <div class="row">
-              <div>
-                <span class="asset-pill orange">K-102</span>
-                <span>Threshold alarm vibrasi bearing kompresor ethylene</span>
-              </div>
-              <small>Unit Polietilena · 25 mnt lalu</small>
-            </div>
-            <div class="row">
-              <div>
-                <span class="asset-pill">F-101</span>
-                <span>Jadwal decoking & histori hotspot coil cracking furnace</span>
-              </div>
-              <small>Unit Monomer · 1 jam lalu</small>
-            </div>
-            <div class="row">
-              <div>
-                <span class="asset-pill">C-201</span>
-                <span>Delta P abnormal pada tray 18-24 splitter kolom</span>
-              </div>
-              <small>Utilities · 3 jam lalu</small>
+            <div class="flow-pill-filter">
+              <button class="unit-filter-pill active" data-unit="olefins">Olefins</button>
+              <button class="unit-filter-pill" data-unit="pe">PE-1</button>
+              <button class="unit-filter-pill" data-unit="furnace">Cracker</button>
+              <button class="unit-filter-pill" data-unit="splitter">C2 Splitter</button>
+              <button class="unit-filter-pill" data-unit="utility">Utilities</button>
             </div>
           </div>
 
-          <div class="glass pad card">
-            <h3>Indeks Pemeliharaan & Kesiapan</h3>
-            <div class="lbl">Cakupan Digitalisasi Manual Pabrik (3,892 docs)</div>
-            <div class="bar"><i style="width: 94%"></i></div>
+          <!-- Organic Spline Curve Wave Chart with Hatched Column & Days -->
+          <div class="spline-flow-wrapper">
+            <div class="spline-days-row">
+              <span class="day-chip">SEN</span>
+              <span class="day-chip">SEL</span>
+              <span class="day-chip">RAB</span>
+              <span class="day-chip active-day">KAM</span>
+              <span class="day-chip">JUM</span>
+              <span class="day-chip">SAB</span>
+              <span class="day-chip">MIN</span>
+            </div>
+
+            <!-- SVG Wave with Smooth Bezier & Hatched Bar -->
+            <div class="svg-wave-container">
+              <svg viewBox="0 0 800 240" class="flow-spline-svg" preserveAspectRatio="none">
+                <defs>
+                  <!-- Hatched pattern like in reference image -->
+                  <pattern id="hatchFill" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                    <line x1="0" y1="0" x2="0" y2="12" stroke="#FDA4AF" stroke-width="3" />
+                  </pattern>
+
+                  <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#F472B6" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#F472B6" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Hatched highlight bar on Kamis -->
+                <rect x="360" y="30" width="70" height="170" rx="14" fill="url(#hatchFill)" opacity="0.65" />
+                <rect x="360" y="30" width="70" height="170" rx="14" fill="none" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="4 4" />
+
+                <!-- Vertical measurement guidelines -->
+                <line x1="120" y1="20" x2="120" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
+                <line x1="240" y1="20" x2="240" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
+                <line x1="395" y1="20" x2="395" y2="200" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="3 3" />
+                <line x1="530" y1="20" x2="530" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
+                <line x1="670" y1="20" x2="670" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
+
+                <!-- Gradient Fill Under Curve -->
+                <path d="M 50 180 C 130 190, 200 90, 280 140 C 340 180, 370 45, 410 40 C 470 35, 520 160, 580 110 C 660 40, 720 170, 760 160 L 760 220 L 50 220 Z" fill="url(#waveGrad)" />
+
+                <!-- Smooth Organic Spline Curve -->
+                <path class="spline-curve-line" d="M 50 180 C 130 190, 200 90, 280 140 C 340 180, 370 45, 410 40 C 470 35, 520 160, 580 110 C 660 40, 720 170, 760 160" fill="none" stroke="#E11D48" stroke-width="3.5" stroke-linecap="round" />
+
+                <!-- Data Points -->
+                <circle cx="120" cy="183" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
+                <circle cx="280" cy="140" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
+                <circle cx="410" cy="40" r="7" fill="#E11D48" stroke="#fff" stroke-width="3" />
+                <circle cx="580" cy="110" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
+                <circle cx="700" cy="100" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
+              </svg>
+
+              <!-- Floating 99.4% / Peak Confidence Badge -->
+              <div class="floating-peak-badge" style="left: 48%; top: 12%;">
+                <span class="peak-val">99.4%</span>
+                <span class="peak-lbl">Peak Accuracy · 19:00</span>
+              </div>
+            </div>
+
+            <!-- Time markers row -->
+            <div class="spline-times-row">
+              <span>07:00</span>
+              <span>11:00</span>
+              <span>15:00</span>
+              <span class="active-time">19:00</span>
+              <span>23:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Grid Stats (Like Bottom Row in Reference) -->
+        <div class="bento-metrics-grid">
+          
+          <!-- Card 1: Lavender Progress Card (Like "Your Progress 95%") -->
+          <div class="bento-card card-lavender">
+            <div class="bento-card-header">
+              <span class="bento-icon">📊</span>
+              <span class="bento-title-small">Digitalisasi SOP Pabrik</span>
+            </div>
             
-            <div class="lbl">Penyelesaian Aksi Korektif RCFA (142/148)</div>
-            <div class="bar"><i class="accent" style="width: 86%"></i></div>
+            <div class="donut-stat-row">
+              <div class="donut-stat-text">
+                <div class="giant-stat">95%</div>
+                <div class="giant-stat-sub">3,892 Dokumen Terindeks</div>
+                <div class="tiny-pill-tag">✓ RAG Grounding Aktif</div>
+              </div>
 
-            <div class="lbl">Ketersediaan Model Backend AI (Port 8000)</div>
-            <div class="bar"><i style="width: 100%"></i></div>
+              <!-- Animated Donut Gauge -->
+              <div class="donut-gauge-wrapper">
+                <svg viewBox="0 0 100 100" class="donut-svg">
+                  <circle cx="50" cy="50" r="40" class="donut-bg" />
+                  <circle cx="50" cy="50" r="40" class="donut-progress" stroke-dasharray="251.2" stroke-dashoffset="12.5" />
+                </svg>
+                <div class="donut-center-label">
+                  <b>1,420</b>
+                  <span>Aset</span>
+                </div>
+              </div>
+            </div>
 
-            <p class="hint">Topik paling krusial minggu ini: <b>Mechanical Seal Degradation pada Pompa Sentrifugal Fluida Ringan</b>.</p>
+            <div class="card-footer-mini">
+              <span>Olefins, PE, PP, BD &amp; Utilities Kompleks</span>
+            </div>
           </div>
+
+          <!-- Card 2: Peach Critical Parameters Card (Like "Breakfast 350 calories") -->
+          <div class="bento-card card-peach">
+            <div class="bento-card-header">
+              <span class="bento-icon">⚡</span>
+              <span class="bento-title-small">Parameter Kritis Lapangan</span>
+              <button class="mini-edit-btn" onclick="switchTab('ai-copilot')">🔍 Cek</button>
+            </div>
+
+            <div class="four-props-grid">
+              <div class="prop-item">
+                <span class="prop-num">2.1</span>
+                <span class="prop-unit">bar</span>
+                <span class="prop-label">Lube Oil Suction</span>
+              </div>
+              <div class="prop-item">
+                <span class="prop-num">45</span>
+                <span class="prop-unit">µm</span>
+                <span class="prop-label">Vibrasi K-102</span>
+              </div>
+              <div class="prop-item">
+                <span class="prop-num">1080</span>
+                <span class="prop-unit">°C</span>
+                <span class="prop-label">Max Tube F-101</span>
+              </div>
+              <div class="prop-item">
+                <span class="prop-num">0.85</span>
+                <span class="prop-unit">bar</span>
+                <span class="prop-label">Delta P C-201</span>
+              </div>
+            </div>
+
+            <div class="card-footer-mini">
+              <span>Status: <b style="color:#059669">Normal di batas aman DCS</b></span>
+            </div>
+          </div>
+
+          <!-- Card 3: Mint Plant Health Card (Like "Hearth Health 88 bpm") -->
+          <div class="bento-card card-mint">
+            <div class="bento-card-header">
+              <span class="bento-icon">💚</span>
+              <span class="bento-title-small">Integritas Keamanan Aset</span>
+            </div>
+            
+            <div class="metric-single-flex">
+              <div class="metric-huge">99.8%</div>
+              <span class="badge-pill ok">Safety Interlock OK</span>
+            </div>
+            
+            <!-- Mini Sparkline Wave -->
+            <div class="mini-sparkline">
+              <svg viewBox="0 0 200 45" preserveAspectRatio="none">
+                <path d="M 0 30 Q 30 10, 60 25 T 120 15 T 170 30 T 200 10" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" />
+              </svg>
+            </div>
+
+            <div class="card-footer-mini">
+              <span>0 Kejadian Trip Tak Terencana 30 Hari Terakhir</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Soft Lilac RCFA Card (Like "IBM Control Your Body") -->
+          <div class="bento-card card-lilac">
+            <div class="bento-card-header">
+              <span class="bento-icon">🛡️</span>
+              <span class="bento-title-small">RCFA Failure Memory</span>
+            </div>
+
+            <div class="metric-single-flex">
+              <div class="metric-huge">142/148</div>
+              <span class="badge-pill purple">96% Selesai</span>
+            </div>
+
+            <p class="lilac-desc">Tindakan korektif permanen telah diimplementasi pada P-101A, K-102, dan F-101.</p>
+
+            <button class="check-link-btn" onclick="switchTab('failure-memory')">
+              <span>Buka Bank Kegagalan</span>
+              <span>➔</span>
+            </button>
+          </div>
+
         </div>
+
       </section>
 
       <!-- ================================================================ -->
-      <!-- TAB 2: ASSET & DOCS -->
+      <!-- TAB 2: ORGANIC NON-STIFF FLOWCHART (DATA & AUTHENTICATION FLOW) -->
       <!-- ================================================================ -->
-      <section id="assets-docs" class="screen">
-        <div class="head">
-          <div class="head-title">
-            <h1>Asset & Engineering Documents</h1>
-            <p>Database P&ID, SOP Operasi, Maintenance Manual, dan Lembar Data Teknis Pabrik</p>
+      <section id="data-flow" class="screen">
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">Interactive Architecture · Zero-Trust</span>
+            <h1 class="hero-title">
+              Data &amp; auth flow <br>
+              <span class="italic-serif">dynamic, organic &amp; secure</span>
+            </h1>
+            <p class="hero-desc">Bagan alir data operasional, validasi integritas kriptografis, dan verifikasi AI tanpa struktur yang kaku.</p>
           </div>
-          <div class="head-meta">
-            <button class="pill secondary" onclick="alert('Sinkronisasi dokumen dari Chandra Asri Engineering Cloud berhasil dijalankan!')">🔄 Sinkronisasi DMS</button>
+
+          <div class="hero-quick-tags">
+            <button class="cute-tag yellow" id="triggerFlowPulseBtn">✨ Putar Animasi Pipeline</button>
+            <button class="cute-tag mint" id="triggerFlowTestBtn">⚡ Tes Verifikasi Hash</button>
           </div>
         </div>
 
-        <div class="drop">
-          <div class="big">↑</div>
-          <h3>Unggah Manual, P&ID, atau Laporan Servis Aset</h3>
-          <p>Mendukung format PDF, DWG, DOCX, atau ZIP arsip dokumen Chandra Asri Cilegon</p>
-          <button class="pill">Pilih Berkas Dokumen</button>
-        </div>
+        <!-- Non-Stiff Organic Flowchart Canvas -->
+        <div class="organic-flow-container">
+          
+          <!-- Interactive Curved SVG Backbone -->
+          <div class="flow-svg-canvas-wrap">
+            <svg viewBox="0 0 1000 320" class="organic-flow-svg" preserveAspectRatio="none">
+              <defs>
+                <!-- Flow Gradient -->
+                <linearGradient id="flowLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#F43F5E" />
+                  <stop offset="25%" stop-color="#F59E0B" />
+                  <stop offset="50%" stop-color="#8B5CF6" />
+                  <stop offset="75%" stop-color="#10B981" />
+                  <stop offset="100%" stop-color="#0284C7" />
+                </linearGradient>
+              </defs>
 
-        <div class="doc-filter-bar">
-          <input type="text" id="docSearchInput" class="search-input" placeholder="Cari berdasarkan Tag Aset, Judul SOP, atau Nomor Dokumen...">
-        </div>
+              <!-- Soft Shadow Base Line -->
+              <path class="flow-path-shadow" d="M 80 160 C 220 60, 320 260, 480 140 C 620 30, 740 260, 920 150" />
 
-        <div class="glass tbl">
-          <table id="docsTable">
-            <thead>
-              <tr>
-                <th>Tag Aset</th>
-                <th>Nama Dokumen</th>
-                <th>Unit Pabrik</th>
-                <th>Revisi / Versi</th>
-                <th>Status Indeks RAG</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="asset-pill">P-101A</span></td>
-                <td><b>CAP-SOP-MECH-P101-STARTUP.pdf</b></td>
-                <td>Olefins (Cilegon)</td>
-                <td>Rev 4.2 (2025)</td>
-                <td><span class="tag ok">Terindeks 100%</span></td>
-                <td><button class="pill secondary" style="padding:6px 14px;font-size:0.75rem" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
-              </tr>
-              <tr>
-                <td><span class="asset-pill orange">K-102</span></td>
-                <td><b>CAP-INST-K102-VIBRATION-SPEC.pdf</b></td>
-                <td>Polietilena (PE-1)</td>
-                <td>Rev 3.1 (2024)</td>
-                <td><span class="tag ok">Terindeks 100%</span></td>
-                <td><button class="pill secondary" style="padding:6px 14px;font-size:0.75rem" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
-              </tr>
-              <tr>
-                <td><span class="asset-pill">F-101</span></td>
-                <td><b>CAP-FURNACE-F101-INTEGRITY-REPORT.pdf</b></td>
-                <td>Cracker Complex</td>
-                <td>Rev 5.0 (2025)</td>
-                <td><span class="tag ok">Terindeks 100%</span></td>
-                <td><button class="pill secondary" style="padding:6px 14px;font-size:0.75rem" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
-              </tr>
-              <tr>
-                <td><span class="asset-pill">C-201</span></td>
-                <td><b>CAP-PID-C201-FRACTIONATION.dwg.pdf</b></td>
-                <td>Olefins Fractionation</td>
-                <td>Rev 6.1 (2024)</td>
-                <td><span class="tag ok">Terindeks 100%</span></td>
-                <td><button class="pill secondary" style="padding:6px 14px;font-size:0.75rem" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
-              </tr>
-              <tr>
-                <td><span class="asset-pill">EX-304</span></td>
-                <td><b>CAP-MECH-EX304-TUBE-INSPECTION.pdf</b></td>
-                <td>Utilities & Offsite</td>
-                <td>Rev 2.0 (2023)</td>
-                <td><span class="tag wait">Dalam Validasi</span></td>
-                <td><button class="pill secondary" style="padding:6px 14px;font-size:0.75rem" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
-              </tr>
-            </tbody>
-          </table>
+              <!-- Animated Flow Dashed Spline -->
+              <path class="flow-path-active" id="flowBezierPath" d="M 80 160 C 220 60, 320 260, 480 140 C 620 30, 740 260, 920 150" />
+            </svg>
+
+            <!-- 5 Organic Interactive Flow Nodes -->
+            <div class="flow-nodes-wrapper">
+              
+              <!-- Node 1: Ingestion (Peach) -->
+              <div class="organic-node-card node-peach tilt-left" data-step="1">
+                <div class="node-sticker-pin">1</div>
+                <div class="node-icon">🗄️</div>
+                <div class="node-title">Source Ingestion</div>
+                <div class="node-body">DMS Engineering, DCS Honeywell, SAP PM, Lab LIMS</div>
+                <div class="node-pills">
+                  <span>mTLS 1.3</span>
+                  <span>Kerberos</span>
+                </div>
+              </div>
+
+              <!-- Node 2: Hashing (Yellow Post-It) -->
+              <div class="organic-node-card node-yellow tilt-right" data-step="2">
+                <div class="node-sticker-pin">2</div>
+                <div class="node-icon">🔐</div>
+                <div class="node-title">Cryptographic Hash</div>
+                <div class="node-body">Komputasi SHA-256 Checksum unik per dokumen SOP/P&amp;ID</div>
+                <div class="node-pills">
+                  <span>SHA-256</span>
+                  <span>Tamper-Free</span>
+                </div>
+              </div>
+
+              <!-- Node 3: RBAC (Lavender) -->
+              <div class="organic-node-card node-lavender tilt-none" data-step="3">
+                <div class="node-sticker-pin">3</div>
+                <div class="node-icon">🛡️</div>
+                <div class="node-title">RBAC Clearance</div>
+                <div class="node-body">Otorisasi Tier 1 (Operator), Tier 2 (Engineer), Tier 3 (GM)</div>
+                <div class="node-pills">
+                  <span>3-Tier Access</span>
+                  <span>Role Matrix</span>
+                </div>
+              </div>
+
+              <!-- Node 4: RAG Grounding (Mint) -->
+              <div class="organic-node-card node-mint tilt-left" data-step="4">
+                <div class="node-sticker-pin">4</div>
+                <div class="node-icon">✦</div>
+                <div class="node-title">RAG AI Guardrail</div>
+                <div class="node-body">Verifikasi grounding sitasi dan confidence score &ge;85%</div>
+                <div class="node-pills">
+                  <span>Score &ge;85%</span>
+                  <span>Hallucination Filter</span>
+                </div>
+              </div>
+
+              <!-- Node 5: WORM Log (Baby Blue) -->
+              <div class="organic-node-card node-blue tilt-right" data-step="5">
+                <div class="node-sticker-pin">5</div>
+                <div class="node-icon">📜</div>
+                <div class="node-title">Immutable Audit</div>
+                <div class="node-body">Penyimpanan WORM terenkripsi untuk audit ISO 27001</div>
+                <div class="node-pills">
+                  <span>AES-256</span>
+                  <span>OSHA PSM</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Dynamic Node Inspector Drawer -->
+          <div class="node-detail-drawer" id="nodeDetailDrawer">
+            <div class="drawer-header">
+              <div class="drawer-title-wrap">
+                <span class="drawer-pill-badge" id="drawerStageBadge">Tahap 02 / 05</span>
+                <h3 id="drawerStageTitle">Cryptographic Hashing &amp; Document Integrity</h3>
+              </div>
+              <button class="pill-btn secondary-light" id="runLiveHashSampleBtn">⚡ Tes Verifikasi Hash SOP P-101A</button>
+            </div>
+            <p id="drawerStageDesc" class="drawer-desc">
+              Setiap kali dokumen baru diunggah atau disinkronisasi dari Engineering Cloud, sistem menghitung sidik jari digital (SHA-256 checksum). Jika terdapat modifikasi 1 karakter pun pada parameter keselamatan, sistem langsung membekukan status verifikasi dan memicu alert ke Superintendent.
+            </p>
+            <div id="drawerTerminalOutput" class="interactive-terminal-box">
+              <span class="term-comment">// Klik "Tes Verifikasi Hash" untuk menguji simulasi kriptografi langsung...</span>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -246,24 +469,29 @@
       <!-- TAB 3: AI COPILOT -->
       <!-- ================================================================ -->
       <section id="ai-copilot" class="screen">
-        <div class="head">
-          <div class="head-title">
-            <h1>AI Copilot — Engineering Assistant</h1>
-            <p>Asisten AI cerdas terintegrasi RAG untuk P&ID, SOP, dan catatan perbaikan Chandra Asri</p>
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">AI Copilot · Grounded RAG</span>
+            <h1 class="hero-title">
+              Engineering assistant <br>
+              <span class="italic-serif">answers backed by evidence</span>
+            </h1>
+            <p class="hero-desc">Tanyakan prosedur darurat, histori kegagalan komponen, atau checklist startup langsung pada model AI yang terhubung ke dokumen resmi Chandra Asri.</p>
           </div>
-          <div class="head-meta">
-            <div id="backendStatus" class="backend-indicator live">
-              <span class="pulse"></span> Endpoint: http://localhost:8000/api/chat
+
+          <div class="hero-quick-tags">
+            <div id="backendStatusPill" class="cute-tag mint">
+              <span class="pulse-dot"></span> Backend: http://localhost:8000/api/chat
             </div>
           </div>
         </div>
 
-        <div class="glass copilot-container">
-          <!-- Copilot Top Toolbar -->
-          <div class="copilot-header">
-            <div class="asset-selector-wrap">
-              <label for="assetTagSelect">🏷️ Target Tag Aset:</label>
-              <select id="assetTagSelect" class="asset-select">
+        <div class="copilot-creative-panel">
+          <!-- Asset Selector Bar -->
+          <div class="copilot-top-bar">
+            <div class="asset-pill-selector">
+              <label for="assetTagSelect">Target Aset:</label>
+              <select id="assetTagSelect" class="styled-select">
                 <option value="P-101A" selected>P-101A — Primary Naphtha Feed Pump</option>
                 <option value="K-102">K-102 — Syngas Ethylene Compressor</option>
                 <option value="F-101">F-101 — Naphtha Thermal Cracking Furnace</option>
@@ -272,66 +500,61 @@
                 <option value="GEN-PLANT">GENERAL — Chandra Asri Plantwide SOP</option>
               </select>
             </div>
-            <div style="font-size:0.8rem;color:var(--muted)">
-              Payload: <code style="background:var(--field);padding:3px 6px;border-radius:6px">{ query, asset_tag }</code>
+
+            <div class="quick-status-note">
+              <span>Grounding: <b>100% Verified Citations</b></span>
             </div>
           </div>
 
-          <!-- Chat Conversation Stream -->
-          <div class="chat-log" id="chatLog">
-            <!-- Initial User Prompt Example -->
-            <div class="m u">
-              <span class="user-tag"><i class="tag-ico">🏷️</i> Asset: <b>P-101A</b></span>
-              <div class="user-text">Apa langkah-langkah kritis sebelum melakukan penyalaan (startup) pompa feed Naphtha P-101A?</div>
+          <!-- Chat Stream Log -->
+          <div class="chat-log-modern" id="chatLog">
+            <!-- User Sample Prompt -->
+            <div class="chat-row user-row">
+              <div class="chat-bubble user-bubble">
+                <div class="chat-bubble-tag">🏷️ Aset: P-101A</div>
+                <div class="chat-bubble-text">Apa langkah-langkah kritis sebelum melakukan penyalaan (startup) pompa feed Naphtha P-101A?</div>
+              </div>
             </div>
 
-            <!-- Initial Assistant Response with Rich Citation Cards -->
-            <div class="m a">
-              <div class="bub">
-                <div class="copilot-meta-header">
-                  <div class="bot-icon">✦</div>
-                  <span>Chandra Asri Manufacturing Copilot</span>
-                  <span class="tag ok" style="margin-left:auto;font-size:0.7rem">Verified Knowledge</span>
+            <!-- Assistant Sample Response -->
+            <div class="chat-row bot-row">
+              <div class="chat-bubble bot-bubble">
+                <div class="bot-header-meta">
+                  <span class="bot-avatar-chip">✦ Copilot</span>
+                  <span class="verified-pill">✓ Verified SOP</span>
                 </div>
-                <div class="copilot-answer-text">Berdasarkan Dokumen Prosedur Operasi Standar (SOP) dan Manual Pemeliharaan Pompa Naphtha <b>P-101A</b> di Unit Olefins Chandra Asri, berikut adalah langkah verifikasi wajib sebelum penyalaan:
+                
+                <div class="bot-text-body">
+                  Berdasarkan Dokumen Prosedur Operasi Standar (SOP) dan Manual Pemeliharaan Pompa Naphtha <b>P-101A</b> di Unit Olefins Chandra Asri, berikut adalah langkah verifikasi wajib sebelum penyalaan:
+                  <br><br>
+                  1. <b>Pelumasan Lube Oil:</b> Pastikan level oli reservoir minimal 65% dan tekanan lube oil terukur pada 2.1 bar gauge.<br>
+                  2. <b>Venting &amp; Priming:</b> Buka venting valve pada casing pompa hingga aliran fluida naphtha kontinyu tanpa buih udara untuk mencegah risiko kavitasi dan vapor lock.<br>
+                  3. <b>Mechanical Seal Flush (API Plan 53A):</b> Barrier fluid pressure wajib dijaga 1.5 bar di atas suction pressure untuk mencegah kebocoran hidrokarbon ke atmosfer.<br>
+                  4. <b>Interlock Safety:</b> Pastikan sinyal trip dari DCS normal dan permit kerja dingin/panas telah ditutup.
+                </div>
 
-1. <b>Pelumasan Lube Oil:</b> Pastikan level oli reservoir minimal 65% dan tekanan lube oil terukur pada 2.1 bar gauge.
-2. <b>Venting & Priming:</b> Buka venting valve pada casing pompa hingga aliran fluida naphtha kontinyu tanpa buih udara untuk mencegah risiko kavitasi dan vapor lock.
-3. <b>Mechanical Seal Flush (API Plan 53A):</b> Barrier fluid pressure wajib dijaga 1.5 bar di atas suction pressure untuk mencegah kebocoran hidrokarbon ke atmosfer.
-4. <b>Interlock Safety:</b> Pastikan sinyal trip dari DCS normal dan permit kerja dingin/panas telah ditutup.</div>
-
-                <!-- Rich Citation Cards Container -->
-                <div class="citations-wrapper">
-                  <div class="citations-title">
-                    <span>📚</span> Dokumen Sumber Terverifikasi (2 Sitasi)
-                  </div>
-                  <div class="citations-grid">
-                    <!-- Citation Card 1 -->
-                    <div class="citation-card">
-                      <div class="citation-source" title="CAP-SOP-MECH-P101-STARTUP.pdf">
-                        <span class="doc-icon">📄</span>
-                        <span>CAP-SOP-MECH-P101-STARTUP.pdf</span>
+                <!-- Verified Citations Grid -->
+                <div class="bot-citations-box">
+                  <div class="citations-header-title">📚 Dokumen Sumber Terverifikasi:</div>
+                  <div class="citation-cards-row">
+                    <div class="citation-chip-card">
+                      <div class="cit-source">📄 CAP-SOP-MECH-P101-STARTUP.pdf</div>
+                      <div class="cit-tags">
+                        <span>Hal. 18</span>
+                        <span>Rev 4.2</span>
+                        <span class="conf-tag">96.5% Akurat</span>
                       </div>
-                      <div class="citation-details">
-                        <span class="citation-pill">📖 Hal. 18</span>
-                        <span class="citation-pill">🔖 Rev 4.2 (2025)</span>
-                        <span class="citation-pill conf conf-high">🎯 96.5% Akurasi</span>
-                      </div>
-                      <div class="citation-snippet">"Bagian 3.2: Pra-penyalaan Pompa Sentrifugal Naphtha - Cek Suction & Seal Plan 53A"</div>
+                      <div class="cit-snippet">"Bagian 3.2: Pra-penyalaan Pompa Sentrifugal Naphtha - Cek Suction &amp; Seal Plan 53A"</div>
                     </div>
 
-                    <!-- Citation Card 2 -->
-                    <div class="citation-card">
-                      <div class="citation-source" title="VENDOR-SULZER-OH2-MANUAL.pdf">
-                        <span class="doc-icon">📄</span>
-                        <span>VENDOR-SULZER-OH2-MANUAL.pdf</span>
+                    <div class="citation-chip-card">
+                      <div class="cit-source">📄 VENDOR-SULZER-OH2-MANUAL.pdf</div>
+                      <div class="cit-tags">
+                        <span>Hal. 42</span>
+                        <span>Rev 2.0</span>
+                        <span class="conf-tag">91.2% Akurat</span>
                       </div>
-                      <div class="citation-details">
-                        <span class="citation-pill">📖 Hal. 42</span>
-                        <span class="citation-pill">🔖 Rev 2.0 (2022)</span>
-                        <span class="citation-pill conf conf-high">🎯 91.2% Akurasi</span>
-                      </div>
-                      <div class="citation-snippet">"Section 4.1: Lubrication and Mechanical Seal Pressure Barrier Limits"</div>
+                      <div class="cit-snippet">"Section 4.1: Lubrication and Mechanical Seal Pressure Barrier Limits"</div>
                     </div>
                   </div>
                 </div>
@@ -341,27 +564,27 @@
           </div>
 
           <!-- Quick Suggestion Prompts -->
-          <div class="quick-prompts">
-            <span style="font-size:0.75rem;color:var(--muted);align-self:center;margin-right:4px">Rekomendasi:</span>
-            <button class="quick-prompt-btn" data-asset="P-101A" data-prompt="Cek SOP Startup dan batas aman temperatur bearing Pompa P-101A">
+          <div class="quick-prompts-bar">
+            <span class="qp-label">Pilihan Cepat:</span>
+            <button class="quick-prompt-pill" data-asset="P-101A" data-prompt="Cek SOP Startup dan batas aman temperatur bearing Pompa P-101A">
               🔍 SOP Startup P-101A
             </button>
-            <button class="quick-prompt-btn" data-asset="K-102" data-prompt="Berapa batas vibrasi abnormal compressor K-102 dan tindakan pencegahannya?">
+            <button class="quick-prompt-pill" data-asset="K-102" data-prompt="Berapa batas vibrasi abnormal compressor K-102 dan tindakan pencegahannya?">
               ⚡ Batas Vibrasi K-102
             </button>
-            <button class="quick-prompt-btn" data-asset="F-101" data-prompt="Jelaskan histori kegagalan hotspot tube radiant pada Furnace F-101">
+            <button class="quick-prompt-pill" data-asset="F-101" data-prompt="Jelaskan histori kegagalan hotspot tube radiant pada Furnace F-101">
               🔥 Histori Hotspot F-101
             </button>
-            <button class="quick-prompt-btn" data-asset="C-201" data-prompt="Bagaimana SOP penanganan differential pressure tinggi pada kolom fraksinasi C-201?">
+            <button class="quick-prompt-pill" data-asset="C-201" data-prompt="Bagaimana SOP penanganan differential pressure tinggi pada kolom fraksinasi C-201?">
               ⚗️ Delta P Kolom C-201
             </button>
           </div>
 
-          <!-- Chat Input Form -->
-          <form id="chatForm" class="compose">
-            <input type="text" id="chatInput" placeholder="Tanyakan prosedur SOP, spesifikasi P&ID, atau mitigasi failure pada aset ini..." autocomplete="off">
-            <button type="submit" id="sendChatBtn" class="pill">
-              <span>Kirim Pertanyaan</span>
+          <!-- Chat Input Compose Bar -->
+          <form id="chatForm" class="copilot-compose-box">
+            <input type="text" id="chatInput" placeholder="Tanyakan prosedur SOP, spesifikasi P&amp;ID, atau mitigasi failure aset..." autocomplete="off">
+            <button type="submit" id="sendChatBtn" class="pill-btn send-btn">
+              <span>Kirim</span>
               <span>➔</span>
             </button>
           </form>
@@ -369,316 +592,291 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- TAB 4: FAILURE MEMORY -->
+      <!-- TAB 4: ASSETS & ENGINEERING DOCS -->
       <!-- ================================================================ -->
-      <section id="failure-memory" class="screen">
-        <div class="head">
-          <div class="head-title">
-            <h1>Failure Memory & RCFA Knowledge Base</h1>
-            <p>Bank memori kegagalan masa lalu (Root Cause Failure Analysis) untuk mencegah pengulangan insiden</p>
+      <section id="assets-docs" class="screen">
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">Engineering Archive · 3,892 Records</span>
+            <h1 class="hero-title">
+              P&amp;ID, SOP &amp; manuals <br>
+              <span class="italic-serif">digitized for instant retrieval</span>
+            </h1>
+            <p class="hero-desc">Pencarian cerdas lembar data teknis, manual pemeliharaan berkala, dan diagram perpipaan pabrik Cilegon.</p>
           </div>
-          <div class="head-meta">
-            <button class="pill secondary" onclick="alert('Export laporan RCFA Chandra Asri berhasil diunduh.')">📥 Export RCFA</button>
+
+          <div class="hero-quick-tags">
+            <button class="pill-btn primary-dark" onclick="alert('Sinkronisasi dokumen dari Chandra Asri Engineering Cloud berhasil dijalankan!')">
+              🔄 Sinkronisasi DMS
+            </button>
           </div>
         </div>
 
-        <div class="doc-filter-bar">
-          <input type="text" id="failureSearchInput" class="search-input" placeholder="Filter kegagalan berdasarkan tag aset, moda kegagalan, atau akar penyebab...">
+        <!-- Upload Drag & Drop Area -->
+        <div class="creative-dropzone">
+          <div class="drop-circle-icon">📂</div>
+          <h3>Unggah Manual, P&amp;ID, atau Laporan Servis Aset</h3>
+          <p>Mendukung format PDF, DWG, DOCX, atau ZIP arsip teknis Chandra Asri</p>
+          <button class="pill-btn secondary-light" onclick="alert('Pilih file dari direktori komputer Anda')">Pilih Berkas</button>
         </div>
 
-        <!-- Failure Memory Card 1 -->
-        <div class="failure-record">
-          <div class="failure-header">
-            <div class="failure-title">
-              <span class="asset-pill">P-101A</span>
-              <span>Kebocoran Katastropik Mechanical Seal (Primary Naphtha Pump)</span>
-            </div>
-            <span class="tag crit">Insiden Kritis (Tier 2)</span>
-          </div>
-          <div class="failure-grid">
-            <div>
-              <div class="failure-prop-label">Tanggal Kejadian</div>
-              <div class="failure-prop-val">14 Agustus 2024</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Moda Kegagalan (Failure Mode)</div>
-              <div class="failure-prop-val">Dry Running & SiC Face Thermal Cracking</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Dampak D downtime</div>
-              <div class="failure-prop-val">18 Jam Unscheduled Shutdown</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Akar Penyebab (Root Cause)</div>
-              <div class="failure-prop-val">Penyumbatan orifice flush Plan 53A oleh partikel coke halus</div>
-            </div>
-          </div>
-          <div class="failure-resolution">
-            <b>Tindakan Korektif & Solusi Terverifikasi:</b> Pemasangan dual duplex strainer 25-micron pada suction flush line dan integrasi alarm delta-P otomatis ke DCS Honeywell Experion. Wajib lakukan inspeksi berkala per 500 jam kerja.
-          </div>
+        <!-- Search Bar -->
+        <div class="search-filter-card">
+          <input type="text" id="docSearchInput" class="styled-search-input" placeholder="🔍 Cari tag aset (P-101A, K-102), judul SOP, atau nomor dokumen...">
         </div>
 
-        <!-- Failure Memory Card 2 -->
-        <div class="failure-record">
-          <div class="failure-header">
-            <div class="failure-title">
-              <span class="asset-pill orange">K-102</span>
-              <span>Spike Vibrasi Radial Bearing & Interlock Trip (Syngas Compressor)</span>
-            </div>
-            <span class="tag wait">Insiden Mayor (Tier 3)</span>
-          </div>
-          <div class="failure-grid">
-            <div>
-              <div class="failure-prop-label">Tanggal Kejadian</div>
-              <div class="failure-prop-val">03 November 2024</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Moda Kegagalan (Failure Mode)</div>
-              <div class="failure-prop-val">Rotor Dynamic Imbalance 1X Synchronous</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Dampak Downtime</div>
-              <div class="failure-prop-val">6 Jam Flaring Reduction</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Akar Penyebab (Root Cause)</div>
-              <div class="failure-prop-val">Akumulasi deposit polimer pada impeller stage 2 akibat gas recycle dingin</div>
-            </div>
-          </div>
-          <div class="failure-resolution">
-            <b>Tindakan Korektif & Solusi Terverifikasi:</b> Rekonfigurasi setpoint temperatur suction gas recycle minimal 5°C di atas dew point dan penambahan continuous flushing solven anti-fouling.
-          </div>
-        </div>
-
-        <!-- Failure Memory Card 3 -->
-        <div class="failure-record">
-          <div class="failure-header">
-            <div class="failure-title">
-              <span class="asset-pill">F-101</span>
-              <span>Local Hotspot Tube Radiant Coil (Naphtha Cracking Furnace)</span>
-            </div>
-            <span class="tag ok">Termitigasi Penuh</span>
-          </div>
-          <div class="failure-grid">
-            <div>
-              <div class="failure-prop-label">Tanggal Kejadian</div>
-              <div class="failure-prop-val">19 Januari 2025</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Moda Kegagalan (Failure Mode)</div>
-              <div class="failure-prop-val">Tube Metal Temperature Exceeded (1080°C)</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Dampak Downtime</div>
-              <div class="failure-prop-val">Tidak ada (Derating kapasitas 15%)</div>
-            </div>
-            <div>
-              <div class="failure-prop-label">Akar Penyebab (Root Cause)</div>
-              <div class="failure-prop-val">Coke deposition lokal akibat fluktuasi steam-to-oil ratio</div>
-            </div>
-          </div>
-          <div class="failure-resolution">
-            <b>Tindakan Korektif & Solusi Terverifikasi:</b> Pelaksanaan steam-air decoking online secara termal dan rekalibrasi flow transmitter steam. Interval decoking diperbarui menjadi 60 hari.
-          </div>
+        <!-- Documents Table / Cards -->
+        <div class="table-creative-card">
+          <table id="docsTable" class="modern-table">
+            <thead>
+              <tr>
+                <th>Tag Aset</th>
+                <th>Nama Dokumen</th>
+                <th>Unit Pabrik</th>
+                <th>Revisi</th>
+                <th>Status RAG</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag-badge peach">P-101A</span></td>
+                <td><b>CAP-SOP-MECH-P101-STARTUP.pdf</b></td>
+                <td>Olefins (Cilegon)</td>
+                <td>Rev 4.2 (2025)</td>
+                <td><span class="status-chip ok">Terindeks 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+              </tr>
+              <tr>
+                <td><span class="tag-badge yellow">K-102</span></td>
+                <td><b>CAP-INST-K102-VIBRATION-SPEC.pdf</b></td>
+                <td>Polietilena (PE-1)</td>
+                <td>Rev 3.1 (2024)</td>
+                <td><span class="status-chip ok">Terindeks 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+              </tr>
+              <tr>
+                <td><span class="tag-badge lavender">F-101</span></td>
+                <td><b>CAP-FURNACE-F101-INTEGRITY-REPORT.pdf</b></td>
+                <td>Cracker Complex</td>
+                <td>Rev 5.0 (2025)</td>
+                <td><span class="status-chip ok">Terindeks 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+              </tr>
+              <tr>
+                <td><span class="tag-badge mint">C-201</span></td>
+                <td><b>CAP-PID-C201-FRACTIONATION.dwg.pdf</b></td>
+                <td>Olefins Fractionation</td>
+                <td>Rev 6.1 (2024)</td>
+                <td><span class="status-chip ok">Terindeks 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+              </tr>
+              <tr>
+                <td><span class="tag-badge blue">EX-304</span></td>
+                <td><b>CAP-MECH-EX304-TUBE-INSPECTION.pdf</b></td>
+                <td>Utilities &amp; Offsite</td>
+                <td>Rev 2.0 (2023)</td>
+                <td><span class="status-chip wait">Validasi DMS</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <!-- ================================================================ -->
-      <!-- TAB 5: SETTINGS -->
+      <!-- TAB 5: FAILURE MEMORY (RCFA) -->
       <!-- ================================================================ -->
-      <section id="settings" class="screen">
-        <div class="head">
-          <div class="head-title">
-            <h1>System & API Settings</h1>
-            <p>Konfigurasi koneksi backend, model AI bahasa, dan parameter Retrieval-Augmented Generation (RAG)</p>
+      <section id="failure-memory" class="screen">
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">Incident Memory · Root Cause Analysis</span>
+            <h1 class="hero-title">
+              Failure records <br>
+              <span class="italic-serif">learning from past anomalies</span>
+            </h1>
+            <p class="hero-desc">Mencegah insiden berulang dengan database solusi permanen berbasis analisis akar kegagalan (RCFA).</p>
+          </div>
+
+          <div class="hero-quick-tags">
+            <button class="pill-btn primary-dark" onclick="alert('Export laporan RCFA Chandra Asri berhasil diunduh.')">
+              📥 Export Laporan RCFA
+            </button>
           </div>
         </div>
 
-        <div class="glass pad" style="max-width: 680px">
-          <div class="field">
-            <label for="apiEndpointInput">Backend Chat API Endpoint</label>
-            <input type="text" id="apiEndpointInput" value="http://localhost:8000/api/chat" placeholder="http://localhost:8000/api/chat">
-            <div class="hint">Alamat endpoint POST yang menerima payload: <code>{ "query": "...", "asset_tag": "..." }</code>.</div>
-          </div>
+        <div class="search-filter-card">
+          <input type="text" id="failureSearchInput" class="styled-search-input" placeholder="🔍 Cari kegagalan berdasarkan tag aset, moda kegagalan, atau kata kunci akar penyebab...">
+        </div>
 
-          <div class="field">
-            <label>Penyedia Model AI / LLM Engine</label>
-            <div class="seg" id="providerSelector">
-              <span class="on">Gemini 1.5 Pro</span>
-              <span>Claude 3.5 Sonnet</span>
-              <span>OpenAI GPT-4o</span>
-              <span>Ollama (Lokal)</span>
+        <div class="failure-records-grid">
+          
+          <!-- Record 1 -->
+          <div class="failure-card-item card-peach-soft">
+            <div class="fc-header">
+              <span class="tag-badge peach">P-101A</span>
+              <span class="fc-severity crit">Insiden Kritis (Tier 2)</span>
+            </div>
+            <h3 class="fc-title">Kebocoran Katastropik Mechanical Seal (Primary Naphtha Pump)</h3>
+            <div class="fc-meta-row">
+              <div><small>Tanggal:</small> <b>14 Agustus 2024</b></div>
+              <div><small>Downtime:</small> <b>18 Jam Unscheduled Shutdown</b></div>
+            </div>
+            <div class="fc-root-cause">
+              <b>Akar Masalah (Root Cause):</b> Penyumbatan orifice flush Plan 53A oleh partikel coke halus yang memicu dry running dan thermal cracking pada face SiC.
+            </div>
+            <div class="fc-fix">
+              <b>Tindakan Korektif Terverifikasi:</b> Pemasangan dual duplex strainer 25-micron pada suction flush line dan integrasi alarm delta-P otomatis ke DCS Honeywell Experion.
             </div>
           </div>
 
-          <div class="field">
+          <!-- Record 2 -->
+          <div class="failure-card-item card-yellow-soft">
+            <div class="fc-header">
+              <span class="tag-badge yellow">K-102</span>
+              <span class="fc-severity wait">Insiden Mayor (Tier 3)</span>
+            </div>
+            <h3 class="fc-title">Spike Vibrasi Radial Bearing &amp; Interlock Trip (Syngas Compressor)</h3>
+            <div class="fc-meta-row">
+              <div><small>Tanggal:</small> <b>03 November 2024</b></div>
+              <div><small>Downtime:</small> <b>6 Jam Flaring Reduction</b></div>
+            </div>
+            <div class="fc-root-cause">
+              <b>Akar Masalah (Root Cause):</b> Akumulasi deposit polimer pada impeller stage 2 akibat gas recycle dingin yang memicu ketidakseimbangan rotor 1X synchronous.
+            </div>
+            <div class="fc-fix">
+              <b>Tindakan Korektif Terverifikasi:</b> Rekonfigurasi setpoint temperatur suction gas recycle minimal 5°C di atas dew point dan continuous flushing solven anti-fouling.
+            </div>
+          </div>
+
+          <!-- Record 3 -->
+          <div class="failure-card-item card-mint-soft">
+            <div class="fc-header">
+              <span class="tag-badge mint">F-101</span>
+              <span class="fc-severity ok">Termitigasi Penuh</span>
+            </div>
+            <h3 class="fc-title">Local Hotspot Tube Radiant Coil (Naphtha Cracking Furnace)</h3>
+            <div class="fc-meta-row">
+              <div><small>Tanggal:</small> <b>19 Januari 2025</b></div>
+              <div><small>Downtime:</small> <b>Derating Kapasitas 15% (No Trip)</b></div>
+            </div>
+            <div class="fc-root-cause">
+              <b>Akar Masalah (Root Cause):</b> Coke deposition lokal akibat fluktuasi rasio steam-to-oil saat transisi umpan.
+            </div>
+            <div class="fc-fix">
+              <b>Tindakan Korektif Terverifikasi:</b> Steam-air decoking online termal dan rekalibrasi flow transmitter steam. Interval decoking diperbarui menjadi 60 hari.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 6: SETTINGS -->
+      <!-- ================================================================ -->
+      <section id="settings" class="screen">
+        <div class="hero-creative-block">
+          <div class="hero-text-wrap">
+            <span class="hero-tag">System Settings · RAG Configuration</span>
+            <h1 class="hero-title">
+              Configuration &amp; engine <br>
+              <span class="italic-serif">tailored to your plant needs</span>
+            </h1>
+            <p class="hero-desc">Pengaturan koneksi API backend, pilihan model bahasa LLM, serta batas toleransi akurasi RAG.</p>
+          </div>
+        </div>
+
+        <div class="settings-creative-card">
+          <div class="form-group-item">
+            <label for="apiEndpointInput">Backend Chat API Endpoint</label>
+            <input type="text" id="apiEndpointInput" value="http://localhost:8000/api/chat" class="styled-input">
+            <small class="form-hint">Menerima payload JSON: <code>{ "query": "...", "asset_tag": "..." }</code></small>
+          </div>
+
+          <div class="form-group-item">
+            <label>Model LLM / AI Engine</label>
+            <div class="cute-toggle-pills" id="providerSelector">
+              <button type="button" class="toggle-pill active">Gemini 1.5 Pro</button>
+              <button type="button" class="toggle-pill">Claude 3.5 Sonnet</button>
+              <button type="button" class="toggle-pill">GPT-4o</button>
+              <button type="button" class="toggle-pill">Ollama Lokal</button>
+            </div>
+          </div>
+
+          <div class="form-group-item">
             <label for="plantSiteSelect">Lokasi Plant Pabrik</label>
-            <select id="plantSiteSelect">
-              <option>Chandra Asri Cilegon Plant 1 (Olefins & Polyethylene)</option>
-              <option>Chandra Asri Ciwandan Plant 2 (Polypropylene & BD)</option>
+            <select id="plantSiteSelect" class="styled-select">
+              <option>Chandra Asri Cilegon Plant 1 (Olefins &amp; PE)</option>
+              <option>Chandra Asri Ciwandan Plant 2 (PP &amp; BD)</option>
             </select>
           </div>
 
-          <div class="field">
+          <div class="form-group-item">
             <label for="ragThreshold">Minimum Confidence Score Threshold</label>
-            <input type="range" id="ragThreshold" min="60" max="98" value="85" style="width:100%;accent-color:var(--berry)">
-            <div class="hint" style="display:flex;justify-content:space-between">
-              <span>Threshold saat ini: <b>85%</b></span>
-              <span>Hanya sitasi dengan akurasi &gt; 85% yang ditampilkan</span>
+            <input type="range" id="ragThreshold" min="60" max="98" value="85" class="styled-range">
+            <div class="range-labels">
+              <span>Threshold saat ini: <b id="thresholdVal">85%</b></span>
+              <small>Hanya sitasi dengan skor &gt; 85% yang disajikan</small>
             </div>
           </div>
 
-          <button id="saveSettingsBtn" class="pill accent">Simpan Konfigurasi</button>
+          <button id="saveSettingsBtn" class="pill-btn primary-dark">Simpan Konfigurasi</button>
         </div>
       </section>
 
-      <!-- Subtle Bottom Footnote -->
+      <!-- ================================================================ -->
+      <!-- SUBTLE FOOTER (WITH SUBTLE FLOW AUTENTIKASI DATA LINK) -->
+      <!-- ================================================================ -->
       <footer class="app-subtle-footer">
-        <span>PT Chandra Asri Pacific Tbk · CALIBER 2026</span>
+        <span>© 2026 PT Chandra Asri Pacific Tbk · Plant Intelligence</span>
         <span class="subtle-divider">·</span>
-        <button type="button" class="subtle-link-btn" id="openAuthFlowBtnSecondary">Flow Autentikasi Data</button>
+        <button type="button" class="subtle-link-btn" id="openAuthFlowBtn">Flow Autentikasi Data</button>
+        <span class="subtle-divider">·</span>
+        <button type="button" class="subtle-link-btn" id="openAuthFlowBtnSecondary">Zero-Trust Protocol</button>
       </footer>
 
     </main>
-  </div>
 
-  <!-- ================================================================ -->
-  <!-- MODAL: DATA AUTHENTICATION & GOVERNANCE FLOW -->
-  <!-- ================================================================ -->
-  <div id="authFlowModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="authFlowTitle">
-    <div class="modal-dialog glass-panel">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <div class="modal-title-wrap">
-          <div class="modal-badge"><span class="shield-dot"></span> Plant Data Governance &amp; Security Protocol</div>
-          <h2 id="authFlowTitle">Alur &amp; Protokol Autentikasi Data</h2>
-          <p class="modal-subtitle">Standar Verifikasi Integritas Data &amp; Dokumen Operasional — PT Chandra Asri Pacific Tbk</p>
-        </div>
-        <button type="button" class="modal-close-btn" id="closeAuthFlowBtn" aria-label="Tutup Modal">&times;</button>
-      </div>
+    <!-- ================================================================ -->
+    <!-- FLOATING BOTTOM DOCK NAVIGATION (EXACTLY LIKE REFERENCE IMAGE) -->
+    <!-- ================================================================ -->
+    <nav class="floating-bottom-dock" aria-label="Navigasi Bawah">
+      <!-- 1. Dashboard -->
+      <button class="dock-btn active" data-tab="dashboard" title="Dashboard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span class="dock-label">Home</span>
+      </button>
 
-      <!-- Modal Body -->
-      <div class="modal-body">
-        <!-- Summary Alert Box -->
-        <div class="auth-intro-box">
-          <div class="intro-icon">🔒</div>
-          <div>
-            <b>Prinsip Zero-Trust &amp; Verifikasi Kriptografis:</b>
-            Seluruh data operasional, P&amp;ID, SOP teknis, dan catatan kegagalan (RCFA) yang diakses oleh tim lapangan maupun AI Copilot wajib melalui 5 tahapan otentikasi data guna menjamin keaslian dan mencegah manipulasi parameter keselamatan industri kimia.
-          </div>
-        </div>
+      <!-- 2. Data Flow (Organic Flowchart) -->
+      <button class="dock-btn" data-tab="data-flow" title="Organic Data Flowchart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V9"/><line x1="12" y1="15" x2="12" y2="21"/></svg>
+        <span class="dock-label">Flow</span>
+      </button>
 
-        <!-- 5-Stage Interactive Flow Pipeline -->
-        <div class="auth-pipeline">
-          <!-- Step 1 -->
-          <div class="auth-step-card">
-            <div class="step-num">01</div>
-            <div class="step-icon">🗄️</div>
-            <div class="step-content">
-              <h4>1. Source Ingestion &amp; Tagging</h4>
-              <p>Pengambilan data otomatis dari DMS Engineering, DCS Honeywell Experion, SAP Plant Maintenance, dan Lab LIMS.</p>
-              <div class="step-tags">
-                <span class="micro-badge">mTLS 1.3</span>
-                <span class="micro-badge">Kerberos SSO</span>
-                <span class="micro-badge">DCS OPC-UA</span>
-              </div>
-            </div>
-          </div>
+      <!-- 3. Prominent Center Action (+) Pill (Like in Reference) -->
+      <button class="dock-center-pill" onclick="switchTab('ai-copilot')" title="Tanya AI Copilot" aria-label="Buka AI Copilot">
+        <span class="center-pill-icon">✦</span>
+      </button>
 
-          <div class="auth-arrow" aria-hidden="true">➔</div>
+      <!-- 4. Asset & Docs -->
+      <button class="dock-btn" data-tab="assets-docs" title="Assets & Docs">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="dock-label">Docs</span>
+      </button>
 
-          <!-- Step 2 -->
-          <div class="auth-step-card">
-            <div class="step-num">02</div>
-            <div class="step-icon">🔐</div>
-            <div class="step-content">
-              <h4>2. Cryptographic Hashing &amp; Integrity</h4>
-              <p>Setiap dokumen (SOP, P&amp;ID, RCFA) dihitung nilai hash SHA-256 unik saat diunggah untuk mencegah perubahan parameter ilegal.</p>
-              <div class="step-tags">
-                <span class="micro-badge">SHA-256 Checksum</span>
-                <span class="micro-badge">Tamper-Evident</span>
-                <span class="micro-badge">Digital Watermark</span>
-              </div>
-            </div>
-          </div>
+      <!-- 5. Failure Memory & Settings -->
+      <button class="dock-btn" data-tab="failure-memory" title="RCFA Memory">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span class="dock-label">RCFA</span>
+      </button>
 
-          <div class="auth-arrow" aria-hidden="true">➔</div>
+      <!-- 6. Settings -->
+      <button class="dock-btn" data-tab="settings" title="Pengaturan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="dock-label">Setting</span>
+      </button>
+    </nav>
 
-          <!-- Step 3 -->
-          <div class="auth-step-card">
-            <div class="step-num">03</div>
-            <div class="step-icon">🛡️</div>
-            <div class="step-content">
-              <h4>3. Role-Based Access Control (RBAC)</h4>
-              <p>Otorisasi pengguna bertingkat sebelum dokumen atau telemetri disajikan:</p>
-              <ul class="auth-tier-list">
-                <li><b>Tier 1 (Operator):</b> Akses SOP Startup/Shutdown &amp; Checklist.</li>
-                <li><b>Tier 2 (Reliability Eng.):</b> P&amp;ID Teknis &amp; RCFA Root Cause.</li>
-                <li><b>Tier 3 (Superintendent):</b> Approval revisi &amp; audit trail penuh.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="auth-arrow" aria-hidden="true">➔</div>
-
-          <!-- Step 4 -->
-          <div class="auth-step-card">
-            <div class="step-num">04</div>
-            <div class="step-icon">✦</div>
-            <div class="step-content">
-              <h4>4. RAG Context &amp; Hallucination Guardrail</h4>
-              <p>Model AI Copilot hanya mengutip potongan dokumen berstatus <i>Verified</i>. Jawaban wajib melewati ambang confidence score &ge;85%.</p>
-              <div class="step-tags">
-                <span class="micro-badge">Confidence Score &ge;85%</span>
-                <span class="micro-badge">Citation Stamping</span>
-                <span class="micro-badge">Grounding Check</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="auth-arrow" aria-hidden="true">➔</div>
-
-          <!-- Step 5 -->
-          <div class="auth-step-card">
-            <div class="step-num">05</div>
-            <div class="step-icon">📜</div>
-            <div class="step-content">
-              <h4>5. Immutable Audit Trail &amp; Kepatuhan</h4>
-              <p>Semua interaksi dicatat ke penyimpanan log WORM (Write Once Read Many) terenkripsi untuk audit keselamatan berkala.</p>
-              <div class="step-tags">
-                <span class="micro-badge">AES-256 at Rest</span>
-                <span class="micro-badge">ISO 27001</span>
-                <span class="micro-badge">OSHA 1910 PSM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Interactive Simulator Box -->
-        <div class="auth-tester-box">
-          <div class="tester-header">
-            <div>
-              <h4>🧪 Simulator Verifikasi Otentikasi Dokumen</h4>
-              <p>Uji validasi kriptografis dan verifikasi tanda tangan digital dokumen teknis secara real-time:</p>
-            </div>
-            <button type="button" id="runAuthSimBtn" class="pill secondary" style="font-size:0.8rem;padding:7px 16px;">
-              ⚡ Jalankan Verifikasi Hash
-            </button>
-          </div>
-          <div id="authSimOutput" class="auth-sim-output">
-            <span class="code-comment">// Klik "Jalankan Verifikasi Hash" untuk menguji integritas dokumen sampel...</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="modal-footer">
-        <div class="modal-footer-meta">
-          <span class="secure-icon">🛡️</span> Protokol Keamanan Terpadu Chandra Asri Pacific · CALIBER 2026
-        </div>
-        <button type="button" class="pill" id="closeAuthFlowFooterBtn">Tutup</button>
-      </div>
-    </div>
   </div>
 
   <!-- Scripts -->
