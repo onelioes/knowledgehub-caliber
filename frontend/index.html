@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Chandra Asri KnowledgeHub — Plant Intelligence &amp; Flow (CALIBER 2026)</title>
+  <title>Chandra Asri KnowledgeHub — Plant Intelligence</title>
   
-  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <!-- Single Unified Modern Font: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Ambient Organic Pastel Blobs -->
+  <!-- Ambient Pastel Accents -->
   <div class="pastel-ambient" aria-hidden="true">
     <div class="ambient-blob blob-butter"></div>
     <div class="ambient-blob blob-lavender"></div>
@@ -24,21 +24,21 @@
 
   <div class="app-shell">
 
-    <!-- Top App Bar / Header -->
+    <!-- Top Header Bar -->
     <header class="app-header">
       <div class="user-greeting-pill">
         <div class="avatar-wrap">
-          <span class="avatar-emoji">👷</span>
+          <span class="avatar-text">CA</span>
           <span class="online-indicator"></span>
         </div>
         <div class="greeting-text">
-          <span class="greeting-title">Hello, Plant Engineer!</span>
-          <span class="greeting-subtitle">Chandra Asri Pacific · Plant Cilegon</span>
+          <span class="greeting-sub-small">Welcome back</span>
+          <span class="greeting-name">Plant Engineer</span>
         </div>
       </div>
 
-      <!-- Center Quick Category Pills (Desktop) -->
-      <nav class="top-nav-pills" aria-label="Kategori Utama">
+      <!-- Navigation Tabs (Desktop Header) -->
+      <nav class="top-nav-pills" aria-label="Navigasi Utama">
         <button class="nav-pill active" data-tab="dashboard">Dashboard</button>
         <button class="nav-pill" data-tab="data-flow">Data Flow</button>
         <button class="nav-pill" data-tab="ai-copilot">AI Copilot</button>
@@ -46,17 +46,17 @@
         <button class="nav-pill" data-tab="failure-memory">RCFA Memory</button>
       </nav>
 
-      <!-- Action Icons -->
+      <!-- Action Buttons -->
       <div class="header-actions">
-        <button class="icon-circle-btn" id="headerSearchBtn" title="Cari data atau dokumen" aria-label="Pencarian">
+        <button class="icon-circle-btn" id="headerSearchBtn" title="Search" aria-label="Search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </button>
-        <button class="icon-circle-btn has-badge" id="headerNotifBtn" title="Notifikasi telemetri" aria-label="Notifikasi">
+        <button class="icon-circle-btn has-badge" id="headerNotifBtn" title="Notifications" aria-label="Notifications">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           <span class="notif-dot"></span>
         </button>
         <button class="pill-btn primary-dark" onclick="switchTab('ai-copilot')">
-          <span>✦ Tanya AI</span>
+          <span>Ask Copilot</span>
         </button>
       </div>
     </header>
@@ -69,268 +69,125 @@
       <!-- ================================================================ -->
       <section id="dashboard" class="screen active">
         
-        <!-- Hero Title Section (Styled like "Activities just for your taste") -->
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">CALIBER 2026 · Manufacturing Intelligence</span>
-            <h1 class="hero-title">
-              Plant intelligence <br>
-              <span class="italic-serif">just for your operations</span>
-            </h1>
-            <p class="hero-desc">Pusat kontrol terpadu untuk dokumen teknik P&amp;ID, SOP operasi, dan analisis kegagalan peralatan kritis Chandra Asri.</p>
-          </div>
+        <!-- Minimalist Hero Title Section -->
+        <div class="hero-minimal-block">
+          <span class="date-chip">Shift A &middot; Petrochemical Operations</span>
+          <h1 class="hero-heading">
+            Operational intelligence for your daily shift
+          </h1>
+          <p class="hero-paragraph">
+            Centralized plant knowledge hub for P&amp;ID engineering, startup SOPs, and equipment reliability at Chandra Asri Cilegon.
+          </p>
 
-          <div class="hero-quick-tags">
-            <span class="cute-tag yellow">⚡ 1,420 Aset Aktif</span>
-            <span class="cute-tag pink">📄 3,892 SOP &amp; P&amp;ID</span>
-            <span class="cute-tag mint">🛡️ 99.4% Akurasi RAG</span>
-            <span class="cute-tag lavender">🏭 Kompleks Olefins &amp; PE</span>
+          <!-- Quick Plant Unit Pills -->
+          <div class="mood-pills-row">
+            <button class="mood-pill active" data-unit="olefins">Olefins Complex</button>
+            <button class="mood-pill" data-unit="pe">Polyethylene PE-1</button>
+            <button class="mood-pill" data-unit="furnace">Cracker Furnace</button>
+            <button class="mood-pill" data-unit="splitter">C2 Splitter</button>
+            <button class="mood-pill" data-unit="utility">Utilities &amp; Offsite</button>
           </div>
         </div>
 
-        <!-- Playful Organic Sticky & Sticker Canvas (Like Top-Middle in Reference) -->
-        <div class="playful-hero-canvas">
+        <!-- 2 Bento Side-by-Side Cards (Sleep Duration & Stress Indicator style) -->
+        <div class="two-bento-row">
           
-          <!-- Sticky Note 1 (Yellow Post-It with slight tilt) -->
-          <div class="sticky-note postit-yellow" onclick="switchTab('assets-docs')" title="Buka detail Pompa P-101A">
-            <div class="pin-dot"></div>
-            <div class="postit-tag">SOP Startup Wajib</div>
-            <div class="postit-title">Pompa Naphtha P-101A</div>
-            <div class="postit-sub">Plan 53A Pressure &amp; Venting casing sebelum start motor 350 kW</div>
-            <div class="postit-meta">
-              <span>Rev 4.2 (2025)</span>
-              <span class="arrow-circle">➔</span>
+          <!-- Card 1 (Peach): Suction Pressure & Lube Oil -->
+          <div class="bento-metric-card card-peach">
+            <div class="bmc-header">
+              <span class="bmc-title">Suction Lube Oil (P-101A)</span>
+              <span class="status-tag normal">Normal</span>
+            </div>
+
+            <!-- Minimalist Rounded Bar Chart Visual -->
+            <div class="mini-bar-visual">
+              <div class="vbar" style="height: 45%"></div>
+              <div class="vbar" style="height: 70%"></div>
+              <div class="vbar" style="height: 55%"></div>
+              <div class="vbar active-vbar" style="height: 85%"></div>
+              <div class="vbar" style="height: 60%"></div>
+              <div class="vbar" style="height: 75%"></div>
+              <div class="vbar" style="height: 65%"></div>
+            </div>
+
+            <div class="bmc-bottom">
+              <div class="bmc-number">2.1 <span class="bmc-unit">bar</span></div>
+              <span class="bmc-label">Standard Range: 1.8 - 2.4 bar</span>
             </div>
           </div>
 
-          <!-- Organic Starburst Sticker (Pink) -->
-          <div class="starburst-sticker pink-burst">
-            <div class="burst-text">
-              <b>Live DCS</b>
-              <span>30/05 Shift A</span>
+          <!-- Card 2 (Lavender): Vibration Threshold (K-102) -->
+          <div class="bento-metric-card card-lavender">
+            <div class="bmc-header">
+              <span class="bmc-title">Vibration Level (K-102)</span>
+              <span class="status-tag safe">Safe</span>
+            </div>
+
+            <!-- Ascending Minimalist Bar Chart Visual -->
+            <div class="mini-bar-visual">
+              <div class="vbar" style="height: 25%"></div>
+              <div class="vbar" style="height: 35%"></div>
+              <div class="vbar" style="height: 50%"></div>
+              <div class="vbar" style="height: 62%"></div>
+              <div class="vbar active-vbar" style="height: 70%"></div>
+              <div class="vbar" style="height: 40%"></div>
+              <div class="vbar" style="height: 30%"></div>
+            </div>
+
+            <div class="bmc-bottom">
+              <div class="bmc-number">45 <span class="bmc-unit">&mu;m</span></div>
+              <span class="bmc-label">Alarm Threshold: 48 &mu;m &middot; Trip: 68 &mu;m</span>
             </div>
           </div>
 
-          <!-- Circular Pill Bubble (Baby Blue) -->
-          <div class="circle-bubble blue-bubble" onclick="switchTab('failure-memory')">
-            <div class="circle-inner">
-              <span class="circle-badge">⚡ RCFA</span>
-              <b>148 Kasus</b>
-              <small>Mitigasi Terverifikasi</small>
-            </div>
+        </div>
+
+        <!-- Monthly Summary Style Card (Mint Green from Reference) -->
+        <div class="summary-mint-card">
+          <div class="smc-header">
+            <span class="smc-sub">Plant Operations Summary</span>
+            <h2 class="smc-title">Optimal</h2>
+            <p class="smc-desc">
+              All safety interlocks, distributed control systems (DCS), and mechanical seals are functioning within verified engineering limits across Cilegon &amp; Ciwandan.
+            </p>
           </div>
 
-          <!-- Interactive Action Card -->
-          <div class="promo-action-card">
-            <p class="promo-text">Butuh panduan operasional cepat untuk insiden lapangan?</p>
-            <button class="pill-btn black-pill" onclick="switchTab('ai-copilot')">
-              <span>Mulai Copilot</span>
-              <span class="btn-arrow">➔</span>
+          <div class="smc-stats-grid">
+            <div class="smc-stat-col">
+              <span class="smc-stat-label">Active Assets</span>
+              <span class="smc-stat-val">1,420</span>
+              <span class="smc-stat-note">Monitored 24/7</span>
+            </div>
+            <div class="smc-stat-col">
+              <span class="smc-stat-label">Indexed Documents</span>
+              <span class="smc-stat-val">3,892</span>
+              <span class="smc-stat-note">P&amp;ID &amp; SOP Active</span>
+            </div>
+            <div class="smc-stat-col">
+              <span class="smc-stat-label">RCFA Actions</span>
+              <span class="smc-stat-val">142/148</span>
+              <span class="smc-stat-note">96% Mitigated</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Question / Verification Card (Bottom card in Reference) -->
+        <div class="verification-quiz-card">
+          <div class="vqc-header">
+            <span class="vqc-badge">Pre-Startup Verification</span>
+            <span class="vqc-step">Checklist 1 of 5</span>
+          </div>
+          <h3 class="vqc-question">
+            Have lube oil reservoir levels (&ge;65%) and Plan 53A barrier fluid pressures been verified before starting primary feed pump P-101A?
+          </h3>
+          <div class="vqc-actions">
+            <button class="pill-btn primary-dark" onclick="alert('Verification logged: Standard checklist confirmed for P-101A.')">
+              Verified
+            </button>
+            <button class="pill-btn secondary-light" onclick="switchTab('ai-copilot')">
+              Consult SOP Details
             </button>
           </div>
-        </div>
-
-        <!-- Audience & Telemetry Flow (Like Top-Right in Reference) -->
-        <div class="card-bento telemetry-flow-card">
-          <div class="card-header-flex">
-            <div>
-              <h2 class="card-title">Plant Telemetry &amp; Document Flow</h2>
-              <p class="card-subtitle">Frekuensi verifikasi parameter &amp; konsultasi AI per unit kerja</p>
-            </div>
-            <div class="flow-pill-filter">
-              <button class="unit-filter-pill active" data-unit="olefins">Olefins</button>
-              <button class="unit-filter-pill" data-unit="pe">PE-1</button>
-              <button class="unit-filter-pill" data-unit="furnace">Cracker</button>
-              <button class="unit-filter-pill" data-unit="splitter">C2 Splitter</button>
-              <button class="unit-filter-pill" data-unit="utility">Utilities</button>
-            </div>
-          </div>
-
-          <!-- Organic Spline Curve Wave Chart with Hatched Column & Days -->
-          <div class="spline-flow-wrapper">
-            <div class="spline-days-row">
-              <span class="day-chip">SEN</span>
-              <span class="day-chip">SEL</span>
-              <span class="day-chip">RAB</span>
-              <span class="day-chip active-day">KAM</span>
-              <span class="day-chip">JUM</span>
-              <span class="day-chip">SAB</span>
-              <span class="day-chip">MIN</span>
-            </div>
-
-            <!-- SVG Wave with Smooth Bezier & Hatched Bar -->
-            <div class="svg-wave-container">
-              <svg viewBox="0 0 800 240" class="flow-spline-svg" preserveAspectRatio="none">
-                <defs>
-                  <!-- Hatched pattern like in reference image -->
-                  <pattern id="hatchFill" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-                    <line x1="0" y1="0" x2="0" y2="12" stroke="#FDA4AF" stroke-width="3" />
-                  </pattern>
-
-                  <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#F472B6" stop-opacity="0.25" />
-                    <stop offset="100%" stop-color="#F472B6" stop-opacity="0.0" />
-                  </linearGradient>
-                </defs>
-
-                <!-- Hatched highlight bar on Kamis -->
-                <rect x="360" y="30" width="70" height="170" rx="14" fill="url(#hatchFill)" opacity="0.65" />
-                <rect x="360" y="30" width="70" height="170" rx="14" fill="none" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="4 4" />
-
-                <!-- Vertical measurement guidelines -->
-                <line x1="120" y1="20" x2="120" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
-                <line x1="240" y1="20" x2="240" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
-                <line x1="395" y1="20" x2="395" y2="200" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="3 3" />
-                <line x1="530" y1="20" x2="530" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
-                <line x1="670" y1="20" x2="670" y2="200" stroke="rgba(30,27,46,0.07)" stroke-width="1.5" />
-
-                <!-- Gradient Fill Under Curve -->
-                <path d="M 50 180 C 130 190, 200 90, 280 140 C 340 180, 370 45, 410 40 C 470 35, 520 160, 580 110 C 660 40, 720 170, 760 160 L 760 220 L 50 220 Z" fill="url(#waveGrad)" />
-
-                <!-- Smooth Organic Spline Curve -->
-                <path class="spline-curve-line" d="M 50 180 C 130 190, 200 90, 280 140 C 340 180, 370 45, 410 40 C 470 35, 520 160, 580 110 C 660 40, 720 170, 760 160" fill="none" stroke="#E11D48" stroke-width="3.5" stroke-linecap="round" />
-
-                <!-- Data Points -->
-                <circle cx="120" cy="183" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
-                <circle cx="280" cy="140" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
-                <circle cx="410" cy="40" r="7" fill="#E11D48" stroke="#fff" stroke-width="3" />
-                <circle cx="580" cy="110" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
-                <circle cx="700" cy="100" r="5" fill="#fff" stroke="#E11D48" stroke-width="3" />
-              </svg>
-
-              <!-- Floating 99.4% / Peak Confidence Badge -->
-              <div class="floating-peak-badge" style="left: 48%; top: 12%;">
-                <span class="peak-val">99.4%</span>
-                <span class="peak-lbl">Peak Accuracy · 19:00</span>
-              </div>
-            </div>
-
-            <!-- Time markers row -->
-            <div class="spline-times-row">
-              <span>07:00</span>
-              <span>11:00</span>
-              <span>15:00</span>
-              <span class="active-time">19:00</span>
-              <span>23:00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento Grid Stats (Like Bottom Row in Reference) -->
-        <div class="bento-metrics-grid">
-          
-          <!-- Card 1: Lavender Progress Card (Like "Your Progress 95%") -->
-          <div class="bento-card card-lavender">
-            <div class="bento-card-header">
-              <span class="bento-icon">📊</span>
-              <span class="bento-title-small">Digitalisasi SOP Pabrik</span>
-            </div>
-            
-            <div class="donut-stat-row">
-              <div class="donut-stat-text">
-                <div class="giant-stat">95%</div>
-                <div class="giant-stat-sub">3,892 Dokumen Terindeks</div>
-                <div class="tiny-pill-tag">✓ RAG Grounding Aktif</div>
-              </div>
-
-              <!-- Animated Donut Gauge -->
-              <div class="donut-gauge-wrapper">
-                <svg viewBox="0 0 100 100" class="donut-svg">
-                  <circle cx="50" cy="50" r="40" class="donut-bg" />
-                  <circle cx="50" cy="50" r="40" class="donut-progress" stroke-dasharray="251.2" stroke-dashoffset="12.5" />
-                </svg>
-                <div class="donut-center-label">
-                  <b>1,420</b>
-                  <span>Aset</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card-footer-mini">
-              <span>Olefins, PE, PP, BD &amp; Utilities Kompleks</span>
-            </div>
-          </div>
-
-          <!-- Card 2: Peach Critical Parameters Card (Like "Breakfast 350 calories") -->
-          <div class="bento-card card-peach">
-            <div class="bento-card-header">
-              <span class="bento-icon">⚡</span>
-              <span class="bento-title-small">Parameter Kritis Lapangan</span>
-              <button class="mini-edit-btn" onclick="switchTab('ai-copilot')">🔍 Cek</button>
-            </div>
-
-            <div class="four-props-grid">
-              <div class="prop-item">
-                <span class="prop-num">2.1</span>
-                <span class="prop-unit">bar</span>
-                <span class="prop-label">Lube Oil Suction</span>
-              </div>
-              <div class="prop-item">
-                <span class="prop-num">45</span>
-                <span class="prop-unit">µm</span>
-                <span class="prop-label">Vibrasi K-102</span>
-              </div>
-              <div class="prop-item">
-                <span class="prop-num">1080</span>
-                <span class="prop-unit">°C</span>
-                <span class="prop-label">Max Tube F-101</span>
-              </div>
-              <div class="prop-item">
-                <span class="prop-num">0.85</span>
-                <span class="prop-unit">bar</span>
-                <span class="prop-label">Delta P C-201</span>
-              </div>
-            </div>
-
-            <div class="card-footer-mini">
-              <span>Status: <b style="color:#059669">Normal di batas aman DCS</b></span>
-            </div>
-          </div>
-
-          <!-- Card 3: Mint Plant Health Card (Like "Hearth Health 88 bpm") -->
-          <div class="bento-card card-mint">
-            <div class="bento-card-header">
-              <span class="bento-icon">💚</span>
-              <span class="bento-title-small">Integritas Keamanan Aset</span>
-            </div>
-            
-            <div class="metric-single-flex">
-              <div class="metric-huge">99.8%</div>
-              <span class="badge-pill ok">Safety Interlock OK</span>
-            </div>
-            
-            <!-- Mini Sparkline Wave -->
-            <div class="mini-sparkline">
-              <svg viewBox="0 0 200 45" preserveAspectRatio="none">
-                <path d="M 0 30 Q 30 10, 60 25 T 120 15 T 170 30 T 200 10" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" />
-              </svg>
-            </div>
-
-            <div class="card-footer-mini">
-              <span>0 Kejadian Trip Tak Terencana 30 Hari Terakhir</span>
-            </div>
-          </div>
-
-          <!-- Card 4: Soft Lilac RCFA Card (Like "IBM Control Your Body") -->
-          <div class="bento-card card-lilac">
-            <div class="bento-card-header">
-              <span class="bento-icon">🛡️</span>
-              <span class="bento-title-small">RCFA Failure Memory</span>
-            </div>
-
-            <div class="metric-single-flex">
-              <div class="metric-huge">142/148</div>
-              <span class="badge-pill purple">96% Selesai</span>
-            </div>
-
-            <p class="lilac-desc">Tindakan korektif permanen telah diimplementasi pada P-101A, K-102, dan F-101.</p>
-
-            <button class="check-link-btn" onclick="switchTab('failure-memory')">
-              <span>Buka Bank Kegagalan</span>
-              <span>➔</span>
-            </button>
-          </div>
-
         </div>
 
       </section>
@@ -339,103 +196,92 @@
       <!-- TAB 2: ORGANIC NON-STIFF FLOWCHART (DATA & AUTHENTICATION FLOW) -->
       <!-- ================================================================ -->
       <section id="data-flow" class="screen">
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">Interactive Architecture · Zero-Trust</span>
-            <h1 class="hero-title">
-              Data &amp; auth flow <br>
-              <span class="italic-serif">dynamic, organic &amp; secure</span>
-            </h1>
-            <p class="hero-desc">Bagan alir data operasional, validasi integritas kriptografis, dan verifikasi AI tanpa struktur yang kaku.</p>
-          </div>
+        <div class="hero-minimal-block">
+          <span class="date-chip">Zero-Trust Architecture &middot; Cryptographic Integrity</span>
+          <h1 class="hero-heading">
+            Data and authentication flow
+          </h1>
+          <p class="hero-paragraph">
+            Fluid, organic data pipeline connecting field DCS telemetry, cryptographic SHA-256 document hashing, role clearance, and grounded AI retrieval.
+          </p>
 
-          <div class="hero-quick-tags">
-            <button class="cute-tag yellow" id="triggerFlowPulseBtn">✨ Putar Animasi Pipeline</button>
-            <button class="cute-tag mint" id="triggerFlowTestBtn">⚡ Tes Verifikasi Hash</button>
+          <div class="mood-pills-row">
+            <button class="mood-pill active" id="triggerFlowPulseBtn">Run Pipeline Flow</button>
+            <button class="mood-pill" id="triggerFlowTestBtn">Test Hash Verification</button>
           </div>
         </div>
 
-        <!-- Non-Stiff Organic Flowchart Canvas -->
-        <div class="organic-flow-container">
+        <!-- Non-Stiff Organic Flow Canvas -->
+        <div class="flowchart-minimal-container">
           
-          <!-- Interactive Curved SVG Backbone -->
           <div class="flow-svg-canvas-wrap">
-            <svg viewBox="0 0 1000 320" class="organic-flow-svg" preserveAspectRatio="none">
+            <svg viewBox="0 0 1000 280" class="organic-flow-svg" preserveAspectRatio="none">
               <defs>
-                <!-- Flow Gradient -->
                 <linearGradient id="flowLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#F43F5E" />
-                  <stop offset="25%" stop-color="#F59E0B" />
-                  <stop offset="50%" stop-color="#8B5CF6" />
-                  <stop offset="75%" stop-color="#10B981" />
-                  <stop offset="100%" stop-color="#0284C7" />
+                  <stop offset="0%" stop-color="#FB7185" />
+                  <stop offset="25%" stop-color="#FBBF24" />
+                  <stop offset="50%" stop-color="#A78BFA" />
+                  <stop offset="75%" stop-color="#34D399" />
+                  <stop offset="100%" stop-color="#38BDF8" />
                 </linearGradient>
               </defs>
 
-              <!-- Soft Shadow Base Line -->
-              <path class="flow-path-shadow" d="M 80 160 C 220 60, 320 260, 480 140 C 620 30, 740 260, 920 150" />
-
-              <!-- Animated Flow Dashed Spline -->
-              <path class="flow-path-active" id="flowBezierPath" d="M 80 160 C 220 60, 320 260, 480 140 C 620 30, 740 260, 920 150" />
+              <path class="flow-path-shadow" d="M 60 140 C 200 40, 300 240, 460 120 C 600 20, 720 240, 940 130" />
+              <path class="flow-path-active" id="flowBezierPath" d="M 60 140 C 200 40, 300 240, 460 120 C 600 20, 720 240, 940 130" />
             </svg>
 
-            <!-- 5 Organic Interactive Flow Nodes -->
+            <!-- 5 Organic Cards with Minimalist Typography (No emojis) -->
             <div class="flow-nodes-wrapper">
               
-              <!-- Node 1: Ingestion (Peach) -->
+              <!-- Step 1 -->
               <div class="organic-node-card node-peach tilt-left" data-step="1">
-                <div class="node-sticker-pin">1</div>
-                <div class="node-icon">🗄️</div>
+                <div class="node-number-pill">01</div>
                 <div class="node-title">Source Ingestion</div>
-                <div class="node-body">DMS Engineering, DCS Honeywell, SAP PM, Lab LIMS</div>
+                <div class="node-body">DCS Honeywell, SCADA Gateway, SAP PM, Lab LIMS</div>
                 <div class="node-pills">
                   <span>mTLS 1.3</span>
                   <span>Kerberos</span>
                 </div>
               </div>
 
-              <!-- Node 2: Hashing (Yellow Post-It) -->
-              <div class="organic-node-card node-yellow tilt-right" data-step="2">
-                <div class="node-sticker-pin">2</div>
-                <div class="node-icon">🔐</div>
+              <!-- Step 2 -->
+              <div class="organic-node-card node-yellow tilt-right active-node" data-step="2">
+                <div class="node-number-pill">02</div>
                 <div class="node-title">Cryptographic Hash</div>
-                <div class="node-body">Komputasi SHA-256 Checksum unik per dokumen SOP/P&amp;ID</div>
+                <div class="node-body">SHA-256 checksum calculated on document ingestion</div>
                 <div class="node-pills">
                   <span>SHA-256</span>
-                  <span>Tamper-Free</span>
+                  <span>Tamper-Proof</span>
                 </div>
               </div>
 
-              <!-- Node 3: RBAC (Lavender) -->
+              <!-- Step 3 -->
               <div class="organic-node-card node-lavender tilt-none" data-step="3">
-                <div class="node-sticker-pin">3</div>
-                <div class="node-icon">🛡️</div>
+                <div class="node-number-pill">03</div>
                 <div class="node-title">RBAC Clearance</div>
-                <div class="node-body">Otorisasi Tier 1 (Operator), Tier 2 (Engineer), Tier 3 (GM)</div>
+                <div class="node-body">3-Tier Matrix for Operator, Engineer, and Superintendent</div>
                 <div class="node-pills">
-                  <span>3-Tier Access</span>
-                  <span>Role Matrix</span>
+                  <span>Tier Matrix</span>
+                  <span>Access Control</span>
                 </div>
               </div>
 
-              <!-- Node 4: RAG Grounding (Mint) -->
+              <!-- Step 4 -->
               <div class="organic-node-card node-mint tilt-left" data-step="4">
-                <div class="node-sticker-pin">4</div>
-                <div class="node-icon">✦</div>
+                <div class="node-number-pill">04</div>
                 <div class="node-title">RAG AI Guardrail</div>
-                <div class="node-body">Verifikasi grounding sitasi dan confidence score &ge;85%</div>
+                <div class="node-body">Grounded citations with confidence threshold &ge;85%</div>
                 <div class="node-pills">
                   <span>Score &ge;85%</span>
-                  <span>Hallucination Filter</span>
+                  <span>Verified SOP</span>
                 </div>
               </div>
 
-              <!-- Node 5: WORM Log (Baby Blue) -->
+              <!-- Step 5 -->
               <div class="organic-node-card node-blue tilt-right" data-step="5">
-                <div class="node-sticker-pin">5</div>
-                <div class="node-icon">📜</div>
+                <div class="node-number-pill">05</div>
                 <div class="node-title">Immutable Audit</div>
-                <div class="node-body">Penyimpanan WORM terenkripsi untuk audit ISO 27001</div>
+                <div class="node-body">Write Once Read Many log storage for ISO 27001 &amp; OSHA</div>
                 <div class="node-pills">
                   <span>AES-256</span>
                   <span>OSHA PSM</span>
@@ -448,17 +294,17 @@
           <!-- Dynamic Node Inspector Drawer -->
           <div class="node-detail-drawer" id="nodeDetailDrawer">
             <div class="drawer-header">
-              <div class="drawer-title-wrap">
-                <span class="drawer-pill-badge" id="drawerStageBadge">Tahap 02 / 05</span>
+              <div>
+                <span class="drawer-pill-badge" id="drawerStageBadge">Stage 02 of 05</span>
                 <h3 id="drawerStageTitle">Cryptographic Hashing &amp; Document Integrity</h3>
               </div>
-              <button class="pill-btn secondary-light" id="runLiveHashSampleBtn">⚡ Tes Verifikasi Hash SOP P-101A</button>
+              <button class="pill-btn secondary-light" id="runLiveHashSampleBtn">Test Hash Verification</button>
             </div>
             <p id="drawerStageDesc" class="drawer-desc">
-              Setiap kali dokumen baru diunggah atau disinkronisasi dari Engineering Cloud, sistem menghitung sidik jari digital (SHA-256 checksum). Jika terdapat modifikasi 1 karakter pun pada parameter keselamatan, sistem langsung membekukan status verifikasi dan memicu alert ke Superintendent.
+              When engineering drawings or SOPs are ingested, a cryptographic SHA-256 checksum is generated. If any safety parameter or threshold is altered illegally, verification is automatically locked and logged.
             </p>
             <div id="drawerTerminalOutput" class="interactive-terminal-box">
-              <span class="term-comment">// Klik "Tes Verifikasi Hash" untuk menguji simulasi kriptografi langsung...</span>
+              <span class="term-comment">// Click "Test Hash Verification" to run live cryptographic validation simulation...</span>
             </div>
           </div>
 
@@ -469,90 +315,88 @@
       <!-- TAB 3: AI COPILOT -->
       <!-- ================================================================ -->
       <section id="ai-copilot" class="screen">
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">AI Copilot · Grounded RAG</span>
-            <h1 class="hero-title">
-              Engineering assistant <br>
-              <span class="italic-serif">answers backed by evidence</span>
-            </h1>
-            <p class="hero-desc">Tanyakan prosedur darurat, histori kegagalan komponen, atau checklist startup langsung pada model AI yang terhubung ke dokumen resmi Chandra Asri.</p>
-          </div>
+        <div class="hero-minimal-block">
+          <span class="date-chip">Retrieval-Augmented Generation &middot; Official Archive</span>
+          <h1 class="hero-heading">
+            Engineering assistant
+          </h1>
+          <p class="hero-paragraph">
+            Ask operational procedures, trip limits, or past failure mitigations grounded in Chandra Asri plant manuals.
+          </p>
 
-          <div class="hero-quick-tags">
-            <div id="backendStatusPill" class="cute-tag mint">
-              <span class="pulse-dot"></span> Backend: http://localhost:8000/api/chat
+          <div class="mood-pills-row">
+            <div id="backendStatusPill" class="mood-pill active">
+              <span class="status-indicator-dot"></span> Backend: http://localhost:8000/api/chat
             </div>
           </div>
         </div>
 
         <div class="copilot-creative-panel">
-          <!-- Asset Selector Bar -->
+          
           <div class="copilot-top-bar">
             <div class="asset-pill-selector">
-              <label for="assetTagSelect">Target Aset:</label>
+              <label for="assetTagSelect">Target Asset:</label>
               <select id="assetTagSelect" class="styled-select">
-                <option value="P-101A" selected>P-101A — Primary Naphtha Feed Pump</option>
-                <option value="K-102">K-102 — Syngas Ethylene Compressor</option>
-                <option value="F-101">F-101 — Naphtha Thermal Cracking Furnace</option>
-                <option value="C-201">C-201 — C2 Splitter Fractionation Column</option>
-                <option value="EX-304">EX-304 — Quench Water Heat Exchanger</option>
-                <option value="GEN-PLANT">GENERAL — Chandra Asri Plantwide SOP</option>
+                <option value="P-101A" selected>P-101A &middot; Primary Naphtha Feed Pump</option>
+                <option value="K-102">K-102 &middot; Syngas Ethylene Compressor</option>
+                <option value="F-101">F-101 &middot; Naphtha Cracking Furnace</option>
+                <option value="C-201">C-201 &middot; C2 Splitter Column</option>
+                <option value="EX-304">EX-304 &middot; Quench Heat Exchanger</option>
+                <option value="GEN-PLANT">GENERAL &middot; Plantwide SOP Standards</option>
               </select>
             </div>
 
             <div class="quick-status-note">
-              <span>Grounding: <b>100% Verified Citations</b></span>
+              <span>Grounding: <b>Verified Engineering Archive</b></span>
             </div>
           </div>
 
           <!-- Chat Stream Log -->
           <div class="chat-log-modern" id="chatLog">
-            <!-- User Sample Prompt -->
+            <!-- Sample User Row -->
             <div class="chat-row user-row">
               <div class="chat-bubble user-bubble">
-                <div class="chat-bubble-tag">🏷️ Aset: P-101A</div>
-                <div class="chat-bubble-text">Apa langkah-langkah kritis sebelum melakukan penyalaan (startup) pompa feed Naphtha P-101A?</div>
+                <div class="chat-bubble-tag">Asset: P-101A</div>
+                <div class="chat-bubble-text">What are the critical verification steps prior to starting up primary naphtha pump P-101A?</div>
               </div>
             </div>
 
-            <!-- Assistant Sample Response -->
+            <!-- Sample Bot Row -->
             <div class="chat-row bot-row">
               <div class="chat-bubble bot-bubble">
                 <div class="bot-header-meta">
-                  <span class="bot-avatar-chip">✦ Copilot</span>
-                  <span class="verified-pill">✓ Verified SOP</span>
+                  <span class="bot-avatar-chip">AI Copilot</span>
+                  <span class="verified-pill">Verified SOP</span>
                 </div>
                 
                 <div class="bot-text-body">
-                  Berdasarkan Dokumen Prosedur Operasi Standar (SOP) dan Manual Pemeliharaan Pompa Naphtha <b>P-101A</b> di Unit Olefins Chandra Asri, berikut adalah langkah verifikasi wajib sebelum penyalaan:
+                  Based on Standard Operating Procedure (SOP) and Maintenance Manual for Naphtha Pump <b>P-101A</b> at Chandra Asri Olefins Unit, the mandatory pre-startup checks are:
                   <br><br>
-                  1. <b>Pelumasan Lube Oil:</b> Pastikan level oli reservoir minimal 65% dan tekanan lube oil terukur pada 2.1 bar gauge.<br>
-                  2. <b>Venting &amp; Priming:</b> Buka venting valve pada casing pompa hingga aliran fluida naphtha kontinyu tanpa buih udara untuk mencegah risiko kavitasi dan vapor lock.<br>
-                  3. <b>Mechanical Seal Flush (API Plan 53A):</b> Barrier fluid pressure wajib dijaga 1.5 bar di atas suction pressure untuk mencegah kebocoran hidrokarbon ke atmosfer.<br>
-                  4. <b>Interlock Safety:</b> Pastikan sinyal trip dari DCS normal dan permit kerja dingin/panas telah ditutup.
+                  1. <b>Lubrication Reservoir:</b> Ensure lube oil level is at or above 65% with pressure gauge reading 2.1 bar.<br>
+                  2. <b>Casing Venting:</b> Open venting valve on pump casing until continuous liquid naphtha flow is established without air bubbles to prevent vapor lock.<br>
+                  3. <b>Seal Flush (Plan 53A):</b> Maintain barrier fluid pressure 1.5 bar above suction pressure.<br>
+                  4. <b>Interlock System:</b> Verify DCS safety permits and ensure cold/hot work permits have been signed off.
                 </div>
 
-                <!-- Verified Citations Grid -->
                 <div class="bot-citations-box">
-                  <div class="citations-header-title">📚 Dokumen Sumber Terverifikasi:</div>
+                  <div class="citations-header-title">Verified Source Documents:</div>
                   <div class="citation-cards-row">
                     <div class="citation-chip-card">
-                      <div class="cit-source">📄 CAP-SOP-MECH-P101-STARTUP.pdf</div>
+                      <div class="cit-source">CAP-SOP-MECH-P101-STARTUP.pdf</div>
                       <div class="cit-tags">
-                        <span>Hal. 18</span>
+                        <span>Page 18</span>
                         <span>Rev 4.2</span>
-                        <span class="conf-tag">96.5% Akurat</span>
+                        <span class="conf-tag">96.5% Match</span>
                       </div>
-                      <div class="cit-snippet">"Bagian 3.2: Pra-penyalaan Pompa Sentrifugal Naphtha - Cek Suction &amp; Seal Plan 53A"</div>
+                      <div class="cit-snippet">"Section 3.2: Pre-startup Verification - Suction and Plan 53A Pressure Checks"</div>
                     </div>
 
                     <div class="citation-chip-card">
-                      <div class="cit-source">📄 VENDOR-SULZER-OH2-MANUAL.pdf</div>
+                      <div class="cit-source">VENDOR-SULZER-OH2-MANUAL.pdf</div>
                       <div class="cit-tags">
-                        <span>Hal. 42</span>
+                        <span>Page 42</span>
                         <span>Rev 2.0</span>
-                        <span class="conf-tag">91.2% Akurat</span>
+                        <span class="conf-tag">91.2% Match</span>
                       </div>
                       <div class="cit-snippet">"Section 4.1: Lubrication and Mechanical Seal Pressure Barrier Limits"</div>
                     </div>
@@ -565,27 +409,27 @@
 
           <!-- Quick Suggestion Prompts -->
           <div class="quick-prompts-bar">
-            <span class="qp-label">Pilihan Cepat:</span>
-            <button class="quick-prompt-pill" data-asset="P-101A" data-prompt="Cek SOP Startup dan batas aman temperatur bearing Pompa P-101A">
-              🔍 SOP Startup P-101A
+            <span class="qp-label">Quick Prompts:</span>
+            <button class="quick-prompt-pill" data-asset="P-101A" data-prompt="Check SOP Startup and bearing temperature limits for Pump P-101A">
+              SOP Startup P-101A
             </button>
-            <button class="quick-prompt-pill" data-asset="K-102" data-prompt="Berapa batas vibrasi abnormal compressor K-102 dan tindakan pencegahannya?">
-              ⚡ Batas Vibrasi K-102
+            <button class="quick-prompt-pill" data-asset="K-102" data-prompt="What are the abnormal vibration limits for compressor K-102 and preventive measures?">
+              Vibration Limits K-102
             </button>
-            <button class="quick-prompt-pill" data-asset="F-101" data-prompt="Jelaskan histori kegagalan hotspot tube radiant pada Furnace F-101">
-              🔥 Histori Hotspot F-101
+            <button class="quick-prompt-pill" data-asset="F-101" data-prompt="Explain failure history of radiant coil hotspots on Furnace F-101">
+              Hotspot History F-101
             </button>
-            <button class="quick-prompt-pill" data-asset="C-201" data-prompt="Bagaimana SOP penanganan differential pressure tinggi pada kolom fraksinasi C-201?">
-              ⚗️ Delta P Kolom C-201
+            <button class="quick-prompt-pill" data-asset="C-201" data-prompt="What is the standard procedure for high differential pressure on fractionation column C-201?">
+              Column Delta P C-201
             </button>
           </div>
 
-          <!-- Chat Input Compose Bar -->
+          <!-- Compose Bar -->
           <form id="chatForm" class="copilot-compose-box">
-            <input type="text" id="chatInput" placeholder="Tanyakan prosedur SOP, spesifikasi P&amp;ID, atau mitigasi failure aset..." autocomplete="off">
+            <input type="text" id="chatInput" placeholder="Ask about startup SOP, P&amp;ID specifications, or failure mitigations..." autocomplete="off">
             <button type="submit" id="sendChatBtn" class="pill-btn send-btn">
-              <span>Kirim</span>
-              <span>➔</span>
+              <span>Send</span>
+              <span>&rarr;</span>
             </button>
           </form>
         </div>
@@ -595,47 +439,42 @@
       <!-- TAB 4: ASSETS & ENGINEERING DOCS -->
       <!-- ================================================================ -->
       <section id="assets-docs" class="screen">
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">Engineering Archive · 3,892 Records</span>
-            <h1 class="hero-title">
-              P&amp;ID, SOP &amp; manuals <br>
-              <span class="italic-serif">digitized for instant retrieval</span>
-            </h1>
-            <p class="hero-desc">Pencarian cerdas lembar data teknis, manual pemeliharaan berkala, dan diagram perpipaan pabrik Cilegon.</p>
-          </div>
+        <div class="hero-minimal-block">
+          <span class="date-chip">Digital Archive &middot; 3,892 Records</span>
+          <h1 class="hero-heading">
+            P&amp;ID, SOP and engineering manuals
+          </h1>
+          <p class="hero-paragraph">
+            Technical documentation indexed and verified for operational accuracy and RAG retrieval.
+          </p>
 
-          <div class="hero-quick-tags">
-            <button class="pill-btn primary-dark" onclick="alert('Sinkronisasi dokumen dari Chandra Asri Engineering Cloud berhasil dijalankan!')">
-              🔄 Sinkronisasi DMS
+          <div class="mood-pills-row">
+            <button class="pill-btn primary-dark" onclick="alert('DMS synchronization complete.')">
+              Sync DMS Archive
             </button>
           </div>
         </div>
 
-        <!-- Upload Drag & Drop Area -->
         <div class="creative-dropzone">
-          <div class="drop-circle-icon">📂</div>
-          <h3>Unggah Manual, P&amp;ID, atau Laporan Servis Aset</h3>
-          <p>Mendukung format PDF, DWG, DOCX, atau ZIP arsip teknis Chandra Asri</p>
-          <button class="pill-btn secondary-light" onclick="alert('Pilih file dari direktori komputer Anda')">Pilih Berkas</button>
+          <h3>Upload Engineering Documentation</h3>
+          <p>Supports PDF, DWG, DOCX, or archive packages from Chandra Asri Engineering Cloud</p>
+          <button class="pill-btn secondary-light" onclick="alert('Select files from your workstation.')">Select Files</button>
         </div>
 
-        <!-- Search Bar -->
         <div class="search-filter-card">
-          <input type="text" id="docSearchInput" class="styled-search-input" placeholder="🔍 Cari tag aset (P-101A, K-102), judul SOP, atau nomor dokumen...">
+          <input type="text" id="docSearchInput" class="styled-search-input" placeholder="Search by asset tag (P-101A, K-102), SOP title, or document number...">
         </div>
 
-        <!-- Documents Table / Cards -->
         <div class="table-creative-card">
           <table id="docsTable" class="modern-table">
             <thead>
               <tr>
-                <th>Tag Aset</th>
-                <th>Nama Dokumen</th>
-                <th>Unit Pabrik</th>
-                <th>Revisi</th>
-                <th>Status RAG</th>
-                <th>Aksi</th>
+                <th>Asset Tag</th>
+                <th>Document Name</th>
+                <th>Unit</th>
+                <th>Revision</th>
+                <th>RAG Index</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -644,40 +483,40 @@
                 <td><b>CAP-SOP-MECH-P101-STARTUP.pdf</b></td>
                 <td>Olefins (Cilegon)</td>
                 <td>Rev 4.2 (2025)</td>
-                <td><span class="status-chip ok">Terindeks 100%</span></td>
-                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+                <td><span class="status-chip ok">Indexed 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
                 <td><span class="tag-badge yellow">K-102</span></td>
                 <td><b>CAP-INST-K102-VIBRATION-SPEC.pdf</b></td>
-                <td>Polietilena (PE-1)</td>
+                <td>Polyethylene (PE-1)</td>
                 <td>Rev 3.1 (2024)</td>
-                <td><span class="status-chip ok">Terindeks 100%</span></td>
-                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+                <td><span class="status-chip ok">Indexed 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
                 <td><span class="tag-badge lavender">F-101</span></td>
                 <td><b>CAP-FURNACE-F101-INTEGRITY-REPORT.pdf</b></td>
                 <td>Cracker Complex</td>
                 <td>Rev 5.0 (2025)</td>
-                <td><span class="status-chip ok">Terindeks 100%</span></td>
-                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+                <td><span class="status-chip ok">Indexed 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
                 <td><span class="tag-badge mint">C-201</span></td>
                 <td><b>CAP-PID-C201-FRACTIONATION.dwg.pdf</b></td>
                 <td>Olefins Fractionation</td>
                 <td>Rev 6.1 (2024)</td>
-                <td><span class="status-chip ok">Terindeks 100%</span></td>
-                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+                <td><span class="status-chip ok">Indexed 100%</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
               <tr>
                 <td><span class="tag-badge blue">EX-304</span></td>
                 <td><b>CAP-MECH-EX304-TUBE-INSPECTION.pdf</b></td>
                 <td>Utilities &amp; Offsite</td>
                 <td>Rev 2.0 (2023)</td>
-                <td><span class="status-chip wait">Validasi DMS</span></td>
-                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Tanya AI</button></td>
+                <td><span class="status-chip wait">Validation Pending</span></td>
+                <td><button class="pill-btn micro-pill" onclick="switchTab('ai-copilot')">Ask AI</button></td>
               </tr>
             </tbody>
           </table>
@@ -688,83 +527,79 @@
       <!-- TAB 5: FAILURE MEMORY (RCFA) -->
       <!-- ================================================================ -->
       <section id="failure-memory" class="screen">
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">Incident Memory · Root Cause Analysis</span>
-            <h1 class="hero-title">
-              Failure records <br>
-              <span class="italic-serif">learning from past anomalies</span>
-            </h1>
-            <p class="hero-desc">Mencegah insiden berulang dengan database solusi permanen berbasis analisis akar kegagalan (RCFA).</p>
-          </div>
+        <div class="hero-minimal-block">
+          <span class="date-chip">RCFA Database &middot; 148 Cases</span>
+          <h1 class="hero-heading">
+            Failure memory records
+          </h1>
+          <p class="hero-paragraph">
+            Historical root cause analyses and verified corrective actions to prevent recurrence of critical plant failures.
+          </p>
 
-          <div class="hero-quick-tags">
-            <button class="pill-btn primary-dark" onclick="alert('Export laporan RCFA Chandra Asri berhasil diunduh.')">
-              📥 Export Laporan RCFA
+          <div class="mood-pills-row">
+            <button class="pill-btn primary-dark" onclick="alert('Exporting verified RCFA database.')">
+              Export Database
             </button>
           </div>
         </div>
 
         <div class="search-filter-card">
-          <input type="text" id="failureSearchInput" class="styled-search-input" placeholder="🔍 Cari kegagalan berdasarkan tag aset, moda kegagalan, atau kata kunci akar penyebab...">
+          <input type="text" id="failureSearchInput" class="styled-search-input" placeholder="Search by asset tag, failure mode, or root cause...">
         </div>
 
         <div class="failure-records-grid">
           
-          <!-- Record 1 -->
           <div class="failure-card-item card-peach-soft">
             <div class="fc-header">
               <span class="tag-badge peach">P-101A</span>
-              <span class="fc-severity crit">Insiden Kritis (Tier 2)</span>
+              <span class="fc-severity crit">Critical (Tier 2)</span>
             </div>
-            <h3 class="fc-title">Kebocoran Katastropik Mechanical Seal (Primary Naphtha Pump)</h3>
+            <h3 class="fc-title">Catastrophic Mechanical Seal Leakage (Primary Naphtha Pump)</h3>
             <div class="fc-meta-row">
-              <div><small>Tanggal:</small> <b>14 Agustus 2024</b></div>
-              <div><small>Downtime:</small> <b>18 Jam Unscheduled Shutdown</b></div>
+              <div><small>Date:</small> <b>14 August 2024</b></div>
+              <div><small>Downtime:</small> <b>18h Unscheduled Shutdown</b></div>
             </div>
             <div class="fc-root-cause">
-              <b>Akar Masalah (Root Cause):</b> Penyumbatan orifice flush Plan 53A oleh partikel coke halus yang memicu dry running dan thermal cracking pada face SiC.
+              <b>Root Cause:</b> Clogging of Plan 53A flush orifice by fine coke particulates leading to dry running and SiC face thermal cracking.
             </div>
             <div class="fc-fix">
-              <b>Tindakan Korektif Terverifikasi:</b> Pemasangan dual duplex strainer 25-micron pada suction flush line dan integrasi alarm delta-P otomatis ke DCS Honeywell Experion.
+              <b>Corrective Action:</b> Installation of dual 25-micron duplex strainers and DCS automated differential pressure alarm.
             </div>
           </div>
 
-          <!-- Record 2 -->
           <div class="failure-card-item card-yellow-soft">
             <div class="fc-header">
               <span class="tag-badge yellow">K-102</span>
-              <span class="fc-severity wait">Insiden Mayor (Tier 3)</span>
+              <span class="fc-severity wait">Major (Tier 3)</span>
             </div>
-            <h3 class="fc-title">Spike Vibrasi Radial Bearing &amp; Interlock Trip (Syngas Compressor)</h3>
+            <h3 class="fc-title">Radial Bearing Vibration Spike &amp; Interlock Trip (Syngas Compressor)</h3>
             <div class="fc-meta-row">
-              <div><small>Tanggal:</small> <b>03 November 2024</b></div>
-              <div><small>Downtime:</small> <b>6 Jam Flaring Reduction</b></div>
+              <div><small>Date:</small> <b>03 November 2024</b></div>
+              <div><small>Downtime:</small> <b>6h Flaring Reduction</b></div>
             </div>
             <div class="fc-root-cause">
-              <b>Akar Masalah (Root Cause):</b> Akumulasi deposit polimer pada impeller stage 2 akibat gas recycle dingin yang memicu ketidakseimbangan rotor 1X synchronous.
+              <b>Root Cause:</b> Polymer deposit buildup on stage 2 impeller due to cold recycle gas inducing 1X synchronous rotor imbalance.
             </div>
             <div class="fc-fix">
-              <b>Tindakan Korektif Terverifikasi:</b> Rekonfigurasi setpoint temperatur suction gas recycle minimal 5°C di atas dew point dan continuous flushing solven anti-fouling.
+              <b>Corrective Action:</b> Reconfigured suction temperature setpoint 5&deg;C above dew point and continuous anti-fouling flush.
             </div>
           </div>
 
-          <!-- Record 3 -->
           <div class="failure-card-item card-mint-soft">
             <div class="fc-header">
               <span class="tag-badge mint">F-101</span>
-              <span class="fc-severity ok">Termitigasi Penuh</span>
+              <span class="fc-severity ok">Fully Mitigated</span>
             </div>
-            <h3 class="fc-title">Local Hotspot Tube Radiant Coil (Naphtha Cracking Furnace)</h3>
+            <h3 class="fc-title">Radiant Coil Tube Metal Hotspot (Cracking Furnace)</h3>
             <div class="fc-meta-row">
-              <div><small>Tanggal:</small> <b>19 Januari 2025</b></div>
-              <div><small>Downtime:</small> <b>Derating Kapasitas 15% (No Trip)</b></div>
+              <div><small>Date:</small> <b>19 January 2025</b></div>
+              <div><small>Downtime:</small> <b>Derating 15% (No Trip)</b></div>
             </div>
             <div class="fc-root-cause">
-              <b>Akar Masalah (Root Cause):</b> Coke deposition lokal akibat fluktuasi rasio steam-to-oil saat transisi umpan.
+              <b>Root Cause:</b> Local coke deposition caused by steam-to-oil ratio fluctuation during feed transition.
             </div>
             <div class="fc-fix">
-              <b>Tindakan Korektif Terverifikasi:</b> Steam-air decoking online termal dan rekalibrasi flow transmitter steam. Interval decoking diperbarui menjadi 60 hari.
+              <b>Corrective Action:</b> Scheduled thermal steam-air decoking cycle updated to 60-day interval and recalibrated flow transmitters.
             </div>
           </div>
 
@@ -775,52 +610,51 @@
       <!-- TAB 6: SETTINGS -->
       <!-- ================================================================ -->
       <section id="settings" class="screen">
-        <div class="hero-creative-block">
-          <div class="hero-text-wrap">
-            <span class="hero-tag">System Settings · RAG Configuration</span>
-            <h1 class="hero-title">
-              Configuration &amp; engine <br>
-              <span class="italic-serif">tailored to your plant needs</span>
-            </h1>
-            <p class="hero-desc">Pengaturan koneksi API backend, pilihan model bahasa LLM, serta batas toleransi akurasi RAG.</p>
-          </div>
+        <div class="hero-minimal-block">
+          <span class="date-chip">System Parameters &middot; Model Engine</span>
+          <h1 class="hero-heading">
+            Configuration and models
+          </h1>
+          <p class="hero-paragraph">
+            Backend connection parameters, model selection, and retrieval confidence filters.
+          </p>
         </div>
 
         <div class="settings-creative-card">
           <div class="form-group-item">
             <label for="apiEndpointInput">Backend Chat API Endpoint</label>
             <input type="text" id="apiEndpointInput" value="http://localhost:8000/api/chat" class="styled-input">
-            <small class="form-hint">Menerima payload JSON: <code>{ "query": "...", "asset_tag": "..." }</code></small>
+            <small class="form-hint">POST endpoint accepting: <code>{ "query": "...", "asset_tag": "..." }</code></small>
           </div>
 
           <div class="form-group-item">
-            <label>Model LLM / AI Engine</label>
+            <label>LLM Engine Provider</label>
             <div class="cute-toggle-pills" id="providerSelector">
               <button type="button" class="toggle-pill active">Gemini 1.5 Pro</button>
               <button type="button" class="toggle-pill">Claude 3.5 Sonnet</button>
               <button type="button" class="toggle-pill">GPT-4o</button>
-              <button type="button" class="toggle-pill">Ollama Lokal</button>
+              <button type="button" class="toggle-pill">Ollama Local</button>
             </div>
           </div>
 
           <div class="form-group-item">
-            <label for="plantSiteSelect">Lokasi Plant Pabrik</label>
+            <label for="plantSiteSelect">Plant Manufacturing Site</label>
             <select id="plantSiteSelect" class="styled-select">
-              <option>Chandra Asri Cilegon Plant 1 (Olefins &amp; PE)</option>
-              <option>Chandra Asri Ciwandan Plant 2 (PP &amp; BD)</option>
+              <option>Chandra Asri Cilegon Complex (Olefins &amp; PE)</option>
+              <option>Chandra Asri Ciwandan Complex (PP &amp; BD)</option>
             </select>
           </div>
 
           <div class="form-group-item">
-            <label for="ragThreshold">Minimum Confidence Score Threshold</label>
+            <label for="ragThreshold">Minimum Confidence Threshold</label>
             <input type="range" id="ragThreshold" min="60" max="98" value="85" class="styled-range">
             <div class="range-labels">
-              <span>Threshold saat ini: <b id="thresholdVal">85%</b></span>
-              <small>Hanya sitasi dengan skor &gt; 85% yang disajikan</small>
+              <span>Current threshold: <b id="thresholdVal">85%</b></span>
+              <small>Only citations &gt; 85% confidence are provided to users</small>
             </div>
           </div>
 
-          <button id="saveSettingsBtn" class="pill-btn primary-dark">Simpan Konfigurasi</button>
+          <button id="saveSettingsBtn" class="pill-btn primary-dark">Save Configuration</button>
         </div>
       </section>
 
@@ -828,58 +662,46 @@
       <!-- SUBTLE FOOTER (WITH SUBTLE FLOW AUTENTIKASI DATA LINK) -->
       <!-- ================================================================ -->
       <footer class="app-subtle-footer">
-        <span>© 2026 PT Chandra Asri Pacific Tbk · Plant Intelligence</span>
-        <span class="subtle-divider">·</span>
+        <span>PT Chandra Asri Pacific Tbk &middot; CALIBER 2026</span>
+        <span class="subtle-divider">&middot;</span>
         <button type="button" class="subtle-link-btn" id="openAuthFlowBtn">Flow Autentikasi Data</button>
-        <span class="subtle-divider">·</span>
-        <button type="button" class="subtle-link-btn" id="openAuthFlowBtnSecondary">Zero-Trust Protocol</button>
+        <span class="subtle-divider">&middot;</span>
+        <button type="button" class="subtle-link-btn" id="openAuthFlowBtnSecondary">Security Protocol</button>
       </footer>
 
     </main>
 
     <!-- ================================================================ -->
-    <!-- FLOATING BOTTOM DOCK NAVIGATION (EXACTLY LIKE REFERENCE IMAGE) -->
+    <!-- MINIMALIST FLOATING BOTTOM DOCK (Reference Screen 2 & 3 style)   -->
     <!-- ================================================================ -->
-    <nav class="floating-bottom-dock" aria-label="Navigasi Bawah">
-      <!-- 1. Dashboard -->
+    <nav class="floating-bottom-dock" aria-label="Bottom Navigation">
       <button class="dock-btn active" data-tab="dashboard" title="Dashboard">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        <span class="dock-label">Home</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       </button>
 
-      <!-- 2. Data Flow (Organic Flowchart) -->
-      <button class="dock-btn" data-tab="data-flow" title="Organic Data Flowchart">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V9"/><line x1="12" y1="15" x2="12" y2="21"/></svg>
-        <span class="dock-label">Flow</span>
+      <button class="dock-btn" data-tab="data-flow" title="Data Flow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M6 9v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V9"></path><line x1="12" y1="15" x2="12" y2="21"></line></svg>
       </button>
 
-      <!-- 3. Prominent Center Action (+) Pill (Like in Reference) -->
-      <button class="dock-center-pill" onclick="switchTab('ai-copilot')" title="Tanya AI Copilot" aria-label="Buka AI Copilot">
-        <span class="center-pill-icon">✦</span>
+      <button class="dock-center-pill" onclick="switchTab('ai-copilot')" title="Ask AI Copilot" aria-label="Ask AI Copilot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       </button>
 
-      <!-- 4. Asset & Docs -->
-      <button class="dock-btn" data-tab="assets-docs" title="Assets & Docs">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <span class="dock-label">Docs</span>
+      <button class="dock-btn" data-tab="assets-docs" title="Documents">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
       </button>
 
-      <!-- 5. Failure Memory & Settings -->
       <button class="dock-btn" data-tab="failure-memory" title="RCFA Memory">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        <span class="dock-label">RCFA</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
       </button>
 
-      <!-- 6. Settings -->
-      <button class="dock-btn" data-tab="settings" title="Pengaturan">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="dock-label">Setting</span>
+      <button class="dock-btn" data-tab="settings" title="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
     </nav>
 
   </div>
 
-  <!-- Scripts -->
   <script src="app.js"></script>
 </body>
 </html>

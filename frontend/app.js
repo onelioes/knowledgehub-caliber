@@ -1,7 +1,7 @@
 /**
  * Chandra Asri Manufacturing Knowledge Hub
  * CALIBER 2026 - Case 1 Chandra Asri
- * Dynamic Organic UI, Non-Stiff Flowchart & AI Integration
+ * Minimalist Unified Typography & Organic Flow Logic
  */
 
 // Backend endpoint configuration
@@ -26,7 +26,7 @@ const CHANDRA_ASRI_KNOWLEDGE_BASE = {
         page: 18,
         revision: "Rev 4.2 (2025)",
         confidence_score: 0.965,
-        snippet: "Bagian 3.2: Pra-penyalaan Pompa Sentrifugal Naphtha - Cek Suction & Seal Plan 53A"
+        snippet: "Section 3.2: Pre-startup Verification - Suction and Plan 53A Pressure Checks"
       },
       {
         source: "VENDOR-SULZER-OH2-MANUAL.pdf",
@@ -38,21 +38,21 @@ const CHANDRA_ASRI_KNOWLEDGE_BASE = {
     ]
   },
   'K-102': {
-    answer: "Untuk Kompresor Gas Sintesis K-102 di Unit Polietilena, batas alarm vibrasi radial bearing adalah 45 µm pk-pk (peringatan) dan trip pada 68 µm pk-pk. Jika terjadi spike vibrasi 1X synchronous, periksa indikasi ketidakseimbangan rotor (fouling polimer pada impeller stage 2) atau degradasi pelumasan coupling.",
+    answer: "Untuk Kompresor Gas Sintesis K-102 di Unit Polietilena, batas alarm vibrasi radial bearing adalah 45 um pk-pk (peringatan) dan trip pada 68 um pk-pk. Jika terjadi spike vibrasi 1X synchronous, periksa indikasi ketidakseimbangan rotor (fouling polimer pada impeller stage 2) atau degradasi pelumasan coupling.",
     citations: [
       {
         source: "CAP-INST-K102-VIBRATION-SPEC.pdf",
         page: 7,
         revision: "Rev 3.1 (2024)",
         confidence_score: 0.948,
-        snippet: "Tabel 2.4: Vibration Thresholds & Interlock Trip Matrix K-102"
+        snippet: "Table 2.4: Vibration Thresholds and Interlock Trip Matrix K-102"
       },
       {
         source: "RCFA-2024-K102-POLYMER-FOULING.pdf",
         page: 3,
         revision: "Final Rev 1",
         confidence_score: 0.885,
-        snippet: "Lesson Learned: Polimerisasi parsial pada gas recycle memicu vibrasi 1X"
+        snippet: "Lesson Learned: Partial recycle gas polymerization triggers 1X vibration"
       }
     ]
   },
@@ -64,14 +64,14 @@ const CHANDRA_ASRI_KNOWLEDGE_BASE = {
         page: 25,
         revision: "Rev 5.0 (2025)",
         confidence_score: 0.972,
-        snippet: "Analisis Metalurgi Tube HP-40 & Pengendalian Coke Deposition"
+        snippet: "Metallurgical Analysis of Tube HP-40 and Coke Deposition Control"
       },
       {
         source: "SOP-FURNACE-STEAM-AIR-DECOKING.pdf",
         page: 12,
         revision: "Rev 3.0 (2023)",
         confidence_score: 0.931,
-        snippet: "Langkah-langkah Dekoking Termal Campuran Steam & Udara"
+        snippet: "Operational Steps for Thermal Steam and Air Decoking"
       }
     ]
   },
@@ -89,36 +89,36 @@ const CHANDRA_ASRI_KNOWLEDGE_BASE = {
   }
 };
 
-// Flowchart Step Metadata
+// Flowchart Step Metadata (Zero emojis)
 const FLOW_STEPS_DATA = {
   1: {
-    badge: "Tahap 01 / 05",
+    badge: "Stage 01 of 05",
     title: "Source Ingestion & Identity Tagging",
-    desc: "Ingesti data operasional secara streaming dari DCS Honeywell Experion, SCADA Gateway, SAP PM, dan DMS Engineering. Tiap paket data disematkan tag asal unit dan diotentikasi melalui mTLS 1.3 serta tiket Kerberos SSO.",
-    sample: "Ingesting 1,420 asset telemetry packets via DCS OPC-UA gateway... Authenticated via TLS 1.3."
+    desc: "Operational telemetry ingestion from Honeywell DCS, SCADA gateways, SAP Plant Maintenance, and LIMS. Packets are tagged with unit origins and authenticated via mTLS 1.3 and Kerberos SSO.",
+    sample: "Ingesting telemetry across 1,420 plant assets via OPC-UA. Connection verified via mTLS 1.3."
   },
   2: {
-    badge: "Tahap 02 / 05",
+    badge: "Stage 02 of 05",
     title: "Cryptographic Hashing & Document Integrity",
-    desc: "Setiap kali SOP, P&ID, atau lembar data teknis diunggah, mesin keamanan menghitung nilai hash kriptografis SHA-256 secara independen. Modifikasi ilegal pada angka batas toleransi keselamatan akan langsung ditolak sistem.",
+    desc: "Every uploaded SOP, P&ID drawing, or datasheet receives a SHA-256 cryptographic checksum. Unapproved changes to safety trip thresholds immediately flag integrity violations.",
     sample: "SHA-256 Checksum: d85e7a9b014f32c6e28fba109c4d9a33481a5e12f6b899147e0bc27a98fa66c1 (Tamper-Free Verified)."
   },
   3: {
-    badge: "Tahap 03 / 05",
+    badge: "Stage 03 of 05",
     title: "Role-Based Access Control (RBAC) Clearance",
-    desc: "Sistem menerapkan otorisasi 3-Tier: Tier 1 (Operator Lapangan untuk checklist startup harian), Tier 2 (Reliability Engineer untuk P&ID dan parameter trip), dan Tier 3 (Superintendent / Auditor untuk persetujuan revisi dokumen).",
+    desc: "Granular 3-Tier matrix: Tier 1 (Field Operator for startup checklists), Tier 2 (Reliability Engineer for P&ID and trip limits), and Tier 3 (Superintendent / Safety Auditor for approvals).",
     sample: "RBAC Matrix: Clearance Tier 2 (Reliability Engineer) active. Read & query privileges granted."
   },
   4: {
-    badge: "Tahap 04 / 05",
+    badge: "Stage 04 of 05",
     title: "RAG AI Context & Grounding Guardrail",
-    desc: "Model AI Copilot diwajibkan hanya merujuk pada chunk dokumen yang terverifikasi resmi. Setiap respon disaring menggunakan ambang akurasi (Confidence Score ≥ 85%) guna mencegah halusinasi teknis berbahaya.",
-    sample: "RAG Evaluation: Answer grounded on verified sources. Confidence Score: 96.5% (> 85% threshold)."
+    desc: "The Copilot LLM queries only verified official chunks. Answers must pass a confidence threshold of at least 85% to eliminate hallucination risks on critical chemical equipment.",
+    sample: "Grounding Check: Answer grounded on verified sources. Confidence score: 96.5% (> 85% threshold)."
   },
   5: {
-    badge: "Tahap 05 / 05",
-    title: "Immutable WORM Audit Trail & Kepatuhan",
-    desc: "Setiap sesi konsultasi, riwayat pembacaan SOP, dan respon AI dicatat dalam media penyimpanan WORM (Write Once Read Many) terenkripsi AES-256 untuk pemenuhan regulasi keselamatan kerja ISO 27001 dan OSHA 1910 PSM.",
+    badge: "Stage 05 of 05",
+    title: "Immutable WORM Audit Trail & Compliance",
+    desc: "All queries, document viewings, and AI responses are preserved in WORM (Write Once Read Many) AES-256 encrypted storage, compliant with ISO 27001 and OSHA 1910 PSM standards.",
     sample: "Audit Log committed to WORM storage. Signature ID: CAP-SEC-AUDIT-2026-9921. Status: Permanent."
   }
 };
@@ -134,12 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSettings();
   setupSearchFilters();
   setupSubtleLinks();
-  setupTelemetryFilterPills();
+  setupPlantUnitPills();
   checkBackendHealth();
 });
 
 /**
- * Setup navigation (Top Pills + Bottom Floating Dock)
+ * Setup navigation
  */
 function setupNavigation() {
   const allNavBtns = document.querySelectorAll('[data-tab]');
@@ -161,7 +161,7 @@ function setupNavigation() {
 function switchTab(tabId) {
   state.currentTab = tabId;
 
-  // Update Top Nav Pills
+  // Header Nav Pills
   document.querySelectorAll('.nav-pill').forEach(pill => {
     if (pill.getAttribute('data-tab') === tabId) {
       pill.classList.add('active');
@@ -170,7 +170,7 @@ function switchTab(tabId) {
     }
   });
 
-  // Update Bottom Dock Buttons
+  // Bottom Dock Buttons
   document.querySelectorAll('.dock-btn').forEach(btn => {
     if (btn.getAttribute('data-tab') === tabId) {
       btn.classList.add('active');
@@ -179,7 +179,7 @@ function switchTab(tabId) {
     }
   });
 
-  // Update Screens
+  // Screen Views
   document.querySelectorAll('.screen').forEach(screen => {
     if (screen.id === tabId) {
       screen.classList.add('active');
@@ -188,10 +188,8 @@ function switchTab(tabId) {
     }
   });
 
-  // Smooth scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Auto focus input if switching to AI Copilot
   if (tabId === 'ai-copilot') {
     const input = document.getElementById('chatInput');
     if (input) setTimeout(() => input.focus(), 150);
@@ -199,7 +197,7 @@ function switchTab(tabId) {
 }
 
 /**
- * Setup Organic Non-Stiff Flowchart Interactions
+ * Setup Organic Non-Stiff Flowchart
  */
 function setupOrganicFlowchart() {
   const nodeCards = document.querySelectorAll('.organic-node-card');
@@ -211,7 +209,6 @@ function setupOrganicFlowchart() {
   const triggerPulseBtn = document.getElementById('triggerFlowPulseBtn');
   const triggerFlowTestBtn = document.getElementById('triggerFlowTestBtn');
 
-  // Node selection
   nodeCards.forEach(card => {
     card.addEventListener('click', () => {
       const step = card.getAttribute('data-step');
@@ -234,11 +231,10 @@ function setupOrganicFlowchart() {
     if (stageTitle) stageTitle.textContent = info.title;
     if (stageDesc) stageDesc.textContent = info.desc;
     if (terminal) {
-      terminal.innerHTML = `<span style="color:#BAE6FD">> Node ${step} Aktif: ${info.title}</span>\n<span style="color:#BBF7D0">${info.sample}</span>`;
+      terminal.innerHTML = `<span style="color:#BAE6FD">> Node ${step} Active: ${info.title}</span>\n<span style="color:#BBF7D0">${info.sample}</span>`;
     }
   }
 
-  // Live simulation in drawer
   if (runLiveBtn) {
     runLiveBtn.addEventListener('click', () => {
       runHashSimulation();
@@ -252,20 +248,19 @@ function setupOrganicFlowchart() {
     });
   }
 
-  // Animation pulse trigger
   if (triggerPulseBtn) {
     triggerPulseBtn.addEventListener('click', () => {
       const path = document.getElementById('flowBezierPath');
       if (path) {
         path.style.animation = 'none';
-        void path.offsetWidth; // trigger reflow
+        void path.offsetWidth;
         path.style.animation = 'flowDash 6s cubic-bezier(0.16, 1, 0.3, 1)';
       }
       nodeCards.forEach((c, idx) => {
         setTimeout(() => {
           c.classList.add('active-node');
           setTimeout(() => c.classList.remove('active-node'), 700);
-        }, idx * 180);
+        }, idx * 160);
       });
     });
   }
@@ -274,16 +269,16 @@ function setupOrganicFlowchart() {
     if (!terminal) return;
     if (runLiveBtn) {
       runLiveBtn.disabled = true;
-      runLiveBtn.textContent = '⏳ Menguji Kriptografi...';
+      runLiveBtn.textContent = 'Verifying Checksum...';
     }
 
-    terminal.innerHTML = `<span style="color:#BAE6FD">> Inisialisasi pipeline verifikasi integritas data: CAP-SOP-MECH-P101-STARTUP.pdf...</span>\n`;
+    terminal.innerHTML = `<span style="color:#BAE6FD">> Initiating cryptographic pipeline: CAP-SOP-MECH-P101-STARTUP.pdf...</span>\n`;
 
     const steps = [
-      `[1/4] Verifikasi Sertifikat mTLS: <span style="color:#BBF7D0">VALID (Issued by Chandra Asri Enterprise CA)</span>`,
-      `[2/4] Komputasi Checksum SHA-256:\n      <span style="color:#FEF08A">d85e7a9b014f32c6e28fba109c4d9a33481a5e12f6b899147e0bc27a98fa66c1</span>\n      Status: <span style="color:#BBF7D0">100% MATCH (Bebas Manipulasi)</span>`,
-      `[3/4] Validasi Hak Akses RBAC: <span style="color:#DDD6FE">Tier 2 (Reliability Engineer)</span> ... <span style="color:#BBF7D0">GRANTED</span>`,
-      `[4/4] Verifikasi Grounding RAG: Citations verified against official plant repository (Confidence: 96.5%)\n<span style="color:#BBF7D0;font-weight:bold">✔ HASIL AKHIR: STATUS 200 OK — DOKUMEN & TELEMETRI TERAUTENTIKASI LENGKAP & AMAN.</span>`
+      `[1/4] mTLS Certificate Verification: <span style="color:#BBF7D0">VALID (Issued by Chandra Asri Enterprise CA)</span>`,
+      `[2/4] SHA-256 Checksum Computation:\n      <span style="color:#FEF08A">d85e7a9b014f32c6e28fba109c4d9a33481a5e12f6b899147e0bc27a98fa66c1</span>\n      Status: <span style="color:#BBF7D0">100% MATCH (Tamper-Free Verified)</span>`,
+      `[3/4] RBAC Matrix Verification: <span style="color:#DDD6FE">Tier 2 (Reliability Engineer)</span> ... <span style="color:#BBF7D0">GRANTED</span>`,
+      `[4/4] RAG Grounding Verification: Citations matched against official repository (Score: 96.5%)\n<span style="color:#BBF7D0;font-weight:bold">RESULT: STATUS 200 OK — DOCUMENT & TELEMETRY VERIFIED AND SECURE.</span>`
     ];
 
     let i = 0;
@@ -296,7 +291,7 @@ function setupOrganicFlowchart() {
         clearInterval(interval);
         if (runLiveBtn) {
           runLiveBtn.disabled = false;
-          runLiveBtn.textContent = '⚡ Tes Ulang Verifikasi Hash';
+          runLiveBtn.textContent = 'Test Hash Verification';
         }
       }
     }, 450);
@@ -304,7 +299,7 @@ function setupOrganicFlowchart() {
 }
 
 /**
- * Setup Subtle Links for "Flow Autentikasi Data"
+ * Setup subtle links
  */
 function setupSubtleLinks() {
   const btn1 = document.getElementById('openAuthFlowBtn');
@@ -313,8 +308,7 @@ function setupSubtleLinks() {
   const goToFlow = (e) => {
     e.preventDefault();
     switchTab('data-flow');
-    // Scroll to the organic flow container
-    const flowContainer = document.querySelector('.organic-flow-container');
+    const flowContainer = document.querySelector('.flowchart-minimal-container');
     if (flowContainer) {
       flowContainer.scrollIntoView({ behavior: 'smooth' });
     }
@@ -325,37 +319,20 @@ function setupSubtleLinks() {
 }
 
 /**
- * Telemetry Spline Filter Pills (Olefins, PE, Cracker, etc.)
+ * Plant unit pill selector
  */
-function setupTelemetryFilterPills() {
-  const pills = document.querySelectorAll('.unit-filter-pill');
-  const peakVal = document.querySelector('.peak-val');
-  const peakLbl = document.querySelector('.peak-lbl');
-
-  const unitMetrics = {
-    'olefins': { score: '99.4%', time: 'Peak Accuracy · 19:00' },
-    'pe': { score: '98.8%', time: 'Peak Accuracy · 15:00' },
-    'furnace': { score: '99.1%', time: 'Decoking Monitor · 11:00' },
-    'splitter': { score: '97.9%', time: 'Delta P Steady · 07:00' },
-    'utility': { score: '99.6%', time: 'Steam Flow Bal. · 23:00' }
-  };
-
+function setupPlantUnitPills() {
+  const pills = document.querySelectorAll('.mood-pill[data-unit]');
   pills.forEach(p => {
     p.addEventListener('click', () => {
       pills.forEach(x => x.classList.remove('active'));
       p.classList.add('active');
-
-      const unit = p.getAttribute('data-unit');
-      if (unitMetrics[unit] && peakVal && peakLbl) {
-        peakVal.textContent = unitMetrics[unit].score;
-        peakLbl.textContent = unitMetrics[unit].time;
-      }
     });
   });
 }
 
 /**
- * Setup AI Copilot Chat Interactions
+ * Setup AI Copilot
  */
 function setupChat() {
   const form = document.getElementById('chatForm');
@@ -381,26 +358,22 @@ function setupChat() {
 }
 
 /**
- * Send chat message to backend or fallback
+ * Send chat message
  */
 async function sendChatMessage(query, assetTag) {
   state.isSending = true;
   const sendBtn = document.getElementById('sendChatBtn');
   if (sendBtn) {
     sendBtn.disabled = true;
-    sendBtn.innerHTML = '<span>✦</span>';
+    sendBtn.innerHTML = '<span>...</span>';
   }
 
-  // Append user bubble
   appendChatBubble('user', query, assetTag);
-
-  // Append loading assistant bubble
   const loadingBubbleId = appendLoadingBubble();
 
   try {
     let result = null;
 
-    // Attempt real backend call
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
@@ -417,32 +390,30 @@ async function sendChatMessage(query, assetTag) {
         result = await res.json();
       }
     } catch (err) {
-      // Backend offline, fallback to internal knowledge base
+      // offline fallback
     }
 
-    // Fallback if backend wasn't reachable
     if (!result) {
       result = getFallbackKnowledgeResponse(query, assetTag);
     }
 
-    // Replace loading bubble with rich assistant response
     removeLoadingBubble(loadingBubbleId);
     appendChatBubble('assistant', result.response, assetTag, result.citations);
 
   } catch (error) {
     removeLoadingBubble(loadingBubbleId);
-    appendChatBubble('assistant', 'Terjadi kendala saat memproses pertanyaan. Silakan coba kembali.', assetTag);
+    appendChatBubble('assistant', 'Unable to complete query. Please check connection and try again.', assetTag);
   } finally {
     state.isSending = false;
     if (sendBtn) {
       sendBtn.disabled = false;
-      sendBtn.innerHTML = '<span>Kirim</span> <span>➔</span>';
+      sendBtn.innerHTML = '<span>Send</span> <span>&rarr;</span>';
     }
   }
 }
 
 /**
- * Append chat bubble to chat log
+ * Append chat bubble (Zero emojis)
  */
 function appendChatBubble(role, text, assetTag, citations = []) {
   const chatLog = document.getElementById('chatLog');
@@ -454,7 +425,7 @@ function appendChatBubble(role, text, assetTag, citations = []) {
   if (role === 'user') {
     row.innerHTML = `
       <div class="chat-bubble user-bubble">
-        <div class="chat-bubble-tag">🏷️ Aset: ${escapeHtml(assetTag)}</div>
+        <div class="chat-bubble-tag">Asset: ${escapeHtml(assetTag)}</div>
         <div class="chat-bubble-text">${escapeHtml(text)}</div>
       </div>
     `;
@@ -463,15 +434,15 @@ function appendChatBubble(role, text, assetTag, citations = []) {
     if (citations && citations.length > 0) {
       citationsHtml = `
         <div class="bot-citations-box">
-          <div class="citations-header-title">📚 Dokumen Sumber Terverifikasi:</div>
+          <div class="citations-header-title">Verified Source Documents:</div>
           <div class="citation-cards-row">
             ${citations.map(c => `
               <div class="citation-chip-card">
-                <div class="cit-source">📄 ${escapeHtml(c.source)}</div>
+                <div class="cit-source">${escapeHtml(c.source)}</div>
                 <div class="cit-tags">
-                  <span>Hal. ${c.page || 'N/A'}</span>
+                  <span>Page ${c.page || 'N/A'}</span>
                   <span>${escapeHtml(c.revision || 'Official')}</span>
-                  <span class="conf-tag">${c.confidence_score ? Math.round(c.confidence_score * 100) + '%' : '95%'} Akurat</span>
+                  <span class="conf-tag">${c.confidence_score ? Math.round(c.confidence_score * 100) + '%' : '95%'} Match</span>
                 </div>
                 <div class="cit-snippet">"${escapeHtml(c.snippet || '')}"</div>
               </div>
@@ -484,8 +455,8 @@ function appendChatBubble(role, text, assetTag, citations = []) {
     row.innerHTML = `
       <div class="chat-bubble bot-bubble">
         <div class="bot-header-meta">
-          <span class="bot-avatar-chip">✦ Copilot</span>
-          <span class="verified-pill">✓ Verified SOP</span>
+          <span class="bot-avatar-chip">AI Copilot</span>
+          <span class="verified-pill">Verified SOP</span>
         </div>
         <div class="bot-text-body">
           ${formatMarkdownText(text)}
@@ -510,11 +481,11 @@ function appendLoadingBubble() {
   row.innerHTML = `
     <div class="chat-bubble bot-bubble" style="opacity:0.85">
       <div class="bot-header-meta">
-        <span class="bot-avatar-chip">✦ Copilot</span>
-        <span class="verified-pill">Menganalisis RAG...</span>
+        <span class="bot-avatar-chip">AI Copilot</span>
+        <span class="verified-pill">Evaluating RAG...</span>
       </div>
       <div style="font-size:0.85rem;color:var(--text-muted)">
-        Memindai dokumen P&ID, SOP, dan catatan kegagalan untuk ${state.selectedAssetTag}...
+        Retrieving verified P&ID and SOP chunks for ${state.selectedAssetTag}...
       </div>
     </div>
   `;
@@ -530,7 +501,7 @@ function removeLoadingBubble(id) {
 }
 
 /**
- * Fallback domain knowledge generator
+ * Fallback knowledge response
  */
 function getFallbackKnowledgeResponse(query, assetTag) {
   if (CHANDRA_ASRI_KNOWLEDGE_BASE[assetTag]) {
@@ -538,21 +509,21 @@ function getFallbackKnowledgeResponse(query, assetTag) {
   }
 
   return {
-    response: `Berdasarkan arsip pedoman teknik pabrik Chandra Asri untuk aset **${assetTag}**:\n\n1. Seluruh operasi wajib mematuhi batas aman tekanan dan temperatur yang terdaftar pada lembar data DCS.\n2. Verifikasi interlock keselamatan dan periksa apakah ada notifikasi anomali pada sistem pemeliharaan berkala sebelum memulai pekerjaan.\n3. Catat deviasi aliran fluida atau getaran pada logsheet shift operasional.`,
+    response: `Berdasarkan pedoman teknik Chandra Asri untuk aset **${assetTag}**:\n\n1. Seluruh operasi wajib mematuhi batas aman tekanan dan temperatur di DCS.\n2. Verifikasi interlock keselamatan dan periksa logsheet pemeliharaan berkala sebelum memulai pekerjaan.\n3. Catat deviasi aliran fluida atau vibrasi pada logsheet shift operasional.`,
     citations: [
       {
         source: `CAP-SOP-${assetTag}-MAINTENANCE.pdf`,
         page: 12,
         revision: "Rev 4.0",
         confidence_score: 0.942,
-        snippet: `Standar Pemeliharaan & Prosedur Verifikasi Operasi Aman Aset ${assetTag}`
+        snippet: `Operational Verification and Safety Guidelines for Asset ${assetTag}`
       }
     ]
   };
 }
 
 /**
- * Setup quick prompt suggestion pills
+ * Quick prompt suggestion pills
  */
 function setupQuickPrompts() {
   const pills = document.querySelectorAll('.quick-prompt-pill');
@@ -577,7 +548,7 @@ function setupQuickPrompts() {
 }
 
 /**
- * Setup system settings
+ * System settings
  */
 function setupSettings() {
   const saveBtn = document.getElementById('saveSettingsBtn');
@@ -605,17 +576,16 @@ function setupSettings() {
         API_ENDPOINT = endpointInput.value.trim() || 'http://localhost:8000/api/chat';
         localStorage.setItem('knowledgehub_api_url', API_ENDPOINT);
       }
-      alert('Konfigurasi berhasil disimpan! Sistem siap digunakan.');
+      alert('Configuration saved successfully.');
       checkBackendHealth();
     });
   }
 }
 
 /**
- * Setup search filters for docs and failure memory
+ * Search filters
  */
 function setupSearchFilters() {
-  // Docs search
   const docInput = document.getElementById('docSearchInput');
   const docRows = document.querySelectorAll('#docsTable tbody tr');
 
@@ -629,7 +599,6 @@ function setupSearchFilters() {
     });
   }
 
-  // Failure search
   const failInput = document.getElementById('failureSearchInput');
   const failCards = document.querySelectorAll('.failure-card-item');
 
@@ -663,15 +632,13 @@ async function checkBackendHealth() {
 
     if (res.ok) {
       state.isLiveBackend = true;
-      pill.innerHTML = `<span class="pulse-dot"></span> Backend Live: http://localhost:8000`;
-      pill.className = 'cute-tag mint';
+      pill.innerHTML = `<span class="status-indicator-dot"></span> Backend Live: http://localhost:8000`;
     } else {
       throw new Error();
     }
   } catch (err) {
     state.isLiveBackend = false;
-    pill.innerHTML = `<span>⚡</span> Mode Offline Simulator (Ready)`;
-    pill.className = 'cute-tag yellow';
+    pill.innerHTML = `<span class="status-indicator-dot" style="background:#D97706"></span> Offline Simulation Mode`;
   }
 }
 
@@ -698,6 +665,5 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-// Global exposure
 window.switchTab = switchTab;
 window.sendChatMessage = sendChatMessage;
