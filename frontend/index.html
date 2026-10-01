@@ -61,6 +61,9 @@
         <div class="status-badge">
           <span class="dot"></span> Telemetri Aktif · 1,420 Aset
         </div>
+        <div class="auth-meta-wrap">
+          <button type="button" class="subtle-link-btn" id="openAuthFlowBtn">Flow Autentikasi Data</button>
+        </div>
       </div>
     </nav>
 
@@ -529,7 +532,153 @@
         </div>
       </section>
 
+      <!-- Subtle Bottom Footnote -->
+      <footer class="app-subtle-footer">
+        <span>PT Chandra Asri Pacific Tbk · CALIBER 2026</span>
+        <span class="subtle-divider">·</span>
+        <button type="button" class="subtle-link-btn" id="openAuthFlowBtnSecondary">Flow Autentikasi Data</button>
+      </footer>
+
     </main>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- MODAL: DATA AUTHENTICATION & GOVERNANCE FLOW -->
+  <!-- ================================================================ -->
+  <div id="authFlowModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="authFlowTitle">
+    <div class="modal-dialog glass-panel">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-badge"><span class="shield-dot"></span> Plant Data Governance &amp; Security Protocol</div>
+          <h2 id="authFlowTitle">Alur &amp; Protokol Autentikasi Data</h2>
+          <p class="modal-subtitle">Standar Verifikasi Integritas Data &amp; Dokumen Operasional — PT Chandra Asri Pacific Tbk</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeAuthFlowBtn" aria-label="Tutup Modal">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Summary Alert Box -->
+        <div class="auth-intro-box">
+          <div class="intro-icon">🔒</div>
+          <div>
+            <b>Prinsip Zero-Trust &amp; Verifikasi Kriptografis:</b>
+            Seluruh data operasional, P&amp;ID, SOP teknis, dan catatan kegagalan (RCFA) yang diakses oleh tim lapangan maupun AI Copilot wajib melalui 5 tahapan otentikasi data guna menjamin keaslian dan mencegah manipulasi parameter keselamatan industri kimia.
+          </div>
+        </div>
+
+        <!-- 5-Stage Interactive Flow Pipeline -->
+        <div class="auth-pipeline">
+          <!-- Step 1 -->
+          <div class="auth-step-card">
+            <div class="step-num">01</div>
+            <div class="step-icon">🗄️</div>
+            <div class="step-content">
+              <h4>1. Source Ingestion &amp; Tagging</h4>
+              <p>Pengambilan data otomatis dari DMS Engineering, DCS Honeywell Experion, SAP Plant Maintenance, dan Lab LIMS.</p>
+              <div class="step-tags">
+                <span class="micro-badge">mTLS 1.3</span>
+                <span class="micro-badge">Kerberos SSO</span>
+                <span class="micro-badge">DCS OPC-UA</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-arrow" aria-hidden="true">➔</div>
+
+          <!-- Step 2 -->
+          <div class="auth-step-card">
+            <div class="step-num">02</div>
+            <div class="step-icon">🔐</div>
+            <div class="step-content">
+              <h4>2. Cryptographic Hashing &amp; Integrity</h4>
+              <p>Setiap dokumen (SOP, P&amp;ID, RCFA) dihitung nilai hash SHA-256 unik saat diunggah untuk mencegah perubahan parameter ilegal.</p>
+              <div class="step-tags">
+                <span class="micro-badge">SHA-256 Checksum</span>
+                <span class="micro-badge">Tamper-Evident</span>
+                <span class="micro-badge">Digital Watermark</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-arrow" aria-hidden="true">➔</div>
+
+          <!-- Step 3 -->
+          <div class="auth-step-card">
+            <div class="step-num">03</div>
+            <div class="step-icon">🛡️</div>
+            <div class="step-content">
+              <h4>3. Role-Based Access Control (RBAC)</h4>
+              <p>Otorisasi pengguna bertingkat sebelum dokumen atau telemetri disajikan:</p>
+              <ul class="auth-tier-list">
+                <li><b>Tier 1 (Operator):</b> Akses SOP Startup/Shutdown &amp; Checklist.</li>
+                <li><b>Tier 2 (Reliability Eng.):</b> P&amp;ID Teknis &amp; RCFA Root Cause.</li>
+                <li><b>Tier 3 (Superintendent):</b> Approval revisi &amp; audit trail penuh.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="auth-arrow" aria-hidden="true">➔</div>
+
+          <!-- Step 4 -->
+          <div class="auth-step-card">
+            <div class="step-num">04</div>
+            <div class="step-icon">✦</div>
+            <div class="step-content">
+              <h4>4. RAG Context &amp; Hallucination Guardrail</h4>
+              <p>Model AI Copilot hanya mengutip potongan dokumen berstatus <i>Verified</i>. Jawaban wajib melewati ambang confidence score &ge;85%.</p>
+              <div class="step-tags">
+                <span class="micro-badge">Confidence Score &ge;85%</span>
+                <span class="micro-badge">Citation Stamping</span>
+                <span class="micro-badge">Grounding Check</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-arrow" aria-hidden="true">➔</div>
+
+          <!-- Step 5 -->
+          <div class="auth-step-card">
+            <div class="step-num">05</div>
+            <div class="step-icon">📜</div>
+            <div class="step-content">
+              <h4>5. Immutable Audit Trail &amp; Kepatuhan</h4>
+              <p>Semua interaksi dicatat ke penyimpanan log WORM (Write Once Read Many) terenkripsi untuk audit keselamatan berkala.</p>
+              <div class="step-tags">
+                <span class="micro-badge">AES-256 at Rest</span>
+                <span class="micro-badge">ISO 27001</span>
+                <span class="micro-badge">OSHA 1910 PSM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Simulator Box -->
+        <div class="auth-tester-box">
+          <div class="tester-header">
+            <div>
+              <h4>🧪 Simulator Verifikasi Otentikasi Dokumen</h4>
+              <p>Uji validasi kriptografis dan verifikasi tanda tangan digital dokumen teknis secara real-time:</p>
+            </div>
+            <button type="button" id="runAuthSimBtn" class="pill secondary" style="font-size:0.8rem;padding:7px 16px;">
+              ⚡ Jalankan Verifikasi Hash
+            </button>
+          </div>
+          <div id="authSimOutput" class="auth-sim-output">
+            <span class="code-comment">// Klik "Jalankan Verifikasi Hash" untuk menguji integritas dokumen sampel...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <div class="modal-footer-meta">
+          <span class="secure-icon">🛡️</span> Protokol Keamanan Terpadu Chandra Asri Pacific · CALIBER 2026
+        </div>
+        <button type="button" class="pill" id="closeAuthFlowFooterBtn">Tutup</button>
+      </div>
+    </div>
   </div>
 
   <!-- Scripts -->

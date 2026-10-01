@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupQuickPrompts();
   setupSettings();
   setupSearchFilters();
+  setupAuthFlowModal();
   checkBackendHealth();
 });
 
@@ -571,3 +572,76 @@ function escapeHtml(str) {
 // Global exposure for direct inline calls if needed
 window.switchTab = switchTab;
 window.sendChatMessage = sendChatMessage;
+
+/**
+ * Setup Data Authentication & Governance Flow Modal
+ */
+function setupAuthFlowModal() {
+  const modal = document.getElementById('authFlowModal');
+  const openBtn = document.getElementById('openAuthFlowBtn');
+  const openBtnSecondary = document.getElementById('openAuthFlowBtnSecondary');
+  const closeBtn = document.getElementById('closeAuthFlowBtn');
+  const closeFooterBtn = document.getElementById('closeAuthFlowFooterBtn');
+  const runSimBtn = document.getElementById('runAuthSimBtn');
+  const simOutput = document.getElementById('authSimOutput');
+
+  if (!modal) return;
+
+  const openModal = () => {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (openBtnSecondary) openBtnSecondary.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (closeFooterBtn) closeFooterBtn.addEventListener('click', closeModal);
+
+  // Close on clicking backdrop
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      closeModal();
+    }
+  });
+
+  // Interactive Hash Verification Simulator
+  if (runSimBtn && simOutput) {
+    runSimBtn.addEventListener('click', () => {
+      runSimBtn.disabled = true;
+      runSimBtn.innerHTML = '⏳ Menjalankan Verifikasi...';
+      simOutput.innerHTML = `<span style="color:#8CC1E9">> Inisialisasi pipeline autentikasi data untuk target dokumen: CAP-SOP-MECH-P101-STARTUP.pdf...</span>\n`;
+
+      const steps = [
+        `[Step 1/4] Memeriksa sertifikat mTLS & PKI Kerberos: <span style="color:#10B981">VALID</span> (Issuer: Chandra Asri Enterprise CA)`,
+        `[Step 2/4] Komputasi Checksum SHA-256:\n          <span style="color:#FFB703">d85e7a9b014f32c6e28fba109c4d9a33481a5e12f6b899147e0bc27a98fa66c1</span>\n          Status Integritas: <span style="color:#10B981">100% MATCH (Tamper-Free Verified)</span>`,
+        `[Step 3/4] Validasi Otorisasi Pengguna: <span style="color:#438BC4">RBAC Tier 2 (Reliability Engineer)</span> ... <span style="color:#10B981">GRANTED</span>`,
+        `[Step 4/4] Verifikasi Grounding RAG Copilot: Sitasi terikat ke metadata terdaftar (Score: 96.5% > Threshold 85%)\n<span style="color:#10B981;font-weight:bold">✔ HASIL AKHIR: STATUS 200 OK — DOKUMEN & TELEMETRI TERAUTENTIKASI LENGKAP & AMAN.</span>`
+      ];
+
+      let currentStep = 0;
+      const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+          simOutput.innerHTML += `${steps[currentStep]}\n`;
+          simOutput.scrollTop = simOutput.scrollHeight;
+          currentStep++;
+        } else {
+          clearInterval(interval);
+          runSimBtn.disabled = false;
+          runSimBtn.innerHTML = '⚡ Jalankan Verifikasi Ulang';
+        }
+      }, 450);
+    });
+  }
+}
