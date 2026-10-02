@@ -1,0 +1,456 @@
+[
+  {
+    "timestamp": "2026-09-27T15:49:52.369330",
+    "file": "sample_data_karyawan_pii.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "NPWP",
+      "Nomor Kartu Keluarga (KK)",
+      "Nomor Rekening Bank",
+      "Tanggal Lahir"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_PRE_OCR",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T15:50:05.905733",
+    "file": "sample_data_karyawan_pii.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "NPWP",
+      "Nomor Kartu Keluarga (KK)",
+      "Nomor Rekening Bank",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "APPROVED_PRE_OCR",
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T15:50:47.862701",
+    "file": "pengajuan-pencairan_2026.pdf",
+    "detected_pii": [
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "APPROVED_POST_OCR",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T15:56:45.349569",
+    "file": "sample_invoice_non_pii.docx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T15:56:52.158543",
+    "file": "pengajuan-pencairan_2026.pdf",
+    "detected_pii": [],
+    "user_consent": false,
+    "action": "REJECTED_OCR_SCAN_GATE",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T15:57:01.175748",
+    "file": "pengajuan-pencairan_2026.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "APPROVED_OCR_SCAN_GATE",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T15:57:30.580139",
+    "file": "pengajuan-pencairan_2026.pdf",
+    "detected_pii": [
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "APPROVED_POST_OCR_PII",
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T16:40:21.217522",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:40:34.982414",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_RAW_PII",
+    "raw_pii_allowed": true,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T16:40:48.703320",
+    "file": "sample_test_rekening_pendek.docx",
+    "detected_pii": [
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:41:06.651494",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:44:31.739581",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:47:57.180155",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:48:20.271837",
+    "file": "sample_test_nik.docx",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Tanggal Lahir"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_RAW_PII",
+    "raw_pii_allowed": true,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T16:48:31.375052",
+    "file": "sample_test_rekening_pendek.docx",
+    "detected_pii": [
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T16:48:38.692509",
+    "file": "sample_invoice_non_pii.docx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T21:03:04.327737",
+    "file": "The Case - CALIBER 2026.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:33:36.764820",
+    "file": "sample_catatan.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:33:41.268286",
+    "file": "sample_panduan.md",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:33:45.669115",
+    "file": "sample_inventaris.csv",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:33:50.493445",
+    "file": "sample_presentasi.pptx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:42:50.228357",
+    "file": "sample_pengumuman.png",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:42:59.694303",
+    "file": "sample_anggaran.xlsx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:43:05.019853",
+    "file": "sample_paket_dokumen.zip/panduan_onboarding.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:43:06.337079",
+    "file": "sample_paket_dokumen.zip/data/laporan_penjualan.csv",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:43:06.998137",
+    "file": "sample_paket_dokumen.zip/arsip/kebijakan_keamanan.docx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:51:17.305160",
+    "file": "sample_zip_pii_test.zip/01_sop_operasional.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T22:51:18.234848",
+    "file": "sample_zip_pii_test.zip/02_data_karyawan_sensitif.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_PRE_OCR_PII",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T23:00:17.167788",
+    "file": "test_doc_clean.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T23:00:33.388015",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T23:01:01.697143",
+    "file": "test_doc_pii_rejected.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-09-27T23:07:25.028430",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": true,
+    "action": "PROCESSED_WITH_REDACTION",
+    "raw_pii_allowed": false,
+    "redacted": true
+  },
+  {
+    "timestamp": "2026-09-27T23:14:16.353931",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:23:10.240292",
+    "file": "CAP-SOP-MECH-P101-STARTUP.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:23:11.085186",
+    "file": "CAP-INST-K102-VIBRATION-SPEC.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:23:11.928151",
+    "file": "CAP-FURNACE-F101-INTEGRITY-REPORT.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:23:12.866925",
+    "file": "CAP-PID-C201-FRACTIONATION.dwg.pdf",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:42:50.620199",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:43:32.839698",
+    "file": "test_clean_auto.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:43:32.845322",
+    "file": "test_pii_auto.txt",
+    "detected_pii": [
+      "NIK (KTP)"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:45:24.947173",
+    "file": "test_clean_auto.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:45:24.953631",
+    "file": "test_pii_auto.txt",
+    "detected_pii": [
+      "NIK (KTP)"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T14:45:53.062371",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)",
+      "Nomor Rekening Bank"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-02T15:57:36.768837",
+    "file": "test_doc_pii_approved.txt",
+    "detected_pii": [
+      "NIK (KTP)"
+    ],
+    "user_consent": false,
+    "action": "REJECTED_BY_USER",
+    "raw_pii_allowed": false,
+    "redacted": false
+  }
+]

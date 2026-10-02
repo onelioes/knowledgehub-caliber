@@ -5,7 +5,7 @@
  */
 
 // Backend endpoint configuration
-let API_ENDPOINT = localStorage.getItem('knowledgehub_api_url') || 'http://localhost:8000/api/chat';
+let API_ENDPOINT = localStorage.getItem('knowledgehub_api_url') || (window.location.protocol.startsWith('http') ? `${window.location.origin}/api/chat` : 'http://localhost:8000/api/chat');
 
 // State
 const state = {
@@ -376,7 +376,7 @@ async function sendChatMessage(query, assetTag) {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       const res = await fetch(API_ENDPOINT, {
         method: 'POST',
@@ -622,9 +622,10 @@ async function checkBackendHealth() {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const healthUrl = API_ENDPOINT.includes('/api/chat') ? API_ENDPOINT.replace('/api/chat', '/health') : `${API_ENDPOINT}/health`;
 
-    const res = await fetch(API_ENDPOINT.replace('/api/chat', '/docs') || API_ENDPOINT, {
+    const res = await fetch(healthUrl, {
       method: 'GET',
       signal: controller.signal
     });
@@ -632,7 +633,8 @@ async function checkBackendHealth() {
 
     if (res.ok) {
       state.isLiveBackend = true;
-      pill.innerHTML = `<span class="status-indicator-dot"></span> Backend Live: http://localhost:8000`;
+      const hostDisplay = window.location.origin.includes('http') ? window.location.origin : 'http://localhost:8000';
+      pill.innerHTML = `<span class="status-indicator-dot"></span> Backend Live: ${hostDisplay}`;
     } else {
       throw new Error();
     }
