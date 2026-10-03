@@ -932,17 +932,20 @@ if not os.path.exists(FRONTEND_DIR):
 if os.path.exists(FRONTEND_DIR):
     from fastapi.responses import FileResponse
 
+    # Cegah browser memakai salinan UI lama dari cache setelah frontend diperbarui
+    NO_CACHE_HEADERS = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache", "Expires": "0"}
+
     @app.get("/", include_in_schema=False)
     def serve_index():
-        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"), headers=NO_CACHE_HEADERS)
 
     @app.get("/styles.css", include_in_schema=False)
     def serve_styles():
-        return FileResponse(os.path.join(FRONTEND_DIR, "styles.css"))
+        return FileResponse(os.path.join(FRONTEND_DIR, "styles.css"), headers=NO_CACHE_HEADERS)
 
     @app.get("/app.js", include_in_schema=False)
     def serve_app_js():
-        return FileResponse(os.path.join(FRONTEND_DIR, "app.js"))
+        return FileResponse(os.path.join(FRONTEND_DIR, "app.js"), headers=NO_CACHE_HEADERS)
 
 
 if __name__ == "__main__":
