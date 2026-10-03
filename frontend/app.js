@@ -135,7 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSearchFilters();
   setupSubtleLinks();
   setupPlantUnitPills();
+  setupDocumentUpload();
   checkBackendHealth();
+  loadStoredDocuments();
 });
 
 /**
@@ -587,11 +589,11 @@ function setupSettings() {
  */
 function setupSearchFilters() {
   const docInput = document.getElementById('docSearchInput');
-  const docRows = document.querySelectorAll('#docsTable tbody tr');
 
   if (docInput) {
     docInput.addEventListener('input', () => {
       const q = docInput.value.toLowerCase().trim();
+      const docRows = document.querySelectorAll('#docsTable tbody tr');
       docRows.forEach(row => {
         const text = row.textContent.toLowerCase();
         row.style.display = text.includes(q) ? '' : 'none';
@@ -669,3 +671,289 @@ function escapeHtml(str) {
 
 window.switchTab = switchTab;
 window.sendChatMessage = sendChatMessage;
+
+/**
+ * Setup Document Upload & Drag-and-Drop
+ */
+function setupDocumentUpload() {
+  const dropzone = document.getElementById('docDropzone');
+  const fileInput = document.getElementById('docFileInput');
+  const selectBtn = document.getElementById('selectFileBtn');
+  const cancelModalBtn = document.getElementById('modalCancelBtn');
+  const confirmModalBtn = document.getElementById('modalConfirmBtn');
+
+  if (selectBtn && fileInput) {
+    selectBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      fileInput.click();
+    });
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleFileUpload(fileInput.files[0]);
+        fileInput.value = '';
+      }
+    });
+  }
+
+  if (dropzone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add('drag-over');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove('drag-over');
+      }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files && files[0]) {
+        handleFileUpload(files[0]);
+      }
+    });
+  }
+
+  if (cancelModalBtn) {
+    cancelModalBtn.addEventListener('click', () => {
+      handleConsentDecision(false);
+    });
+  }
+
+  if (confirmModalBtn) {
+    confirmModalBtn.addEventListener('click', () => {
+      handleConsentDecision(true);
+    });
+  }
+}
+
+/**
+ * Handle document upload via POST /upload
+ */
+async function handleFileUpload(file) {
+  if (!file) return;
+
+  const maxBytes = 25 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    showUploadBanner(`Ukuran file (${(file.size / 1024 / 1024).toFixed(1)} MB) melebihi batas aman 25 MB.`, 'error');
+    return;
+  }
+
+  showUploadBanner(`Mengunggah & menganalisis dokumen: "${file.name}"...`, 'loading');
+
+  const uploadUrl = API_ENDPOINT.includes('/api/chat')
+    ? API_ENDPOINT.replace('/api/chat', '/upload')
+    : `${API_ENDPOINT}/upload`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const res = await fetch(uploadUrl, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showUploadBanner(data.detail || 'Gagal memproses dokumen upload.', 'error');
+      return;
+    }
+
+    if (data.status === 'completed') {
+      showUploadBanner(`Dokumen "${data.file_name}" berhasil diproses dan disimpan ke Vector Store (${data.chunks_count} chunks)!`, 'success');
+      loadStoredDocuments();
+    } else if (data.status === 'pending_consent') {
+      state.pendingUpload = data;
+      showUploadBanner(`Dokumen "${data.file_name}" terdeteksi PII/OCR, memerlukan persetujuan keamanan.`, 'warning');
+      openConsentModal(data);
+    }
+  } catch (err) {
+    showUploadBanner('Gagal terhubung ke backend untuk upload: ' + err.message, 'error');
+  }
+}
+
+/**
+ * Buka modal persetujuan PII / OCR
+ */
+function openConsentModal(pendingData) {
+  const modal = document.getElementById('consentModal');
+  const title = document.getElementById('modalDocTitle');
+  const msg = document.getElementById('modalDocMessage');
+  const details = document.getElementById('modalPiiDetails');
+  const ocrOption = document.getElementById('consentOcrOption');
+
+  if (!modal) return;
+
+  if (title) title.textContent = `Persetujuan: ${pendingData.file_name}`;
+  if (msg) msg.textContent = pendingData.message;
+
+  let alertContent = '';
+  if (pendingData.detected_pii && pendingData.detected_pii.length > 0) {
+    alertContent += `<div><strong>Data Pribadi Sensitif Terdeteksi:</strong> ${pendingData.detected_pii.join(', ')}</div>`;
+  }
+  if (pendingData.requires_ocr) {
+    alertContent += `<div><strong>Halaman Gambar/Pindaian:</strong> Memerlukan Vision OCR API untuk transkripsi.</div>`;
+    if (ocrOption) ocrOption.style.display = 'flex';
+  } else {
+    if (ocrOption) ocrOption.style.display = 'none';
+  }
+
+  if (details) details.innerHTML = alertContent || 'Konfirmasi pemrosesan data.';
+
+  modal.style.display = 'flex';
+}
+
+function closeConsentModal() {
+  const modal = document.getElementById('consentModal');
+  if (modal) modal.style.display = 'none';
+}
+
+/**
+ * Tangani keputusan consent pengguna
+ */
+async function handleConsentDecision(approve) {
+  if (!state.pendingUpload || !state.pendingUpload.pending_id) {
+    closeConsentModal();
+    return;
+  }
+
+  const pendingId = state.pendingUpload.pending_id;
+  const redactChecked = document.getElementById('consentRedactCheckbox')?.checked ?? true;
+  const ocrChecked = document.getElementById('consentOcrCheckbox')?.checked ?? true;
+
+  const confirmUrl = API_ENDPOINT.includes('/api/chat')
+    ? API_ENDPOINT.replace('/api/chat', `/upload/${pendingId}/confirm`)
+    : `${API_ENDPOINT}/upload/${pendingId}/confirm`;
+
+  const payload = {
+    consent_processing: approve,
+    consent_ocr: ocrChecked,
+    allow_raw_pii: !redactChecked
+  };
+
+  closeConsentModal();
+  showUploadBanner(`Memproses konfirmasi untuk ${state.pendingUpload.file_name}...`, 'loading');
+
+  try {
+    const res = await fetch(confirmUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showUploadBanner(data.detail || 'Konfirmasi gagal diproses.', 'error');
+      return;
+    }
+
+    if (data.status === 'completed') {
+      showUploadBanner(`Dokumen "${data.file_name}" berhasil disetujui & diindeks ke Vector Store (${data.chunks_count} chunks)!`, 'success');
+      loadStoredDocuments();
+    } else {
+      showUploadBanner(`Dokumen "${data.file_name}" dibatalkan sesuai keputusan pengguna.`, 'warning');
+    }
+  } catch (err) {
+    showUploadBanner('Gagal mengirim konfirmasi: ' + err.message, 'error');
+  } finally {
+    state.pendingUpload = null;
+  }
+}
+
+function showUploadBanner(message, type = 'info') {
+  const banner = document.getElementById('uploadStatusBanner');
+  if (!banner) return;
+
+  banner.style.display = 'block';
+  banner.textContent = message;
+
+  if (type === 'success') {
+    banner.style.background = '#ECFDF5';
+    banner.style.color = '#065F46';
+    banner.style.border = '1px solid #A7F3D0';
+  } else if (type === 'error') {
+    banner.style.background = '#FEF2F2';
+    banner.style.color = '#991B1B';
+    banner.style.border = '1px solid #FECACA';
+  } else if (type === 'warning') {
+    banner.style.background = '#FFFBEB';
+    banner.style.color = '#92400E';
+    banner.style.border = '1px solid #FDE68A';
+  } else {
+    banner.style.background = '#EFF6FF';
+    banner.style.color = '#1E40AF';
+    banner.style.border = '1px solid #BFDBFE';
+  }
+}
+
+/**
+ * Load documents list from GET /documents into docsTable
+ */
+async function loadStoredDocuments() {
+  const tableBody = document.querySelector('#docsTable tbody');
+  if (!tableBody) return;
+
+  const docsUrl = API_ENDPOINT.includes('/api/chat')
+    ? API_ENDPOINT.replace('/api/chat', '/documents')
+    : `${API_ENDPOINT}/documents`;
+
+  try {
+    const res = await fetch(docsUrl);
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (data.documents && data.documents.length > 0) {
+      tableBody.innerHTML = '';
+      data.documents.forEach((doc) => {
+        const tr = document.createElement('tr');
+        
+        let tag = 'DOC';
+        let badgeClass = 'blue';
+        if (doc.source.includes('P101') || doc.source.includes('P-101')) { tag = 'P-101A'; badgeClass = 'blue'; }
+        else if (doc.source.includes('K102') || doc.source.includes('K-102')) { tag = 'K-102'; badgeClass = 'green'; }
+        else if (doc.source.includes('F101') || doc.source.includes('F-101')) { tag = 'F-101'; badgeClass = 'blue'; }
+        else if (doc.source.includes('C201') || doc.source.includes('C-201')) { tag = 'C-201'; badgeClass = 'green'; }
+        else if (doc.source.includes('EX304') || doc.source.includes('EX-304')) { tag = 'EX-304'; badgeClass = 'blue'; }
+
+        const dateStr = doc.last_processed ? new Date(doc.last_processed).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Official Archive';
+
+        tr.innerHTML = `
+          <td><span class="tag-badge ${badgeClass}">${tag}</span></td>
+          <td><b>${escapeHtml(doc.source)}</b></td>
+          <td>Chandra Asri Archive</td>
+          <td>${dateStr}</td>
+          <td><span class="status-chip ok">${doc.chunks_count} Chunks (100%)</span></td>
+          <td><button class="pill-btn micro-pill" onclick="askAiAboutDoc('${escapeHtml(doc.source)}')">Ask AI</button></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+  } catch (e) {
+    // Keep defaults if offline
+  }
+}
+
+function askAiAboutDoc(docName) {
+  switchTab('ai-copilot');
+  const input = document.getElementById('chatInput');
+  if (input) {
+    input.value = `Jelaskan ringkasan dan poin penting dari dokumen ${docName}`;
+    input.focus();
+  }
+}
+
+window.askAiAboutDoc = askAiAboutDoc;
