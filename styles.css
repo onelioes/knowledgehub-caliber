@@ -767,9 +767,10 @@ body {
 
 .deck-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  gap: 16px;
 }
 
 .section-title {
@@ -789,6 +790,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  align-items: stretch;
 }
 
 .deck-card {
@@ -802,6 +804,9 @@ body {
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .deck-card:hover {
@@ -2106,8 +2111,11 @@ body {
     display: none;
   }
   .stacked-cards-container {
-    grid-template-columns: 1fr;
-  }
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
   .two-bento-grid {
     grid-template-columns: 1fr;
   }
@@ -2903,6 +2911,9 @@ body {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   cursor: pointer;
+
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .deck-card:hover {
@@ -3038,13 +3049,15 @@ body {
 }
 
 .chemical-selector-wrap {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #F8FAFC;
   border: 1px solid var(--border-soft);
   padding: 6px 14px;
-  border-radius: 16px;
+  border-radius: 14px;
+  height: 38px;
+  box-sizing: border-box;
 }
 
 .chemical-selector-wrap label {
@@ -3877,7 +3890,7 @@ body {
 }
 
 .telemetry-controls {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
@@ -3933,7 +3946,7 @@ body {
 /* --- Telemetry Grid & Cross-site Bar Chart --- */
 .telemetry-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 1.55fr 1fr;
   gap: 20px;
   align-items: stretch;
 }
@@ -3942,9 +3955,12 @@ body {
   background: #F8FAFC;
   border: 1.5px solid var(--border-soft);
   border-radius: 20px;
-  padding: 18px 20px;
+  padding: 22px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   gap: 14px;
 }
 
@@ -4095,9 +4111,12 @@ body {
   background: #F8FAFC;
   border: 1.5px solid var(--border-soft);
   border-radius: 20px;
-  padding: 20px;
+  padding: 22px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   gap: 12px;
 }
 
@@ -4177,7 +4196,7 @@ body {
   align-items: center;
   gap: 8px;
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 12px;
 }
 .sdp-actions button:first-child {
   flex: 1;
@@ -4413,11 +4432,7 @@ body {
   color: #15803D;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 900px) {
-  .telemetry-grid {
-    grid-template-columns: 1fr;
-  }
+
   .ops-link-strip {
     justify-content: flex-start;
   }
@@ -4426,4 +4441,145 @@ body {
 /* Hapus semua titik warna dan teks LIVE sesuai instruksi */
 .live-indicator, .live-dot, .live-pulse, .ops-node-dot, .deck-live-row .live-dot, .site-chip .chip-dot {
   display: none !important;
+}
+
+/* ==================================================================== */
+/* COMPREHENSIVE RESPONSIVE DESIGN (DESKTOP, TABLET & MOBILE PHONES)    */
+/* ==================================================================== */
+@media (max-width: 1024px) {
+  .stacked-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .telemetry-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ops-link-strip {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  .ops-node {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  .ops-link-arrow {
+    display: none;
+  }
+  .site-chips-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+  .site-chip {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .feature-search-wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+  .stacked-cards-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .deck-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .deck-header button {
+    width: 100%;
+  }
+  .telemetry-wrapper-card {
+    padding: 16px 14px;
+    border-radius: 20px;
+  }
+  .telemetry-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .telemetry-controls {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+  .chemical-selector-wrap {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .chemical-selector-wrap select {
+    max-width: 60%;
+  }
+  .telemetry-controls button.pill-btn {
+    width: 100%;
+  }
+  .site-chart-card {
+    padding: 14px 10px;
+  }
+  .site-bar-chart {
+    height: 180px;
+    gap: 6px;
+    padding: 10px 2px 0 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .site-col {
+    min-width: 50px;
+    padding: 2px 1px;
+  }
+  .site-val {
+    font-size: 0.72rem;
+  }
+  .site-val small {
+    font-size: 0.6rem;
+  }
+  .site-name {
+    font-size: 0.72rem;
+  }
+  .site-region {
+    font-size: 0.62rem;
+  }
+  .site-detail-panel {
+    padding: 16px 14px;
+  }
+  .sdp-value {
+    font-size: 1.8rem;
+  }
+  .sdp-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sdp-actions button {
+    width: 100%;
+  }
+  .checklist-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .checklist-header button {
+    width: 100%;
+  }
 }
