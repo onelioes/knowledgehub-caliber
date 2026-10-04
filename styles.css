@@ -2981,28 +2981,71 @@ body {
   align-items: center;
   gap: 8px;
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid var(--border-soft);
 }
 
-.deck-actions-btn-group button {
-  flex: 1;
+.deck-actions-btn-group button.pill-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding: 0 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.deck-actions-btn-group button.pill-btn.outline-dark {
+  background: var(--surface);
+  border: 1.5px solid var(--border-soft);
+  color: var(--text-main);
+  box-shadow: none;
+}
+.deck-actions-btn-group button.pill-btn.outline-dark:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.deck-actions-btn-group button.pill-btn.accent-green {
+  background: var(--blue-primary);
+  color: #fff;
+  border: 1.5px solid transparent;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+}
+.deck-actions-btn-group button.pill-btn.accent-green:hover {
+  background: #1E40AF;
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.35);
 }
 
 .deck-del-btn {
-  background: transparent;
-  border: 1px solid #FECACA;
-  color: #EF4444;
-  border-radius: 999px;
-  width: 32px;
-  height: 32px;
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.9rem;
+  line-height: 1;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid #FECACA;
+  color: #EF4444;
   cursor: pointer;
-  font-size: 0.85rem;
   transition: all 0.2s ease;
-  flex: none !important;
 }
 
 .deck-del-btn:hover {
@@ -3401,10 +3444,11 @@ body {
 
 .settings-bento-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
   width: 100%;
   box-sizing: border-box;
+  align-items: stretch;
 }
 
 @media (max-width: 900px) {
@@ -3416,14 +3460,16 @@ body {
 .settings-card {
   background: #FFFFFF;
   border: 1.5px solid var(--border-soft);
-  border-radius: 32px;
-  padding: 32px 36px;
+  border-radius: 28px;
+  padding: 28px 30px;
   box-shadow: var(--shadow-sm);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 20px;
   position: relative;
+  height: 100%;
 }
 
 @media (max-width: 768px) {
@@ -3589,7 +3635,7 @@ body {
   border: 1.5px solid var(--border-soft, #E2E8F0);
   border-radius: 16px;
   padding: 6px;
-  max-width: 480px;
+  max-width: 100%;
   width: 100%;
   box-sizing: border-box;
   box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.04);
@@ -4475,38 +4521,16 @@ body {
 }
 
 @media (max-width: 768px) {
-  .ops-link-strip {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding: 8px 12px;
-    gap: 6px;
+  .main-content {
+    padding: 12px 14px 85px 14px !important;
   }
-  .ops-node {
-    flex-shrink: 0;
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-  .ops-link-arrow {
-    display: none;
-  }
-  .site-chips-row {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-  }
-  .site-chip {
-    flex-shrink: 0;
-  }
-}
 
-@media (max-width: 640px) {
+  /* Compact Header */
   .app-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 12px 14px;
+    gap: 8px;
+    padding: 10px 12px;
   }
   .header-actions {
     width: 100%;
@@ -4516,88 +4540,279 @@ body {
     width: 100%;
     max-width: 100%;
   }
+
+  /* Compact Hero Banner */
+  .hero-blue-card {
+    padding: 18px 16px !important;
+    border-radius: 20px !important;
+    margin-bottom: 12px !important;
+  }
+  .hero-blue-card.compact-hero {
+    padding: 16px 14px !important;
+    margin-bottom: 12px !important;
+  }
+  .hero-headline {
+    font-size: 1.35rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 4px !important;
+  }
+  .hero-caption {
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Compact Ops Link Strip */
+  .ops-link-strip {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 8px !important;
+    border-radius: 14px !important;
+    margin-bottom: 12px !important;
+    gap: 4px !important;
+  }
+  .ops-node {
+    flex-shrink: 0;
+    padding: 6px 8px !important;
+    font-size: 0.74rem !important;
+  }
+  .ops-node-label {
+    font-size: 0.74rem !important;
+  }
+  .ops-node-metric {
+    font-size: 0.68rem !important;
+    padding: 2px 6px !important;
+  }
+  .ops-link-arrow {
+    display: none;
+  }
+
+  /* Compact Critical Equipment */
+  .stacked-deck-section {
+    margin-bottom: 12px !important;
+  }
+  .deck-header-row {
+    margin-bottom: 8px !important;
+    gap: 8px !important;
+  }
+  .section-title {
+    font-size: 1.05rem !important;
+    line-height: 1.2 !important;
+  }
+  .section-sub {
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+  }
   .stacked-cards-container {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
-  .deck-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .deck-card {
+    padding: 14px 14px 12px 14px !important;
+    border-radius: 16px !important;
+    gap: 8px !important;
   }
-  .deck-header button {
-    width: 100%;
+  .deck-title {
+    font-size: 0.95rem !important;
+    line-height: 1.25 !important;
   }
+  .deck-site-line {
+    font-size: 0.72rem !important;
+  }
+  .deck-live-row {
+    font-size: 0.72rem !important;
+    padding: 4px 8px !important;
+    margin: 2px 0 !important;
+  }
+  .deck-desc {
+    font-size: 0.75rem !important;
+    line-height: 1.35 !important;
+    margin: 2px 0 !important;
+  }
+  .deck-actions-btn-group {
+    padding-top: 8px !important;
+    gap: 6px !important;
+  }
+  .deck-actions-btn-group button.pill-btn {
+    height: 34px !important;
+    min-height: 34px !important;
+    font-size: 0.72rem !important;
+  }
+  .deck-actions-btn-group .deck-del-btn {
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+  }
+
+  /* Compact Telemetry */
   .telemetry-wrapper-card {
-    padding: 16px 14px;
-    border-radius: 20px;
+    padding: 14px 12px !important;
+    border-radius: 18px !important;
+    margin-bottom: 12px !important;
   }
   .telemetry-top-bar {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  .telemetry-heading {
+    font-size: 1.05rem !important;
+  }
+  .telemetry-subline {
+    font-size: 0.72rem !important;
   }
   .telemetry-controls {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    gap: 8px;
+    gap: 6px !important;
   }
   .chemical-selector-wrap {
     width: 100%;
     justify-content: space-between;
+    font-size: 0.72rem;
   }
   .chemical-selector-wrap select {
     max-width: 60%;
+    padding: 5px 8px;
+    font-size: 0.74rem;
   }
   .telemetry-controls button.pill-btn {
     width: 100%;
   }
+  .site-chips-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    gap: 5px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 8px !important;
+  }
+  .site-chip {
+    flex-shrink: 0;
+    padding: 4px 8px !important;
+    font-size: 0.72rem !important;
+  }
   .site-chart-card {
-    padding: 14px 10px;
+    padding: 10px 8px !important;
+    border-radius: 14px !important;
+  }
+  .site-chart-legend {
+    gap: 8px !important;
+    font-size: 0.68rem !important;
+    margin-bottom: 4px;
   }
   .site-bar-chart {
-    height: 180px;
-    gap: 6px;
-    padding: 10px 2px 0 2px;
+    height: 140px !important;
+    gap: 4px !important;
+    padding: 6px 2px 0 2px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
   .site-col {
-    min-width: 50px;
+    min-width: 44px;
     padding: 2px 1px;
   }
   .site-val {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
   .site-val small {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
   }
   .site-name {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
   .site-region {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
   }
   .site-detail-panel {
-    padding: 16px 14px;
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+    gap: 8px !important;
   }
   .sdp-value {
-    font-size: 1.8rem;
+    font-size: 1.5rem !important;
   }
   .sdp-actions {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
   .sdp-actions button {
     width: 100%;
   }
-  .checklist-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+
+  /* Compact Checklist */
+  .checklist-module-card {
+    padding: 14px 12px !important;
+    border-radius: 18px !important;
+    margin-bottom: 12px !important;
   }
-  .checklist-header button {
-    width: 100%;
+  .cmc-title {
+    font-size: 1.05rem !important;
+  }
+  .ai-pending-empty {
+    padding: 8px 10px !important;
+    border-radius: 12px !important;
+    gap: 6px !important;
+  }
+  .ai-pending-empty b {
+    font-size: 0.8rem;
+  }
+  .ai-pending-empty span {
+    font-size: 0.72rem;
+  }
+  .chk-section-label {
+    font-size: 0.76rem !important;
+    margin: 8px 0 6px 0 !important;
+  }
+  .checklist-items-table {
+    gap: 6px !important;
+  }
+  .checklist-item-row {
+    padding: 8px 10px !important;
+    border-radius: 12px !important;
+    gap: 8px !important;
+  }
+  .cir-text {
+    font-size: 0.8rem !important;
+    line-height: 1.35 !important;
+  }
+  .checklist-check-btn {
+    padding: 5px 10px !important;
+    font-size: 0.72rem !important;
+  }
+  .checklist-delete-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Compact Floating Bottom Dock */
+  .floating-bottom-dock {
+    bottom: 10px !important;
+    padding: 5px 14px !important;
+    gap: 10px !important;
+  }
+  .dock-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 8px 10px 75px 10px !important;
+  }
+  .hero-blue-card {
+    padding: 14px 12px !important;
+    border-radius: 16px !important;
+  }
+  .hero-headline {
+    font-size: 1.2rem !important;
+  }
+  .hero-caption {
+    font-size: 0.74rem !important;
   }
 }
