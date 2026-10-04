@@ -840,8 +840,9 @@ def chat_api_endpoint(req: ChatAPIRequest):
         ]
 
     # 1. Matching dokumen berdasarkan grounded_doc atau asset_tag jika ada
+    is_explicit_grounded = bool(req.grounded_doc and req.grounded_doc.strip())
     matched_doc_filter = None
-    if req.grounded_doc and req.grounded_doc.strip():
+    if is_explicit_grounded:
         matched_doc_filter = req.grounded_doc.strip()
     elif req.asset_tag and req.asset_tag.upper() not in ("GENERAL", "GEN-PLANT", "ALL", ""):
         stored_docs = list_stored_docs()
@@ -872,8 +873,9 @@ def chat_api_endpoint(req: ChatAPIRequest):
             return_metrics=True,
         )
 
-        # 3. Fallback pencarian tanpa filter aset jika tidak ditemukan
-        if matched_doc_filter and "informasi tidak ditemukan" in answer.lower() and not formatted_history:
+        # 3. Fallback pencarian tanpa filter aset HANYA jika bukan grounded_doc eksplisit
+        # Jika pengguna memilih Dokumen A, sistem WAJIB strictly menganalisis Dokumen A saja tanpa kontaminasi dokumen lain.
+        if not is_explicit_grounded and matched_doc_filter and "informasi tidak ditemukan" in answer.lower() and not formatted_history:
             alt_answer, alt_metrics = answer_question(
                 question=req.query.strip(),
                 top_k=8,
@@ -887,6 +889,9 @@ def chat_api_endpoint(req: ChatAPIRequest):
                 metrics = alt_metrics
                 matched_doc_filter = None
 
+        if is_explicit_grounded and "informasi tidak ditemukan" in answer.lower():
+            answer = f"Berdasarkan dokumen terpilih **{matched_doc_filter}**, informasi spesifik terkait topik tersebut tidak ditemukan di dalam isi dokumen ini."
+
         # 4. Ambil chunk relevan untuk membentuk kartu sitasi (confidence score & snippet)
         relevant_chunks = find_relevant_chunks(
             question=req.query.strip(),
@@ -894,7 +899,7 @@ def chat_api_endpoint(req: ChatAPIRequest):
             similarity_threshold=0.45,
             doc_filter=matched_doc_filter,
         )
-        if not relevant_chunks and matched_doc_filter:
+        if not is_explicit_grounded and not relevant_chunks and matched_doc_filter:
             relevant_chunks = find_relevant_chunks(
                 question=req.query.strip(),
                 top_k=3,

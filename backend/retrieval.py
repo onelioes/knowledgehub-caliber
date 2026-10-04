@@ -139,13 +139,19 @@ def find_relevant_chunks(
         return []
 
     if doc_filter:
-        doc_filter_clean = doc_filter.strip().lower()
+        doc_filter_clean = os.path.basename(doc_filter).strip().lower()
         norm_f = re.sub(r'[^a-zA-Z0-9]', '', doc_filter_clean)
-        filtered = [
-            item for item in store
-            if (doc_filter_clean in item.get("source", "").lower() or item.get("source", "").lower() in doc_filter_clean)
-            or (norm_f and norm_f in re.sub(r'[^a-zA-Z0-9]', '', item.get("source", "").lower()))
-        ]
+        filtered = []
+        for item in store:
+            item_src = os.path.basename(item.get("source", "")).strip().lower()
+            norm_item = re.sub(r'[^a-zA-Z0-9]', '', item_src)
+            # Exact filename match, normalized match, or strict prefix
+            if doc_filter_clean == item_src or norm_f == norm_item:
+                filtered.append(item)
+            elif (len(doc_filter_clean) >= 6 and doc_filter_clean in item_src) or (len(item_src) >= 6 and item_src in doc_filter_clean):
+                # Guard against distinct documents that share words like CALIBER or SOP
+                if not (("the case" in doc_filter_clean and "booklet" in item_src) or ("booklet" in doc_filter_clean and "the case" in item_src)):
+                    filtered.append(item)
         store = filtered
         if not store:
             return []
@@ -371,65 +377,76 @@ def synthesize_factual_response(relevant_chunks: list[dict], query: str) -> str:
     # 0. Pertanyaan Overview / Rangkuman Dokumen / Analisis & Solusi ("ini isinya apa", "jelaskan", "solusi")
     if is_overview_or_summary_query(query) or any(k in q_lower for k in ["apa ini", "ini apa", "ringkas", "rangkum", "summary", "overview", "solusi", "analisis", "penjelasan"]):
         combined_text = "\n".join(c.get("text", "") for c in relevant_chunks)
-        owner_name = None
-        univ_name = None
-        ipk_val = None
-        rek_num = None
-        bank_name = None
-        saldo_val = None
+        
+        is_scholarship_doc = any(k in combined_text.lower() for k in ["beasiswa", "pencairan", "khs", "krs", "ipk", "unj", "permohonan pencairan"])
+        if is_scholarship_doc:
+            owner_name = None
+            univ_name = None
+            ipk_val = None
+            rek_num = None
+            bank_name = None
+            saldo_val = None
 
-        m_owner = re.search(r'(?i)(?:nama(?:\s*mahasiswa|\s*lengkap)?|\bnama\s*akun)\s*[:*]{1,4}\s*([A-Z\s.]{4,40})', combined_text)
-        if m_owner:
-            clean = m_owner.group(1).split('\n')[0].strip().rstrip('.').strip()
-            if len(clean) >= 4 and not any(ign in clean.lower() for ign in ['transkripsi', 'aplikasi', 'perbankan', 'gambar']):
-                owner_name = clean
+            m_owner = re.search(r'(?i)(?:nama(?:\s*mahasiswa|\s*lengkap)?|\bnama\s*akun)\s*[:*]{1,4}\s*([A-Z\s.]{4,40})', combined_text)
+            if m_owner:
+                clean = m_owner.group(1).split('\n')[0].strip().rstrip('.').strip()
+                if len(clean) >= 4 and not any(ign in clean.lower() for ign in ['transkripsi', 'aplikasi', 'perbankan', 'gambar']):
+                    owner_name = clean
 
-        if "universitas negeri jakarta" in combined_text.lower() or "unj" in combined_text.lower():
-            univ_name = "Universitas Negeri Jakarta (UNJ) - Fakultas Ekonomi dan Bisnis (Bisnis Digital)"
+            if "universitas negeri jakarta" in combined_text.lower() or "unj" in combined_text.lower():
+                univ_name = "Universitas Negeri Jakarta (UNJ) - Fakultas Ekonomi dan Bisnis (Bisnis Digital)"
 
-        m_ipk = re.search(r'(?i)(?:indeks prestasi|ipk)[\s:*-]{1,8}(\d+[.,]\d{2})', combined_text)
-        if m_ipk:
-            ipk_val = m_ipk.group(1)
+            m_ipk = re.search(r'(?i)(?:indeks prestasi|ipk)[\s:*-]{1,8}(\d+[.,]\d{2})', combined_text)
+            if m_ipk:
+                ipk_val = m_ipk.group(1)
 
-        m_rek = re.search(r'(?i)(?:nomor rekening|no\.?\s*rek(?:ening)?|norek)[\s:*-]{1,12}(\d{6,16})', combined_text)
-        if m_rek:
-            rek_num = m_rek.group(1)
+            m_rek = re.search(r'(?i)(?:nomor rekening|no\.?\s*rek(?:ening)?|norek)[\s:*-]{1,12}(\d{6,16})', combined_text)
+            if m_rek:
+                rek_num = m_rek.group(1)
 
-        if "mandiri" in combined_text.lower() or "livin" in combined_text.lower():
-            bank_name = "Bank Mandiri (Livin' by Mandiri)"
+            if "mandiri" in combined_text.lower() or "livin" in combined_text.lower():
+                bank_name = "Bank Mandiri (Livin' by Mandiri)"
 
-        m_saldo = re.search(r'(?i)saldo\s*(?:tersedia)?[\s:*-]{1,10}(?:rp\.?\s*[\d.,]+)', combined_text)
-        if m_saldo:
-            saldo_val = m_saldo.group(0).split(':')[-1].strip()
+            m_saldo = re.search(r'(?i)saldo\s*(?:tersedia)?[\s:*-]{1,10}(?:rp\.?\s*[\d.,]+)', combined_text)
+            if m_saldo:
+                saldo_val = m_saldo.group(0).split(':')[-1].strip()
 
-        # Bangun respon analitik komprehensif
-        out = [f"### Ringkasan & Analisis Dokumen: **{src}**\n"]
-        out.append("Dokumen ini berisi berkas resmi pengajuan permohonan pencairan dan lampiran administrasi terkait. Berikut adalah rincian data kunci yang terverifikasi:\n")
-
-        if owner_name:
-            out.append(f"- **Subjek / Pemohon**: **{owner_name}**")
-        if univ_name:
-            out.append(f"- **Institusi Akademik**: {univ_name}")
-        if ipk_val:
-            out.append(f"- **Prestasi Akademik (IPK)**: **{ipk_val}** (Memenuhi kualifikasi)")
-        if bank_name or rek_num:
-            out.append(f"- **Data Perbankan**: {bank_name or 'Bank Terdaftar'}")
-            if rek_num:
-                out.append(f"- **Nomor Rekening**: `{rek_num}`")
-            if saldo_val:
-                out.append(f"- **Saldo Terakhir**: {saldo_val}")
-
-        out.append("\n**Kelengkapan Berkas Administrasi:**")
-        out.append("1. Surat Permohonan Pencairan Beasiswa resmi.")
-        out.append("2. Kartu Hasil Studi (KHS) & Kartu Rencana Studi (KRS) semester berjalan.")
-        out.append("3. Surat Keterangan Mahasiswa Aktif dan lampiran rekening bank/buku tabungan.")
-
-        out.append("\n**Rekomendasi Tindak Lanjut & Solusi:**")
-        out.append("- **Verifikasi Administrasi**: Seluruh berkas wajib dipastikan telah ditandatangani dan dilegalisir (Wakil Dekan I & Koordinator Program Studi).")
-        out.append("- **Validasi Rekening**: Lakukan *cross-check* antara nomor rekening pemohon dengan rekening tujuan transfer untuk menghindari retur pencairan.")
-        out.append("- **Persetujuan (Approval)**: Pengajuan dapat dilanjutkan ke tahap verifikasi keuangan untuk penerbitan persetujuan pencairan dana.")
-
-        return "\n".join(out)
+            out = [f"### Ringkasan & Analisis Dokumen: **{src}**\n"]
+            out.append("Dokumen ini berisi berkas permohonan dan lampiran administrasi terkait. Rincian data kunci yang terverifikasi:\n")
+            if owner_name:
+                out.append(f"- **Subjek / Pemohon**: **{owner_name}**")
+            if univ_name:
+                out.append(f"- **Institusi Akademik**: {univ_name}")
+            if ipk_val:
+                out.append(f"- **Prestasi Akademik (IPK)**: **{ipk_val}**")
+            if bank_name or rek_num:
+                out.append(f"- **Data Perbankan**: {bank_name or 'Bank Terdaftar'}")
+                if rek_num:
+                    out.append(f"- **Nomor Rekening**: `{rek_num}`")
+                if saldo_val:
+                    out.append(f"- **Saldo Terakhir**: {saldo_val}")
+            out.append("- **Status Dokumen**: Berkas permohonan pencairan resmi.")
+            return "\n".join(out)
+        else:
+            # Dynamic high-fidelity analysis directly from the chunk text of THIS specific document
+            out = [f"### Ringkasan & Analisis Dokumen: **{src}**\n"]
+            out.append(f"Berdasarkan dokumen terpilih **{src}** (Halaman {p_num}):\n")
+            
+            raw_lines = combined_text.split("\n")
+            meaningful_lines = []
+            seen_pts = set()
+            for l in raw_lines:
+                clean_l = l.strip().lstrip("-*#•| ").rstrip("| ").strip()
+                if len(clean_l) > 16 and not clean_l.startswith("===") and not clean_l.startswith("---"):
+                    low = clean_l.lower()
+                    if low not in seen_pts:
+                        seen_pts.add(low)
+                        meaningful_lines.append(clean_l)
+            
+            for item_pt in meaningful_lines[:8]:
+                out.append(f"- {item_pt}")
+            
+            return "\n".join(out)
 
     # 1. Pertanyaan Nomor Rekening, Rekening Bank, Saldo, Beasiswa
     if any(k in q_lower for k in ["rekening", "norek", "tabungan", "bank", "saldo", "pencairan", "beasiswa"]):

@@ -89,7 +89,7 @@
 
       <!-- Sisi Kanan: Quick Actions -->
       <div class="header-actions">
-        <button class="pill-btn outline-dark micro-pill" onclick="switchTab('ai-copilot')" title="Open AI Copilot">
+        <button class="pill-btn outline-dark micro-pill" onclick="switchTab('ai-copilot')" title="Ask AI">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           <span>Ask AI</span>
         </button>
@@ -121,25 +121,21 @@
         <!-- Operations Link: Equipment -> Telemetry -> AI Copilot -> Safety Checklist (saling terhubung) -->
         <nav class="ops-link-strip" id="opsLinkStrip" aria-label="Connected operations flow">
           <button type="button" class="ops-node" id="opsNodeEquip" onclick="scrollToDashSection('criticalEquipmentSection')">
-            <span class="ops-node-dot blue"></span>
             <span class="ops-node-label" id="lblOpsEquip">Equipment</span>
             <span class="ops-node-metric" id="opsMetricEquip">-</span>
           </button>
           <span class="ops-link-arrow" aria-hidden="true"></span>
           <button type="button" class="ops-node" id="opsNodeTele" onclick="scrollToDashSection('telemetrySection')">
-            <span class="ops-node-dot green live-pulse"></span>
-            <span class="ops-node-label" id="lblOpsTele">Live Telemetry</span>
+            <span class="ops-node-label" id="lblOpsTele">Telemetry</span>
             <span class="ops-node-metric" id="opsMetricTele">-</span>
           </button>
           <span class="ops-link-arrow" aria-hidden="true"></span>
           <button type="button" class="ops-node" id="opsNodeAi" onclick="switchTab('ai-copilot')">
-            <span class="ops-node-dot violet"></span>
-            <span class="ops-node-label" id="lblOpsAi">AI Copilot</span>
+            <span class="ops-node-label" id="lblOpsAi">Ask AI</span>
             <span class="ops-node-metric" id="opsMetricAi">-</span>
           </button>
           <span class="ops-link-arrow" aria-hidden="true"></span>
           <button type="button" class="ops-node" id="opsNodeChk" onclick="scrollToDashSection('checklistSection')">
-            <span class="ops-node-dot amber"></span>
             <span class="ops-node-label" id="lblOpsChk">Safety Checklist</span>
             <span class="ops-node-metric" id="opsMetricChk">-</span>
           </button>
@@ -150,7 +146,7 @@
           <div class="deck-header-row">
             <div>
               <h2 class="section-title" id="lblCriticalEquipTitle">Critical Equipment Status</h2>
-              <p class="section-sub" id="lblCriticalEquipSub">Status follows live telemetry. Abnormal readings can be escalated straight to AI Copilot.</p>
+              <p class="section-sub" id="lblCriticalEquipSub">Status follows process telemetry. Abnormal readings can be escalated straight to Ask AI.</p>
             </div>
             <button type="button" class="pill-btn outline-dark micro-pill" onclick="openAddEquipmentModal()">
               <span id="lblAddEquipBtn">+ Add Equipment</span>
@@ -167,9 +163,9 @@
         <div class="telemetry-wrapper-card" id="telemetrySection">
           <div class="telemetry-top-bar">
             <div class="telemetry-title-block">
-              <h3 class="telemetry-heading" id="lblTelemetryHeading">Live Telemetry &amp; Chemical Process</h3>
+              <h3 class="telemetry-heading" id="lblTelemetryHeading">Telemetry &amp; Chemical Process</h3>
               <p class="telemetry-subline">
-                <span class="live-indicator" id="telemetryLiveIndicator"><span class="live-dot"></span><span id="lblLiveState">LIVE</span></span>
+                <span id="lblLiveState">LIVE</span></span>
                 <span id="lblTelemetrySub">Cross-site comparison of petrochemical complexes</span>
               </p>
             </div>
@@ -226,7 +222,7 @@
           <div class="cmc-header-row">
             <div>
               <h3 class="cmc-title" id="lblChecklistTitle">Plant Operations &amp; Safety Checklist</h3>
-              <p class="section-sub" id="lblChecklistSub">AI Copilot recommendations land here first. Nothing runs until you approve it.</p>
+              <p class="section-sub" id="lblChecklistSub">Hootie Frutti AI recommendations land here first. Nothing runs until you approve it.</p>
             </div>
             <button type="button" class="pill-btn accent-green micro-pill" onclick="openAddChecklistModal()">
               <span id="lblAddChecklistBtn">+ Add Item</span>
@@ -639,7 +635,7 @@
       <div class="cm-footer">
         <button type="button" class="pill-btn outline-dark" onclick="closeEquipmentDetailModal()">Close</button>
         <button type="button" class="pill-btn accent-green" id="modalAskCopilotBtn">
-          <span>Consult AI Copilot</span>
+          <span>Consult AI</span>
         </button>
       </div>
     </div>

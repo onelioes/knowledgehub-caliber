@@ -820,8 +820,8 @@ body {
 }
 
 .deck-card-purple {
-  background: #FAF5FF;
-  border-color: #E9D5FF;
+  background: var(--blue-tint-bg);
+  border-color: var(--blue-tint-border);
 }
 
 .deck-card-top {
@@ -3706,15 +3706,15 @@ body {
 }
 
 .ops-node.has-alert {
-  border-color: #FECACA;
-  background: #FEF2F2;
-  color: #991B1B;
+  border-color: var(--blue-tint-border);
+  background: var(--blue-tint-bg);
+  color: var(--blue-primary);
 }
 
 .ops-node.has-pending {
-  border-color: #FEF08A;
-  background: #FEFCE8;
-  color: #854D0E;
+  border-color: var(--blue-tint-border);
+  background: var(--blue-tint-bg);
+  color: var(--blue-primary);
 }
 
 .ops-node-dot {
@@ -3745,10 +3745,11 @@ body {
 
 .ops-node-metric {
   font-size: 0.76rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  background: rgba(15, 23, 42, 0.04);
-  padding: 2px 8px;
+  color: #1E40AF;
+  font-weight: 700;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  padding: 2px 9px;
   border-radius: 999px;
 }
 
@@ -4204,8 +4205,9 @@ body {
   color: #1E40AF;
 }
 .ctx-chip.ai {
-  background: #F3E8FF;
-  color: #6B21A8;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1D4ED8;
 }
 
 /* --- Checklist AI Pending Zone --- */
@@ -4240,8 +4242,8 @@ body {
 }
 
 .ai-batch-card {
-  background: #FAF5FF;
-  border: 1.5px solid #E9D5FF;
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
   border-radius: 20px;
   padding: 18px 20px;
   display: flex;
@@ -4261,7 +4263,7 @@ body {
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  color: #7E22CE;
+  color: #1D4ED8;
   letter-spacing: 0.04em;
 }
 
@@ -4346,7 +4348,7 @@ body {
   height: 22px;
   border-radius: 50%;
   background: #F3E8FF;
-  color: #7E22CE;
+  color: #1D4ED8;
   font-size: 0.74rem;
   font-weight: 800;
   display: flex;
@@ -4419,4 +4421,9 @@ body {
   .ops-link-strip {
     justify-content: flex-start;
   }
+}
+
+/* Hapus semua titik warna dan teks LIVE sesuai instruksi */
+.live-indicator, .live-dot, .live-pulse, .ops-node-dot, .deck-live-row .live-dot, .site-chip .chip-dot {
+  display: none !important;
 }
