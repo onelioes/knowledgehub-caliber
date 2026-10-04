@@ -1600,6 +1600,16 @@ async function loadStoredDocuments() {
       state.storedDocs = docs;
 
       if (countBadge) countBadge.textContent = state.lang === 'id' ? `${docs.length} Dokumen` : `${docs.length} Documents`;
+      if (!state.activeGroundedDoc && docs.length > 0) {
+        const firstDoc = docs[0].source || docs[0].name;
+        state.activeGroundedDoc = firstDoc;
+        const text = document.getElementById('activeGroundingText');
+        const clearBtn = document.getElementById('clearGroundingBtn');
+        const tag = document.getElementById('activeGroundingTag');
+        if (text) text.textContent = (state.lang === 'id' ? 'Dokumen: ' : 'Document: ') + firstDoc;
+        if (clearBtn) clearBtn.style.display = 'inline-block';
+        if (tag) tag.style.display = 'inline-flex';
+      }
       renderUnifiedDocsList();
     } else {
       throw new Error(`HTTP ${res.status}`);

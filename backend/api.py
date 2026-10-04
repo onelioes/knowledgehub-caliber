@@ -851,6 +851,16 @@ def chat_api_endpoint(req: ChatAPIRequest):
                 matched_doc_filter = doc_name
                 break
 
+    # 1b. Jika tanpa filter eksplisit, namun query menanyakan isi dokumen ("ini isinya apa", dsb.)
+    if not matched_doc_filter:
+        from retrieval import is_overview_or_summary_query
+        if is_overview_or_summary_query(req.query):
+            stored_docs = list_stored_docs()
+            if stored_docs:
+                doc_keys = list(stored_docs.keys())
+                # Prioritaskan dokumen aktif/terbaru yang diunggah
+                matched_doc_filter = doc_keys[-1] if doc_keys else None
+
     try:
         # 2. Eksekusi Answer Question via Gemini RAG / Factual Synthesizer
         answer, metrics = answer_question(
