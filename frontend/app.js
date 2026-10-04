@@ -385,8 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupUnifiedCopilot();
   setupDocumentUpload();
   loadStoredDocuments();
+  initTelemetryModel();
   renderEquipmentCards();
-  initTelemetrySliders();
+  renderTelemetry();
   renderChecklist();
   setDashboardLanguage(state.lang, true);
 });
@@ -507,8 +508,277 @@ function clearFeatureSearch() {
 }
 
 // ============================================================================
-// 3. CRITICAL EQUIPMENT STATUS (Kondisi, Tambah, Edit, Tanya Copilot)
+// 3. CONNECTED OPERATIONS MODEL
+//    Equipment <-> Live Telemetry (multi-site) <-> AI Copilot <-> Safety Checklist
 // ============================================================================
+
+const L = (en, id) => (state.lang === 'id' ? id : en);
+
+// Kompleks petrokimia yang dipantau. `bias` = offset awal sebagai fraksi rentang parameter,
+// sehingga tiap site punya profil operasi berbeda namun tetap realistis.
+const PLANT_SITES = [
+  { id: 'cilegon', name: 'Cilegon', region: 'Banten', complex: 'Naphtha Cracker & Olefins', bias: 0 },
+  { id: 'serang', name: 'Serang', region: 'Banten', complex: 'Polyolefin & Chlor-Alkali', bias: -0.025 },
+  { id: 'tuban', name: 'Tuban', region: 'Jawa Timur', complex: 'Aromatics & Olefins', bias: 0.02 },
+  { id: 'cilacap', name: 'Cilacap', region: 'Jawa Tengah', complex: 'Refinery-Petrochemical', bias: -0.015 },
+  { id: 'balongan', name: 'Balongan', region: 'Jawa Barat', complex: 'Polypropylene', bias: 0.06 },
+  { id: 'bontang', name: 'Bontang', region: 'Kalimantan Timur', complex: 'Methanol & Ammonia', bias: 0.035 }
+];
+
+// Parameter proses per aliran kimia. Batas: alarmLo/tripLo (sisi bawah) & alarmHi/tripHi (sisi atas).
+function P(label, labelId, unit, min, max, step, base, lim) {
+  return { label, labelId, unit, min, max, step, base, ...lim };
+}
+
+const PROCESS_STREAMS = {
+  ethylene: {
+    name: 'Ethylene Cracker Stream (Olefins)',
+    params: {
+      feed_pressure: P('Feed Naphtha Pressure', 'Tekanan Umpan Naphtha', 'bar', 8, 20, 0.1, 14.2, { alarmLo: 12, tripLo: 10, alarmHi: 16, tripHi: 18 }),
+      suction_lube: P('Suction Lube Oil Pressure', 'Tekanan Lube Oil Suction', 'bar', 1, 3.5, 0.05, 2.1, { alarmLo: 1.8, tripLo: 1.4, alarmHi: 2.6, tripHi: 3.0 }),
+      reactor_temp: P('Coil Outlet Temperature', 'Suhu Coil Outlet', '°C', 750, 900, 1, 835, { alarmLo: 820, tripLo: 790, alarmHi: 850, tripHi: 870 }),
+      vibration: P('Radial Bearing Vibration', 'Vibrasi Radial Bearing', 'µm', 10, 80, 1, 45, { alarmHi: 48, tripHi: 68 }),
+      delta_p: P('Column Differential Pressure', 'Tekanan Diferensial Kolom', 'bar', 0.1, 0.8, 0.01, 0.35, { alarmHi: 0.45, tripHi: 0.6 }),
+      bearing_temp: P('Thrust Bearing Temperature', 'Suhu Thrust Bearing', '°C', 40, 100, 1, 68, { alarmHi: 85, tripHi: 95 })
+    }
+  },
+  propylene: {
+    name: 'Propylene Polymerization Unit',
+    params: {
+      feed_pressure: P('Propylene Feed Pressure', 'Tekanan Umpan Propylene', 'bar', 15, 40, 0.1, 28.5, { alarmLo: 25, tripLo: 22, alarmHi: 32, tripHi: 35 }),
+      suction_lube: P('Suction Lube Oil Pressure', 'Tekanan Lube Oil Suction', 'bar', 1, 3.5, 0.05, 1.9, { alarmLo: 1.7, tripLo: 1.3, alarmHi: 2.5, tripHi: 2.9 }),
+      reactor_temp: P('Reactor Bed Temperature', 'Suhu Bed Reaktor', '°C', 40, 95, 1, 68, { alarmLo: 62, tripLo: 55, alarmHi: 75, tripHi: 82 }),
+      vibration: P('Radial Bearing Vibration', 'Vibrasi Radial Bearing', 'µm', 10, 80, 1, 32, { alarmHi: 45, tripHi: 65 }),
+      delta_p: P('Column Differential Pressure', 'Tekanan Diferensial Kolom', 'bar', 0.1, 0.6, 0.01, 0.22, { alarmHi: 0.3, tripHi: 0.45 }),
+      bearing_temp: P('Thrust Bearing Temperature', 'Suhu Thrust Bearing', '°C', 40, 95, 1, 62, { alarmHi: 80, tripHi: 90 })
+    }
+  },
+  pygas: {
+    name: 'Pyrolysis Gasoline (PyGas Hydrotreating)',
+    params: {
+      feed_pressure: P('PyGas Feed Pressure', 'Tekanan Umpan PyGas', 'bar', 20, 45, 0.1, 34, { alarmLo: 30, tripLo: 26, alarmHi: 38, tripHi: 42 }),
+      suction_lube: P('Suction Lube Oil Pressure', 'Tekanan Lube Oil Suction', 'bar', 1, 3.5, 0.05, 2.3, { alarmLo: 1.9, tripLo: 1.5, alarmHi: 2.8, tripHi: 3.2 }),
+      reactor_temp: P('Hydrotreater Bed Temperature', 'Suhu Bed Hydrotreater', '°C', 180, 300, 1, 242, { alarmLo: 220, tripLo: 200, alarmHi: 260, tripHi: 280 }),
+      vibration: P('Radial Bearing Vibration', 'Vibrasi Radial Bearing', 'µm', 10, 80, 1, 38, { alarmHi: 50, tripHi: 70 }),
+      delta_p: P('Reactor Differential Pressure', 'Tekanan Diferensial Reaktor', 'bar', 0.1, 0.7, 0.01, 0.28, { alarmHi: 0.4, tripHi: 0.55 }),
+      bearing_temp: P('Thrust Bearing Temperature', 'Suhu Thrust Bearing', '°C', 40, 100, 1, 71, { alarmHi: 88, tripHi: 96 })
+    }
+  },
+  butadiene: {
+    name: 'Mixed C4 / Butadiene Extraction',
+    params: {
+      feed_pressure: P('C4 Feed Pressure', 'Tekanan Umpan C4', 'bar', 5, 15, 0.1, 8.8, { alarmLo: 7, tripLo: 6, alarmHi: 10.5, tripHi: 12.5 }),
+      suction_lube: P('Suction Lube Oil Pressure', 'Tekanan Lube Oil Suction', 'bar', 1, 3.5, 0.05, 2.0, { alarmLo: 1.7, tripLo: 1.3, alarmHi: 2.5, tripHi: 2.9 }),
+      reactor_temp: P('Stripper Temperature', 'Suhu Stripper', '°C', 80, 160, 1, 118, { alarmLo: 110, tripLo: 100, alarmHi: 130, tripHi: 140 }),
+      vibration: P('Radial Bearing Vibration', 'Vibrasi Radial Bearing', 'µm', 10, 80, 1, 44, { alarmHi: 52, tripHi: 70 }),
+      delta_p: P('Column Differential Pressure', 'Tekanan Diferensial Kolom', 'bar', 0.1, 0.8, 0.01, 0.4, { alarmHi: 0.5, tripHi: 0.65 }),
+      bearing_temp: P('Thrust Bearing Temperature', 'Suhu Thrust Bearing', '°C', 40, 100, 1, 76, { alarmHi: 90, tripHi: 97 })
+    }
+  }
+};
+
+// Equipment default -> site & parameter telemetri yang menggerakkan statusnya
+const DEFAULT_EQUIP_LINKS = {
+  'P-101A': { site: 'cilegon', link: { stream: 'ethylene', param: 'feed_pressure' } },
+  'K-102': { site: 'cilegon', link: { stream: 'ethylene', param: 'vibration' } },
+  'F-101': { site: 'cilegon', link: { stream: 'ethylene', param: 'reactor_temp' } }
+};
+
+const telemetry = {
+  stream: 'ethylene',
+  param: 'feed_pressure',
+  selectedSite: 'cilegon',
+  visibleSites: ['cilegon', 'serang', 'tuban', 'cilacap', 'balongan'],
+  setpoints: {},
+  live: {},
+  liveOn: true,
+  timer: null
+};
+
+const eqStatusCache = {};
+const eqAlertCooldown = {};
+
+const tk = (stream, param, site) => `${stream}|${param}|${site}`;
+const clampNum = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+const stepDecimals = (step) => (String(step).split('.')[1] || '').length;
+const roundToStep = (v, step) => Number((Math.round(v / step) * step).toFixed(stepDecimals(step)));
+const fmtVal = (v, p) => Number(v).toFixed(stepDecimals(p.step));
+const siteById = (id) => PLANT_SITES.find(s => s.id === id) || { id, name: id || '-', region: '', complex: '', bias: 0 };
+const paramLabel = (p) => (state.lang === 'id' ? p.labelId : p.label);
+const currentParamDef = () => PROCESS_STREAMS[telemetry.stream].params[telemetry.param];
+
+function defaultSetpoint(p, site) {
+  return roundToStep(clampNum(p.base + (site.bias || 0) * (p.max - p.min), p.min, p.max), p.step);
+}
+
+function evalStatus(p, v) {
+  if ((p.tripHi != null && v >= p.tripHi) || (p.tripLo != null && v <= p.tripLo)) return 'Critical';
+  if ((p.alarmHi != null && v >= p.alarmHi) || (p.alarmLo != null && v <= p.alarmLo)) return 'Warning';
+  return 'Normal';
+}
+
+function statusLabel(st) {
+  if (st === 'Critical') return L('Critical', 'Kritis');
+  if (st === 'Warning') return L('Warning', 'Waspada');
+  return 'Normal';
+}
+
+function limitText(p) {
+  const parts = [];
+  if (p.alarmLo != null) parts.push(`${L('Low alarm', 'Alarm bawah')} ≤ ${p.alarmLo}`);
+  if (p.alarmHi != null) parts.push(`${L('High alarm', 'Alarm atas')} ≥ ${p.alarmHi}`);
+  if (p.tripHi != null) parts.push(`Trip ≥ ${p.tripHi}`);
+  if (p.tripLo != null) parts.push(`Trip ≤ ${p.tripLo}`);
+  return `${parts.join(' · ')} ${p.unit}`;
+}
+
+function getLiveValue(stream, param, site) {
+  const p = PROCESS_STREAMS[stream] && PROCESS_STREAMS[stream].params[param];
+  if (!p) return null;
+  const k = tk(stream, param, site);
+  const v = telemetry.live[k] != null ? telemetry.live[k] : telemetry.setpoints[k];
+  return roundToStep(v != null ? v : defaultSetpoint(p, siteById(site)), p.step);
+}
+
+function initTelemetryModel() {
+  let saved = null;
+  try { saved = jsonParseSafe(localStorage.getItem('kh_site_telemetry') || 'null'); } catch (e) {}
+  if (saved) {
+    if (saved.setpoints) telemetry.setpoints = saved.setpoints;
+    if (Array.isArray(saved.visibleSites) && saved.visibleSites.length) telemetry.visibleSites = saved.visibleSites.filter(id => PLANT_SITES.some(s => s.id === id));
+    if (saved.stream && PROCESS_STREAMS[saved.stream]) telemetry.stream = saved.stream;
+    if (saved.param && PROCESS_STREAMS[telemetry.stream].params[saved.param]) telemetry.param = saved.param;
+    if (saved.selectedSite) telemetry.selectedSite = saved.selectedSite;
+    if (typeof saved.liveOn === 'boolean') telemetry.liveOn = saved.liveOn;
+  }
+  if (!telemetry.visibleSites.length) telemetry.visibleSites = [PLANT_SITES[0].id];
+
+  for (const [sKey, stream] of Object.entries(PROCESS_STREAMS)) {
+    for (const [pKey, p] of Object.entries(stream.params)) {
+      for (const site of PLANT_SITES) {
+        const k = tk(sKey, pKey, site.id);
+        if (typeof telemetry.setpoints[k] !== 'number') telemetry.setpoints[k] = defaultSetpoint(p, site);
+        telemetry.live[k] = telemetry.setpoints[k];
+      }
+    }
+  }
+}
+
+function saveTelemetryState() {
+  localStorage.setItem('kh_site_telemetry', JSON.stringify({
+    setpoints: telemetry.setpoints,
+    visibleSites: telemetry.visibleSites,
+    stream: telemetry.stream,
+    param: telemetry.param,
+    selectedSite: telemetry.selectedSite,
+    liveOn: telemetry.liveOn
+  }));
+}
+
+function telemetryTick() {
+  if (document.hidden) return;
+  for (const [sKey, stream] of Object.entries(PROCESS_STREAMS)) {
+    for (const [pKey, p] of Object.entries(stream.params)) {
+      const amp = (p.max - p.min) * 0.008;
+      for (const site of PLANT_SITES) {
+        const k = tk(sKey, pKey, site.id);
+        telemetry.live[k] = clampNum(telemetry.setpoints[k] + (Math.random() * 2 - 1) * amp, p.min, p.max);
+      }
+    }
+  }
+  updateSiteBars();
+  updateSiteDetailLive();
+  updateEquipmentLive();
+  refreshOpsLink();
+}
+
+function startTelemetryFeed() {
+  if (telemetry.timer) clearInterval(telemetry.timer);
+  telemetry.timer = telemetry.liveOn ? setInterval(telemetryTick, 2500) : null;
+  const btnLbl = document.getElementById('lblToggleLive');
+  const ind = document.getElementById('telemetryLiveIndicator');
+  const st = document.getElementById('lblLiveState');
+  if (btnLbl) btnLbl.textContent = telemetry.liveOn ? L('Pause', 'Jeda') : L('Resume', 'Lanjutkan');
+  if (ind) ind.classList.toggle('paused', !telemetry.liveOn);
+  if (st) st.textContent = telemetry.liveOn ? 'LIVE' : L('PAUSED', 'JEDA');
+}
+
+function toggleLiveTelemetry() {
+  telemetry.liveOn = !telemetry.liveOn;
+  saveTelemetryState();
+  startTelemetryFeed();
+  refreshOpsLink();
+}
+
+function scrollToDashSection(sectionId) {
+  if (state.currentTab !== 'dashboard') switchTab('dashboard');
+  setTimeout(() => {
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 60);
+}
+
+// ----------------------------------------------------------------------------
+// 3a. Ops Link strip (ringkasan keterhubungan modul)
+// ----------------------------------------------------------------------------
+function refreshOpsLink() {
+  const eqEl = document.getElementById('opsMetricEquip');
+  const teleEl = document.getElementById('opsMetricTele');
+  const aiEl = document.getElementById('opsMetricAi');
+  const chkEl = document.getElementById('opsMetricChk');
+
+  const alarms = state.equipments.filter(eq => {
+    const r = getEquipmentReading(eq);
+    const st = r ? r.status : eq.status;
+    return st === 'Warning' || st === 'Critical';
+  }).length;
+  if (eqEl) eqEl.textContent = alarms
+    ? `${alarms} ${L(alarms > 1 ? 'alarms' : 'alarm', 'alarm')}`
+    : `${state.equipments.length} ${L('units · normal', 'unit · normal')}`;
+  const eqNode = document.getElementById('opsNodeEquip');
+  if (eqNode) eqNode.classList.toggle('has-alert', alarms > 0);
+
+  if (teleEl) teleEl.textContent = `${telemetry.visibleSites.length} ${L('sites', 'site')} · ${telemetry.liveOn ? 'LIVE' : L('paused', 'jeda')}`;
+
+  if (aiEl) {
+    const q = state.lastAiQuery;
+    aiEl.textContent = q ? (q.length > 26 ? `${q.slice(0, 26)}…` : q) : L('Ready', 'Siap');
+  }
+
+  const pending = state.checklists.filter(c => c.status === 'proposed').length;
+  const active = state.checklists.filter(c => c.status === 'active').length;
+  if (chkEl) chkEl.textContent = pending
+    ? `${pending} ${L('awaiting approval', 'menunggu persetujuan')}`
+    : `${active} ${L('active items', 'item aktif')}`;
+  const chkNode = document.getElementById('opsNodeChk');
+  if (chkNode) chkNode.classList.toggle('has-pending', pending > 0);
+}
+
+// ----------------------------------------------------------------------------
+// 3b. CRITICAL EQUIPMENT STATUS (status mengikuti telemetri live)
+// ----------------------------------------------------------------------------
+function migrateEquipment(eq) {
+  const def = DEFAULT_EQUIP_LINKS[eq.tag];
+  const out = { ...eq };
+  if (!out.site) out.site = def ? def.site : (state.userProfile.plant || 'cilegon');
+  if (out.link === undefined && def) out.link = { ...def.link };
+  return out;
+}
+
+function getEquipmentReading(eq) {
+  if (!eq.link) return null;
+  const stream = PROCESS_STREAMS[eq.link.stream];
+  const p = stream && stream.params[eq.link.param];
+  if (!p) return null;
+  const v = getLiveValue(eq.link.stream, eq.link.param, eq.site);
+  return { p, v, status: evalStatus(p, v), site: siteById(eq.site), stream };
+}
+
+function badgeClassFor(st) {
+  if (st === 'Critical') return 'critical';
+  if (st === 'Warning') return 'warning';
+  return 'normal';
+}
 
 function renderEquipmentCards() {
   const container = document.getElementById('equipmentCardsContainer');
@@ -516,25 +786,44 @@ function renderEquipmentCards() {
 
   const saved = localStorage.getItem('kh_equipment_list');
   if (saved) {
-    try { state.equipments = jsonParseSafe(saved); } catch (e) {}
+    const parsed = jsonParseSafe(saved);
+    if (Array.isArray(parsed)) state.equipments = parsed;
   }
+  state.equipments = state.equipments.map(migrateEquipment);
 
   const dict = I18N[state.lang] || I18N.en;
   container.innerHTML = state.equipments.map(eq => {
-    const badgeColor = eq.status === 'Normal' ? 'normal' : (eq.status === 'Safe Limit' ? 'safe' : (eq.status === 'Warning' ? 'warning' : 'critical'));
+    const r = getEquipmentReading(eq);
+    const st = r ? r.status : (eq.status === 'Safe Limit' ? 'Normal' : eq.status);
+    eqStatusCache[eq.id] = st;
+    const site = siteById(eq.site);
+    const liveText = r ? `${paramLabel(r.p)} · ${fmtVal(r.v, r.p)} ${r.p.unit}` : L('No telemetry link', 'Tidak terhubung telemetri');
+    const isAlert = st === 'Warning' || st === 'Critical';
     return `
-      <div class="deck-card" data-eq-id="${eq.id}">
+      <div class="deck-card status-${badgeClassFor(st)}" id="eqCard-${eq.id}" data-eq-id="${eq.id}">
         <div class="deck-card-top">
           <span class="deck-tag">${escapeHtml(eq.tag)}</span>
-          <span class="deck-badge ${badgeColor}">${escapeHtml(eq.status)}</span>
+          <span class="deck-badge ${badgeClassFor(st)}" id="eqBadge-${eq.id}">${statusLabel(st)}</span>
         </div>
         <h3 class="deck-title">${escapeHtml(eq.name)}</h3>
-        <p class="deck-desc">${escapeHtml(eq.desc)}</p>
+        <div class="deck-site-line">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>${escapeHtml(site.name)}${site.complex ? ` · ${escapeHtml(site.complex)}` : ''}</span>
+        </div>
+        <div class="deck-live-row ${r ? '' : 'is-offline'}">
+          <span class="live-dot"></span>
+          <span id="eqLive-${eq.id}">${escapeHtml(liveText)}</span>
+        </div>
+        <p class="deck-desc">${escapeHtml(eq.desc || '')}</p>
+        <button type="button" class="deck-alert-btn" id="eqAlert-${eq.id}" style="display:${isAlert ? 'flex' : 'none'}" onclick="escalateEquipment('${eq.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>${L('Abnormal reading — escalate to AI Copilot', 'Pembacaan abnormal — eskalasi ke AI Copilot')}</span>
+        </button>
         <div class="deck-actions-btn-group">
           <button type="button" class="pill-btn outline-dark micro-pill" onclick="openEquipmentDetail('${eq.id}')">
             <span>${dict.btnTechCondition}</span>
           </button>
-          <button type="button" class="pill-btn accent-green micro-pill" onclick="queryEquipmentCopilot('${escapeHtml(eq.tag)}', '${state.lang === 'id' ? `Evaluasi kondisi operasional, spesifikasi, dan mitigasi untuk equipment ${escapeHtml(eq.tag)} (${escapeHtml(eq.name)})` : `Evaluate operational health, specifications, and safety mitigation for equipment ${escapeHtml(eq.tag)} (${escapeHtml(eq.name)})`}')">
+          <button type="button" class="pill-btn accent-green micro-pill" onclick="askCopilotForEquipment('${eq.id}')">
             <span>${dict.btnAskCopilot}</span>
           </button>
           <button type="button" class="deck-del-btn" title="Delete Equipment" onclick="deleteEquipment('${eq.id}')">
@@ -544,6 +833,74 @@ function renderEquipmentCards() {
       </div>
     `;
   }).join('');
+  refreshOpsLink();
+}
+
+function updateEquipmentLive() {
+  state.equipments.forEach(eq => {
+    const r = getEquipmentReading(eq);
+    if (!r) return;
+    const st = r.status;
+    const liveEl = document.getElementById(`eqLive-${eq.id}`);
+    const badge = document.getElementById(`eqBadge-${eq.id}`);
+    const card = document.getElementById(`eqCard-${eq.id}`);
+    const alertBtn = document.getElementById(`eqAlert-${eq.id}`);
+    if (liveEl) liveEl.textContent = `${paramLabel(r.p)} · ${fmtVal(r.v, r.p)} ${r.p.unit}`;
+    if (badge) {
+      badge.textContent = statusLabel(st);
+      badge.className = `deck-badge ${badgeClassFor(st)}`;
+    }
+    if (card) card.className = `deck-card status-${badgeClassFor(st)}`;
+    if (alertBtn) alertBtn.style.display = (st === 'Warning' || st === 'Critical') ? 'flex' : 'none';
+
+    const prev = eqStatusCache[eq.id];
+    const rank = { Normal: 0, Warning: 1, Critical: 2 };
+    if (prev && rank[st] > rank[prev]) {
+      const now = Date.now();
+      if (!eqAlertCooldown[eq.id] || now - eqAlertCooldown[eq.id] > 30000) {
+        eqAlertCooldown[eq.id] = now;
+        showToast(L(
+          `${eq.tag} @ ${r.site.name}: ${statusLabel(st)} — ${paramLabel(r.p)} ${fmtVal(r.v, r.p)} ${r.p.unit}`,
+          `${eq.tag} @ ${r.site.name}: ${statusLabel(st)} — ${paramLabel(r.p)} ${fmtVal(r.v, r.p)} ${r.p.unit}`
+        ), st === 'Critical' ? 'error' : 'info');
+      }
+    }
+    eqStatusCache[eq.id] = st;
+  });
+}
+
+function buildEquipmentQuery(eq, incident) {
+  const r = getEquipmentReading(eq);
+  const siteName = siteById(eq.site).name;
+  if (!r) {
+    return L(
+      `Evaluate operational health, specifications, and safety mitigation for equipment ${eq.tag} (${eq.name}) at ${siteName}.`,
+      `Evaluasi kondisi operasional, spesifikasi, dan mitigasi keselamatan untuk equipment ${eq.tag} (${eq.name}) di site ${siteName}.`
+    );
+  }
+  const reading = `${paramLabel(r.p)} ${fmtVal(r.v, r.p)} ${r.p.unit}`;
+  if (incident) {
+    return L(
+      `${statusLabel(r.status).toUpperCase()} ALARM: ${eq.tag} (${eq.name}) at ${siteName} — ${reading} (${limitText(r.p)}). What are the likely causes and what immediate safety actions must be taken?`,
+      `ALARM ${statusLabel(r.status).toUpperCase()}: ${eq.tag} (${eq.name}) di ${siteName} — ${reading} (${limitText(r.p)}). Apa kemungkinan penyebabnya dan langkah tindakan keselamatan apa yang harus segera dilakukan?`
+    );
+  }
+  return L(
+    `Evaluate ${eq.tag} (${eq.name}) at ${siteName}: current ${reading}, status ${statusLabel(r.status)}. Provide safe operating limits, likely risks, and recommended mitigation steps.`,
+    `Evaluasi ${eq.tag} (${eq.name}) di ${siteName}: ${reading} saat ini, status ${statusLabel(r.status)}. Berikan batas operasi aman, potensi risiko, dan langkah mitigasi yang direkomendasikan.`
+  );
+}
+
+function askCopilotForEquipment(eqId) {
+  const eq = state.equipments.find(e => e.id === eqId);
+  if (!eq) return;
+  queryEquipmentCopilot(eq.tag, buildEquipmentQuery(eq, false), { site: eq.site, ignoreGrounding: true });
+}
+
+function escalateEquipment(eqId) {
+  const eq = state.equipments.find(e => e.id === eqId);
+  if (!eq) return;
+  queryEquipmentCopilot(eq.tag, buildEquipmentQuery(eq, true), { site: eq.site, ignoreGrounding: true });
 }
 
 function openEquipmentDetail(eqId) {
@@ -554,6 +911,7 @@ function openEquipmentDetail(eqId) {
   const title = document.getElementById('modalEquipTitle');
   const body = document.getElementById('modalEquipBody');
   const askBtn = document.getElementById('modalAskCopilotBtn');
+  const r = getEquipmentReading(eq);
 
   if (title) title.textContent = `${eq.tag} · ${eq.name}`;
 
@@ -561,15 +919,37 @@ function openEquipmentDetail(eqId) {
     let detailsHtml = '<div style="display:flex;flex-direction:column;gap:8px;">';
     detailsHtml += `
       <div class="cm-param-item">
-        <span>${state.lang === 'id' ? 'Status Operasi Saat Ini:' : 'Current Operating Status:'}</span>
-        <select class="styled-select-blue" style="padding:4px 10px;font-size:0.85rem;" onchange="updateEquipmentStatus('${eq.id}', this.value)">
-          <option value="Normal" ${eq.status === 'Normal' ? 'selected' : ''}>Normal</option>
-          <option value="Safe Limit" ${eq.status === 'Safe Limit' ? 'selected' : ''}>Safe Limit</option>
-          <option value="Warning" ${eq.status === 'Warning' ? 'selected' : ''}>Warning</option>
-          <option value="Critical" ${eq.status === 'Critical' ? 'selected' : ''}>Critical</option>
-        </select>
+        <span>${L('Plant Site:', 'Site Pabrik:')}</span>
+        <b>${escapeHtml(siteById(eq.site).name)}</b>
       </div>
     `;
+    if (r) {
+      detailsHtml += `
+        <div class="cm-param-item">
+          <span>${L('Live Status (from telemetry):', 'Status Live (dari telemetri):')}</span>
+          <b class="deck-badge ${badgeClassFor(r.status)}">${statusLabel(r.status)}</b>
+        </div>
+        <div class="cm-param-item">
+          <span>${escapeHtml(paramLabel(r.p))}:</span>
+          <b>${fmtVal(r.v, r.p)} ${r.p.unit}</b>
+        </div>
+        <div class="cm-param-item">
+          <span>${L('Limits:', 'Batas:')}</span>
+          <b>${escapeHtml(limitText(r.p))}</b>
+        </div>
+      `;
+    } else {
+      detailsHtml += `
+        <div class="cm-param-item">
+          <span>${L('Current Operating Status:', 'Status Operasi Saat Ini:')}</span>
+          <select class="styled-select-blue" style="padding:4px 10px;font-size:0.85rem;" onchange="updateEquipmentStatus('${eq.id}', this.value)">
+            <option value="Normal" ${eq.status === 'Normal' ? 'selected' : ''}>Normal</option>
+            <option value="Warning" ${eq.status === 'Warning' ? 'selected' : ''}>Warning</option>
+            <option value="Critical" ${eq.status === 'Critical' ? 'selected' : ''}>Critical</option>
+          </select>
+        </div>
+      `;
+    }
     if (eq.details) {
       for (const [key, val] of Object.entries(eq.details)) {
         detailsHtml += `
@@ -587,10 +967,7 @@ function openEquipmentDetail(eqId) {
   if (askBtn) {
     askBtn.onclick = () => {
       closeEquipmentDetailModal();
-      const prompt = state.lang === 'id'
-        ? `Analisis mendalam kondisi teknis ${eq.tag} (${eq.name}), status ${eq.status}, dan berikan rekomendasi SOP keselamatan.`
-        : `Deep technical analysis for ${eq.tag} (${eq.name}), operating status ${eq.status}, with safety SOP recommendations.`;
-      queryEquipmentCopilot(eq.tag, prompt);
+      askCopilotForEquipment(eq.id);
     };
   }
 
@@ -608,12 +985,28 @@ function updateEquipmentStatus(eqId, newStatus) {
     eq.status = newStatus;
     localStorage.setItem('kh_equipment_list', JSON.stringify(state.equipments));
     renderEquipmentCards();
-    showToast(state.lang === 'id' ? `Status ${eq.tag} diperbarui: ${newStatus}` : `Status ${eq.tag} updated: ${newStatus}`, 'success');
+    showToast(L(`Status ${eq.tag} updated: ${newStatus}`, `Status ${eq.tag} diperbarui: ${newStatus}`), 'success');
   }
 }
 
 function openAddEquipmentModal() {
   const modal = document.getElementById('addEquipmentModal');
+  const siteSel = document.getElementById('newEquipSite');
+  const paramSel = document.getElementById('newEquipParam');
+  if (siteSel) {
+    siteSel.innerHTML = PLANT_SITES.map(s =>
+      `<option value="${s.id}" ${s.id === telemetry.selectedSite ? 'selected' : ''}>${escapeHtml(s.name)} · ${escapeHtml(s.region)}</option>`
+    ).join('');
+  }
+  if (paramSel) {
+    paramSel.innerHTML = `<option value="">${L('No telemetry link (manual status)', 'Tanpa telemetri (status manual)')}</option>` +
+      Object.entries(PROCESS_STREAMS).map(([sKey, s]) => `
+        <optgroup label="${escapeHtml(s.name)}">
+          ${Object.entries(s.params).map(([pKey, p]) =>
+            `<option value="${sKey}|${pKey}" ${sKey === telemetry.stream && pKey === telemetry.param ? 'selected' : ''}>${escapeHtml(paramLabel(p))} (${p.unit})</option>`
+          ).join('')}
+        </optgroup>`).join('');
+  }
   if (modal) modal.style.display = 'flex';
 }
 
@@ -626,20 +1019,28 @@ function handleSaveNewEquipment(e) {
   e.preventDefault();
   const tagInput = document.getElementById('newEquipTag');
   const nameInput = document.getElementById('newEquipName');
-  const statusInput = document.getElementById('newEquipStatus');
+  const siteInput = document.getElementById('newEquipSite');
+  const paramInput = document.getElementById('newEquipParam');
   const descInput = document.getElementById('newEquipDesc');
 
   if (!tagInput || !nameInput) return;
+
+  let link = null;
+  if (paramInput && paramInput.value) {
+    const [stream, param] = paramInput.value.split('|');
+    link = { stream, param };
+  }
 
   const newEquip = {
     id: `eq-${Date.now()}`,
     tag: tagInput.value.trim().toUpperCase(),
     name: nameInput.value.trim(),
-    status: statusInput ? statusInput.value : 'Normal',
-    desc: descInput ? descInput.value.trim() : (state.lang === 'id' ? 'Parameter operasional normal.' : 'Normal operating parameters.'),
+    status: 'Normal',
+    site: siteInput ? siteInput.value : 'cilegon',
+    link,
+    desc: descInput ? descInput.value.trim() : L('Normal operating parameters.', 'Parameter operasional normal.'),
     rev: 'Rev 1.0',
     details: {
-      'Operational Status': statusInput ? statusInput.value : 'Normal',
       'Key Parameter': descInput ? descInput.value.trim() : 'Normal'
     }
   };
@@ -647,7 +1048,9 @@ function handleSaveNewEquipment(e) {
   state.equipments.push(newEquip);
   localStorage.setItem('kh_equipment_list', JSON.stringify(state.equipments));
   renderEquipmentCards();
+  renderSiteDetail();
   closeAddEquipmentModal();
+  e.target.reset();
   const dict = I18N[state.lang] || I18N.en;
   showToast(dict.equipAddedToast(newEquip.tag), 'success');
 }
@@ -656,112 +1059,275 @@ function deleteEquipment(eqId) {
   state.equipments = state.equipments.filter(e => e.id !== eqId);
   localStorage.setItem('kh_equipment_list', JSON.stringify(state.equipments));
   renderEquipmentCards();
+  renderSiteDetail();
   const dict = I18N[state.lang] || I18N.en;
   showToast(dict.equipRemovedToast, 'info');
 }
 
-// ============================================================================
-// 4. TELEMETRY & CHEMICAL PROCESS STREAM CONTROL
-// ============================================================================
+// ----------------------------------------------------------------------------
+// 4. LIVE TELEMETRY & CHEMICAL PROCESS (perbandingan multi-site, bisa diadjust)
+// ----------------------------------------------------------------------------
+function renderTelemetry() {
+  const streamSel = document.getElementById('chemicalStreamSelect');
+  if (streamSel) streamSel.value = telemetry.stream;
+  renderParamSelect();
+  renderSiteChips();
+  renderSiteChart();
+  renderSiteDetail();
+  startTelemetryFeed();
+}
+
+function renderParamSelect() {
+  const sel = document.getElementById('telemetryParamSelect');
+  if (!sel) return;
+  const params = PROCESS_STREAMS[telemetry.stream].params;
+  sel.innerHTML = Object.entries(params).map(([k, p]) =>
+    `<option value="${k}" ${k === telemetry.param ? 'selected' : ''}>${escapeHtml(paramLabel(p))}</option>`
+  ).join('');
+}
+
+function renderSiteChips() {
+  const row = document.getElementById('siteChipsRow');
+  if (!row) return;
+  row.innerHTML = PLANT_SITES.map(s => {
+    const on = telemetry.visibleSites.includes(s.id);
+    return `
+      <button type="button" class="site-chip ${on ? 'on' : ''}" id="siteChip-${s.id}" aria-pressed="${on}" onclick="toggleSiteVisibility('${s.id}')">
+        <span class="chip-dot" id="siteChipDot-${s.id}"></span>
+        <span class="chip-name">${escapeHtml(s.name)}</span>
+        <span class="chip-region">${escapeHtml(s.region)}</span>
+      </button>`;
+  }).join('');
+}
+
+function renderSiteChart() {
+  const chart = document.getElementById('siteBarChart');
+  if (!chart) return;
+  const p = currentParamDef();
+  const sites = PLANT_SITES.filter(s => telemetry.visibleSites.includes(s.id));
+  if (!sites.length) {
+    chart.innerHTML = `<div class="site-chart-empty">${L('Select at least one site above.', 'Pilih minimal satu site di atas.')}</div>`;
+    return;
+  }
+  const pct = v => clampNum(((v - p.min) / (p.max - p.min)) * 100, 0, 100);
+  const bandLo = p.alarmLo != null ? pct(p.alarmLo) : 0;
+  const bandHi = p.alarmHi != null ? pct(p.alarmHi) : 100;
+  const lines = [
+    p.alarmHi != null ? `<span class="site-limit alarm" style="bottom:${pct(p.alarmHi)}%"></span>` : '',
+    p.tripHi != null ? `<span class="site-limit trip" style="bottom:${pct(p.tripHi)}%"></span>` : '',
+    p.alarmLo != null ? `<span class="site-limit alarm" style="bottom:${pct(p.alarmLo)}%"></span>` : '',
+    p.tripLo != null ? `<span class="site-limit trip" style="bottom:${pct(p.tripLo)}%"></span>` : ''
+  ].join('');
+
+  chart.innerHTML = sites.map(s => `
+    <button type="button" role="listitem" class="site-col ${s.id === telemetry.selectedSite ? 'selected' : ''}" id="siteCol-${s.id}" onclick="selectTelemetrySite('${s.id}')" title="${escapeHtml(s.complex)}">
+      <span class="site-val" id="siteVal-${s.id}">-</span>
+      <span class="site-bar-track">
+        <span class="site-band" style="bottom:${bandLo}%;height:${Math.max(bandHi - bandLo, 0)}%"></span>
+        ${lines}
+        <span class="site-bar-fill" id="siteFill-${s.id}"></span>
+      </span>
+      <span class="site-name">${escapeHtml(s.name)}</span>
+      <span class="site-region">${escapeHtml(s.region)}</span>
+    </button>
+  `).join('');
+  updateSiteBars();
+}
+
+function updateSiteBars() {
+  const p = currentParamDef();
+  PLANT_SITES.forEach(s => {
+    const v = getLiveValue(telemetry.stream, telemetry.param, s.id);
+    const st = evalStatus(p, v);
+    const dot = document.getElementById(`siteChipDot-${s.id}`);
+    if (dot) dot.className = `chip-dot st-${badgeClassFor(st)}`;
+    const fill = document.getElementById(`siteFill-${s.id}`);
+    const val = document.getElementById(`siteVal-${s.id}`);
+    if (fill) {
+      fill.style.height = `${clampNum(((v - p.min) / (p.max - p.min)) * 100, 3, 100)}%`;
+      fill.className = `site-bar-fill st-${badgeClassFor(st)}`;
+    }
+    if (val) {
+      val.innerHTML = `${fmtVal(v, p)}<small>${p.unit}</small>`;
+      val.className = `site-val st-${badgeClassFor(st)}`;
+    }
+  });
+}
+
+function linkedEquipmentAt(siteId) {
+  return state.equipments.filter(eq => eq.site === siteId && eq.link && eq.link.stream === telemetry.stream && eq.link.param === telemetry.param);
+}
+
+function renderSiteDetail() {
+  const panel = document.getElementById('siteDetailPanel');
+  if (!panel) return;
+  if (!telemetry.visibleSites.includes(telemetry.selectedSite)) telemetry.selectedSite = telemetry.visibleSites[0];
+  const site = siteById(telemetry.selectedSite);
+  const p = currentParamDef();
+  const k = tk(telemetry.stream, telemetry.param, site.id);
+  const sp = telemetry.setpoints[k];
+  const linked = linkedEquipmentAt(site.id);
+  const allAtSite = state.equipments.filter(eq => eq.site === site.id);
+
+  panel.innerHTML = `
+    <div class="sdp-head">
+      <div>
+        <div class="sdp-site">${escapeHtml(site.name)}</div>
+        <div class="sdp-complex">${escapeHtml(site.complex)} · ${escapeHtml(site.region)}</div>
+      </div>
+      <span class="status-pill" id="sdpStatus">-</span>
+    </div>
+
+    <div class="sdp-param">${escapeHtml(paramLabel(p))}</div>
+    <div class="sdp-value"><span id="sdpValue">-</span> <small>${p.unit}</small></div>
+    <div class="sdp-limits">${escapeHtml(limitText(p))}</div>
+
+    <div class="telemetry-adjust-row">
+      <span class="adjust-label">${L('Setpoint', 'Setpoint')}</span>
+      <input type="range" id="siteSetpointSlider" aria-label="${L('Adjust setpoint', 'Atur setpoint')}" min="${p.min}" max="${p.max}" step="${p.step}" value="${sp}" oninput="setSiteSetpoint(this.value)">
+      <span class="slider-val" id="siteSetpointVal">${fmtVal(sp, p)}</span>
+    </div>
+
+    <div class="sdp-linked">
+      <span class="sdp-linked-label">${L('Connected equipment', 'Equipment terhubung')}</span>
+      <div class="sdp-linked-list">
+        ${linked.length
+          ? linked.map(eq => `<span class="ctx-chip strong">${escapeHtml(eq.tag)}</span>`).join('')
+          : (allAtSite.length
+            ? allAtSite.map(eq => `<span class="ctx-chip">${escapeHtml(eq.tag)}</span>`).join('') + `<span class="sdp-hint">${L('(linked to other parameters)', '(terhubung ke parameter lain)')}</span>`
+            : `<span class="sdp-hint">${L('No equipment registered at this site yet.', 'Belum ada equipment terdaftar di site ini.')}</span>`)}
+      </div>
+    </div>
+
+    <div class="sdp-actions">
+      <button type="button" class="pill-btn accent-green micro-pill" onclick="askCopilotFromTelemetry()">
+        <span>${L('Ask Copilot about this reading', 'Tanya Copilot soal pembacaan ini')}</span>
+      </button>
+      <button type="button" class="pill-btn outline-dark micro-pill" onclick="resetSiteSetpoint()">
+        <span>${L('Reset', 'Reset')}</span>
+      </button>
+    </div>
+  `;
+  updateSiteDetailLive();
+}
+
+function updateSiteDetailLive() {
+  const p = currentParamDef();
+  const v = getLiveValue(telemetry.stream, telemetry.param, telemetry.selectedSite);
+  const st = evalStatus(p, v);
+  const valEl = document.getElementById('sdpValue');
+  const stEl = document.getElementById('sdpStatus');
+  if (valEl) valEl.textContent = fmtVal(v, p);
+  if (stEl) {
+    stEl.textContent = statusLabel(st);
+    stEl.className = `status-pill ${st === 'Normal' ? 'green' : (st === 'Warning' ? 'amber' : 'red')}`;
+  }
+}
 
 function changeChemicalStream(chemKey) {
-  state.currentChemical = chemKey;
-  updateTelemetryDisplay();
-  showToast(state.lang === 'id' ? `Aliran proses beralih ke: ${state.chemicalData[chemKey].name}` : `Process stream switched to: ${state.chemicalData[chemKey].name}`, 'info');
+  if (!PROCESS_STREAMS[chemKey]) return;
+  telemetry.stream = chemKey;
+  if (!PROCESS_STREAMS[chemKey].params[telemetry.param]) telemetry.param = Object.keys(PROCESS_STREAMS[chemKey].params)[0];
+  saveTelemetryState();
+  renderParamSelect();
+  renderSiteChart();
+  renderSiteDetail();
+  showToast(L(`Process stream switched to: ${PROCESS_STREAMS[chemKey].name}`, `Aliran proses beralih ke: ${PROCESS_STREAMS[chemKey].name}`), 'info');
 }
 
-function switchTelemetryParam(boxNum, paramKey) {
-  if (boxNum === 1) state.selectedParam1 = paramKey;
-  if (boxNum === 2) state.selectedParam2 = paramKey;
-  updateTelemetryDisplay();
+function changeTelemetryParam(paramKey) {
+  if (!PROCESS_STREAMS[telemetry.stream].params[paramKey]) return;
+  telemetry.param = paramKey;
+  saveTelemetryState();
+  renderSiteChart();
+  renderSiteDetail();
 }
 
-function initTelemetrySliders() {
-  updateTelemetryDisplay();
-}
-
-function updateTelemetryDisplay() {
-  const chem = state.chemicalData[state.currentChemical];
-  if (!chem) return;
-
-  // Box 1
-  const p1 = chem[state.selectedParam1];
-  if (p1) {
-    const valDisplay = document.getElementById('paramValDisplay1');
-    const note = document.getElementById('paramNote1');
-    const status = document.getElementById('paramStatus1');
-    const slider = document.getElementById('paramSlider1');
-    const sliderVal = document.getElementById('sliderVal1');
-    const activeBar = document.getElementById('activeBar1');
-
-    if (valDisplay) valDisplay.innerHTML = `${p1.val} <span class="bbox-unit">${p1.unit}</span>`;
-    if (note) note.textContent = p1.note;
-    if (status) status.textContent = p1.status;
-    if (slider) {
-      slider.min = p1.min;
-      slider.max = p1.max;
-      slider.step = p1.step;
-      slider.value = p1.val;
+function toggleSiteVisibility(siteId) {
+  const idx = telemetry.visibleSites.indexOf(siteId);
+  if (idx >= 0) {
+    if (telemetry.visibleSites.length === 1) {
+      showToast(L('At least one site must stay visible.', 'Minimal satu site harus tetap tampil.'), 'info');
+      return;
     }
-    if (sliderVal) sliderVal.textContent = p1.val;
-
-    if (activeBar) {
-      const pct = Math.min(Math.max(((p1.val - p1.min) / (p1.max - p1.min)) * 100, 20), 95);
-      activeBar.style.height = `${pct}%`;
-    }
+    telemetry.visibleSites.splice(idx, 1);
+  } else {
+    telemetry.visibleSites.push(siteId);
+    telemetry.visibleSites.sort((a, b) => PLANT_SITES.findIndex(s => s.id === a) - PLANT_SITES.findIndex(s => s.id === b));
   }
-
-  // Box 2
-  const p2 = chem[state.selectedParam2];
-  if (p2) {
-    const valDisplay = document.getElementById('paramValDisplay2');
-    const note = document.getElementById('paramNote2');
-    const status = document.getElementById('paramStatus2');
-    const slider = document.getElementById('paramSlider2');
-    const sliderVal = document.getElementById('sliderVal2');
-    const activeBar = document.getElementById('activeBar2');
-
-    if (valDisplay) valDisplay.innerHTML = `${p2.val} <span class="bbox-unit">${p2.unit}</span>`;
-    if (note) note.textContent = p2.note;
-    if (status) status.textContent = p2.status;
-    if (slider) {
-      slider.min = p2.min;
-      slider.max = p2.max;
-      slider.step = p2.step;
-      slider.value = p2.val;
-    }
-    if (sliderVal) sliderVal.textContent = p2.val;
-
-    if (activeBar) {
-      const pct = Math.min(Math.max(((p2.val - p2.min) / (p2.max - p2.min)) * 100, 20), 95);
-      activeBar.style.height = `${pct}%`;
-    }
-  }
+  saveTelemetryState();
+  renderSiteChips();
+  renderSiteChart();
+  renderSiteDetail();
+  refreshOpsLink();
 }
 
-function adjustTelemetryValue(boxNum, val) {
-  const chem = state.chemicalData[state.currentChemical];
-  const paramKey = boxNum === 1 ? state.selectedParam1 : state.selectedParam2;
-  if (chem && chem[paramKey]) {
-    chem[paramKey].val = Number(val);
-    const sliderVal = document.getElementById(`sliderVal${boxNum}`);
-    const valDisplay = document.getElementById(`paramValDisplay${boxNum}`);
-    const activeBar = document.getElementById(`activeBar${boxNum}`);
-
-    if (sliderVal) sliderVal.textContent = val;
-    if (valDisplay) valDisplay.innerHTML = `${val} <span class="bbox-unit">${chem[paramKey].unit}</span>`;
-
-    if (activeBar) {
-      const p = chem[paramKey];
-      const pct = Math.min(Math.max(((p.val - p.min) / (p.max - p.min)) * 100, 20), 95);
-      activeBar.style.height = `${pct}%`;
-    }
-  }
+function selectTelemetrySite(siteId) {
+  telemetry.selectedSite = siteId;
+  saveTelemetryState();
+  document.querySelectorAll('.site-col').forEach(el => el.classList.toggle('selected', el.id === `siteCol-${siteId}`));
+  renderSiteDetail();
 }
 
-// ============================================================================
-// 5. DYNAMIC OPERATIONAL CHECKLIST
-// ============================================================================
+function setSiteSetpoint(val) {
+  const p = currentParamDef();
+  const k = tk(telemetry.stream, telemetry.param, telemetry.selectedSite);
+  const v = roundToStep(Number(val), p.step);
+  telemetry.setpoints[k] = v;
+  telemetry.live[k] = v;
+  const lbl = document.getElementById('siteSetpointVal');
+  if (lbl) lbl.textContent = fmtVal(v, p);
+  updateSiteBars();
+  updateSiteDetailLive();
+  updateEquipmentLive();
+  refreshOpsLink();
+  saveTelemetryState();
+}
+
+function resetSiteSetpoint() {
+  const p = currentParamDef();
+  setSiteSetpoint(defaultSetpoint(p, siteById(telemetry.selectedSite)));
+  const slider = document.getElementById('siteSetpointSlider');
+  if (slider) slider.value = telemetry.setpoints[tk(telemetry.stream, telemetry.param, telemetry.selectedSite)];
+}
+
+function askCopilotFromTelemetry() {
+  const site = siteById(telemetry.selectedSite);
+  const p = currentParamDef();
+  const v = getLiveValue(telemetry.stream, telemetry.param, site.id);
+  const st = evalStatus(p, v);
+  const linked = linkedEquipmentAt(site.id);
+  const tag = linked.length ? linked[0].tag : '';
+  const streamName = PROCESS_STREAMS[telemetry.stream].name;
+  const query = L(
+    `Telemetry ${site.name} (${streamName}): ${paramLabel(p)} is ${fmtVal(v, p)} ${p.unit}, status ${statusLabel(st)} (${limitText(p)}). What could cause this and what safety actions should be taken?`,
+    `Telemetri ${site.name} (${streamName}): ${paramLabel(p)} saat ini ${fmtVal(v, p)} ${p.unit}, status ${statusLabel(st)} (${limitText(p)}). Apa kemungkinan penyebabnya dan langkah keselamatan apa yang harus dilakukan?`
+  );
+  queryEquipmentCopilot(tag, query, { site: site.id, ignoreGrounding: true });
+}
+
+// ----------------------------------------------------------------------------
+// 5. PLANT OPERATIONS & SAFETY CHECKLIST (saran AI -> persetujuan user -> eksekusi)
+// ----------------------------------------------------------------------------
+function normalizeChecklistItem(item) {
+  return { status: 'active', source: 'manual', ...item };
+}
+
+function persistChecklist() {
+  localStorage.setItem('kh_checklist_items', JSON.stringify(state.checklists));
+}
+
+function nowTimeStr() {
+  return new Date().toLocaleTimeString(state.lang === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
+function contextChipsHtml(item) {
+  const chips = [];
+  if (item.source === 'ai') chips.push(`<span class="ctx-chip ai">AI Copilot</span>`);
+  if (item.assetTag) chips.push(`<span class="ctx-chip strong">${escapeHtml(item.assetTag)}</span>`);
+  if (item.site) chips.push(`<span class="ctx-chip">${escapeHtml(siteById(item.site).name)}</span>`);
+  return chips.length ? `<div class="chk-context-chips">${chips.join('')}</div>` : '';
+}
 
 function renderChecklist() {
   const container = document.getElementById('checklistContainer');
@@ -769,11 +1335,16 @@ function renderChecklist() {
 
   const saved = localStorage.getItem('kh_checklist_items');
   if (saved) {
-    try { state.checklists = jsonParseSafe(saved); } catch (e) {}
+    const parsed = jsonParseSafe(saved);
+    if (Array.isArray(parsed)) state.checklists = parsed;
   }
+  state.checklists = state.checklists.map(normalizeChecklistItem);
+
+  renderAiPendingZone();
 
   const dict = I18N[state.lang] || I18N.en;
-  container.innerHTML = state.checklists.map(item => `
+  const active = state.checklists.filter(c => c.status === 'active');
+  container.innerHTML = active.length ? active.map(item => `
     <div class="checklist-item-row ${item.verified ? 'is-verified' : ''}" id="chkRow-${item.id}">
       <div class="cir-left">
         <div class="cir-checkbox-indicator">
@@ -781,6 +1352,8 @@ function renderChecklist() {
         </div>
         <div>
           <div class="cir-text">${escapeHtml(item.text)}</div>
+          ${contextChipsHtml(item)}
+          ${item.approvedMeta ? `<span class="cir-meta-time">${escapeHtml(item.approvedMeta)}</span>` : ''}
           ${item.time ? `<span class="cir-meta-time">${escapeHtml(item.time)}</span>` : ''}
         </div>
       </div>
@@ -793,7 +1366,215 @@ function renderChecklist() {
         </button>
       </div>
     </div>
+  `).join('') : `<div class="chk-empty">${L('No active checklist items.', 'Belum ada item checklist aktif.')}</div>`;
+
+  refreshOpsLink();
+}
+
+function renderAiPendingZone() {
+  const zone = document.getElementById('aiPendingZone');
+  if (!zone) return;
+  const pending = state.checklists.filter(c => c.status === 'proposed');
+
+  if (!pending.length) {
+    zone.innerHTML = `
+      <div class="ai-pending-empty">
+        <div>
+          <b>${L('No AI recommendations awaiting approval', 'Tidak ada saran AI yang menunggu persetujuan')}</b>
+          <span>${L('Ask Copilot about an incident (e.g. a naphtha leak) and its recommended actions will appear here for you to approve or reject.', 'Tanyakan insiden ke Copilot (mis. kebocoran naphtha) dan saran tindakannya akan muncul di sini untuk Anda setujui atau tolak.')}</span>
+        </div>
+        <button type="button" class="pill-btn outline-dark micro-pill" onclick="switchTab('ai-copilot')">${L('Open Copilot', 'Buka Copilot')}</button>
+      </div>`;
+    return;
+  }
+
+  const batches = [];
+  pending.forEach(item => {
+    let b = batches.find(x => x.id === item.batchId);
+    if (!b) {
+      b = { id: item.batchId, query: item.query, assetTag: item.assetTag, site: item.site, createdAt: item.createdAt, items: [] };
+      batches.push(b);
+    }
+    b.items.push(item);
+  });
+
+  zone.innerHTML = batches.map(b => `
+    <div class="ai-batch-card">
+      <div class="ai-batch-head">
+        <div class="ai-batch-info">
+          <span class="ai-batch-kicker">${L('AI Copilot recommendation · awaiting your approval', 'Saran AI Copilot · menunggu persetujuan Anda')}</span>
+          <div class="ai-batch-query">“${escapeHtml(b.query || '')}”</div>
+          <div class="chk-context-chips">
+            ${b.assetTag ? `<span class="ctx-chip strong">${escapeHtml(b.assetTag)}</span>` : ''}
+            ${b.site ? `<span class="ctx-chip">${escapeHtml(siteById(b.site).name)}</span>` : ''}
+            ${b.createdAt ? `<span class="ctx-chip">${escapeHtml(b.createdAt)}</span>` : ''}
+          </div>
+        </div>
+        <div class="ai-batch-actions">
+          <button type="button" class="chk-approve-btn" onclick="approveAiBatch('${b.id}')">${L('Approve all', 'Setujui semua')}</button>
+          <button type="button" class="chk-reject-btn" onclick="rejectAiBatch('${b.id}')">${L('Reject all', 'Tolak semua')}</button>
+        </div>
+      </div>
+      <ol class="ai-step-list">
+        ${b.items.map((item, i) => `
+          <li class="ai-step-row">
+            <span class="ai-step-num">${i + 1}</span>
+            <span class="ai-step-text">${escapeHtml(item.text)}</span>
+            <span class="ai-step-actions">
+              <button type="button" class="chk-approve-btn small" onclick="approveAiSuggestion('${item.id}')">${L('Run', 'Jalankan')}</button>
+              <button type="button" class="chk-reject-btn small" onclick="rejectAiSuggestion('${item.id}')">${L('Skip', 'Lewati')}</button>
+            </span>
+          </li>`).join('')}
+      </ol>
+    </div>
   `).join('');
+}
+
+function approveItems(items) {
+  const meta = L(`Approved by ${state.userProfile.name} · ${nowTimeStr()}`, `Disetujui oleh ${state.userProfile.name} · ${nowTimeStr()} WIB`);
+  items.forEach(it => {
+    it.status = 'active';
+    it.verified = false;
+    it.time = null;
+    it.approvedMeta = meta;
+  });
+  persistChecklist();
+  renderChecklist();
+}
+
+function approveAiSuggestion(chkId) {
+  const item = state.checklists.find(c => c.id === chkId);
+  if (!item) return;
+  approveItems([item]);
+  showToast(L('Action approved and added to the active checklist.', 'Tindakan disetujui dan masuk ke checklist aktif.'), 'success');
+}
+
+function rejectAiSuggestion(chkId) {
+  state.checklists = state.checklists.filter(c => c.id !== chkId);
+  persistChecklist();
+  renderChecklist();
+  showToast(L('AI suggestion skipped.', 'Saran AI dilewati.'), 'info');
+}
+
+function approveAiBatch(batchId) {
+  const items = state.checklists.filter(c => c.batchId === batchId && c.status === 'proposed');
+  if (!items.length) return;
+  approveItems(items);
+  showToast(L(`${items.length} actions approved.`, `${items.length} tindakan disetujui.`), 'success');
+}
+
+function rejectAiBatch(batchId) {
+  const n = state.checklists.filter(c => c.batchId === batchId && c.status === 'proposed').length;
+  state.checklists = state.checklists.filter(c => !(c.batchId === batchId && c.status === 'proposed'));
+  persistChecklist();
+  renderChecklist();
+  showToast(L(`${n} AI suggestions rejected.`, `${n} saran AI ditolak.`), 'info');
+}
+
+// Ekstraksi langkah tindakan dari jawaban AI (bullet / numbered list, prioritas di bawah heading tindakan)
+function extractActionSteps(text) {
+  if (!text) return [];
+  const actionHeading = /(rekomendasi|tindakan|langkah|mitigasi|solusi|prosedur|penanganan|tindak lanjut|action|recommend|step|mitigation|procedure|response|immediate|next)/i;
+  const actionVerb = /\b(pastikan|periksa|lakukan|hentikan|isolasi|tutup|buka|matikan|evakuasi|aktifkan|laporkan|hubungi|gunakan|siapkan|verifikasi|cek|pantau|monitor|kurangi|turunkan|naikkan|ganti|inspeksi|kendalikan|cegah|eliminasi|ensure|check|verify|isolate|stop|shut|close|open|evacuate|activate|notify|report|use|deploy|inspect|confirm|apply|wear|eliminate|ventilate|contain|reduce|replace|purge|control|prevent)\b/i;
+  const clean = s => s.replace(/\*\*|__|`/g, '').replace(/^\*+|\*+$/g, '').replace(/\s+/g, ' ').trim();
+
+  const actionItems = [];
+  const allItems = [];
+  let inAction = false;
+
+  text.split(/\r?\n/).forEach(raw => {
+    const line = raw.trim();
+    if (!line) return;
+    const listMatch = line.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/);
+    const isHeading = !listMatch && (/^#{1,6}\s/.test(line) || /^\*\*[^*]+\*\*:?$/.test(line) || (/:$/.test(line) && line.length < 90));
+    if (isHeading) {
+      inAction = actionHeading.test(line);
+      return;
+    }
+    if (listMatch) {
+      const item = clean(listMatch[1]);
+      if (item.length < 12) return;
+      allItems.push(item);
+      if (inAction) actionItems.push(item);
+    }
+  });
+
+  const picked = actionItems.length ? actionItems : allItems.filter(i => actionVerb.test(i));
+  const seen = new Set();
+  return picked.filter(i => {
+    const key = i.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).map(i => (i.length > 240 ? `${i.slice(0, 237)}…` : i)).slice(0, 7);
+}
+
+function isSafetyRelevant(query, assetTag) {
+  if (assetTag) return true;
+  return /(bocor|kebocoran|leak|naphtha|nafta|tumpah|spill|kebakaran|fire|ledak|explos|gas|h2s|darurat|emergency|trip|alarm|vibrasi|vibration|tekanan|pressure|suhu|temperature|overheat|mitigasi|mitigation|sop|keselamatan|safety|harus diapain|harus dilakukan|apa yang harus|what should|how to handle|tindakan|langkah|shutdown|isolasi|isolation|evakuasi|telemetri|telemetry)/i.test(query || '');
+}
+
+function proposeChecklistFromAi({ query, assetTag, site, steps }) {
+  const existing = new Set(state.checklists.filter(c => c.status !== 'rejected').map(c => (c.text || '').toLowerCase()));
+  const batchId = `ai-${Date.now()}`;
+  const createdAt = nowTimeStr();
+  let added = 0;
+  steps.forEach((text, i) => {
+    if (existing.has(text.toLowerCase())) return;
+    state.checklists.push({
+      id: `chk-${Date.now()}-${i}`,
+      text,
+      status: 'proposed',
+      source: 'ai',
+      verified: false,
+      time: null,
+      batchId,
+      query,
+      assetTag: assetTag || '',
+      site: site || '',
+      createdAt
+    });
+    added++;
+  });
+  if (added) {
+    persistChecklist();
+    renderChecklist();
+  }
+  return added;
+}
+
+function openChecklistFromChat() {
+  scrollToDashSection('checklistSection');
+}
+
+function attachChecklistHandoff(row, query, assetTag, answer, site) {
+  if (!row) return;
+  const steps = extractActionSteps(answer);
+  if (!steps.length) return;
+  const bubble = row.querySelector('.chat-bubble');
+  if (!bubble) return;
+
+  const box = document.createElement('div');
+  box.className = 'ai-handoff-box';
+  const reviewBtn = `<button type="button" class="pill-btn accent-green micro-pill" onclick="openChecklistFromChat()">${L('Review in Safety Checklist', 'Tinjau di Safety Checklist')}</button>`;
+
+  const sentHtml = (n) => n
+    ? `<div class="ai-handoff-text"><b>${n}</b> ${L('recommended actions were sent to the Safety Checklist and are awaiting your approval.', 'saran tindakan dikirim ke Safety Checklist dan menunggu persetujuan Anda.')}</div>${reviewBtn}`
+    : `<div class="ai-handoff-text">${L('These recommendations are already in the Safety Checklist.', 'Saran ini sudah ada di Safety Checklist.')}</div>${reviewBtn}`;
+
+  if (isSafetyRelevant(query, assetTag)) {
+    box.innerHTML = sentHtml(proposeChecklistFromAi({ query, assetTag, site, steps }));
+  } else {
+    box.innerHTML = `
+      <div class="ai-handoff-text">${steps.length} ${L('actionable steps detected in this answer.', 'langkah tindakan terdeteksi pada jawaban ini.')}</div>
+      <button type="button" class="pill-btn outline-dark micro-pill">${L('Send to Safety Checklist', 'Kirim ke Safety Checklist')}</button>`;
+    box.querySelector('button').addEventListener('click', () => {
+      box.innerHTML = sentHtml(proposeChecklistFromAi({ query, assetTag, site, steps }));
+    });
+  }
+  bubble.appendChild(box);
+  const chatLog = document.getElementById('chatLog');
+  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
 }
 
 function toggleChecklistItem(chkId) {
@@ -803,18 +1584,14 @@ function toggleChecklistItem(chkId) {
   const dict = I18N[state.lang] || I18N.en;
   item.verified = !item.verified;
   if (item.verified) {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString(state.lang === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit' });
-    item.time = state.lang === 'id'
-      ? `Diverifikasi oleh ${state.userProfile.name} · ${timeStr} WIB`
-      : `Verified by ${state.userProfile.name} · ${timeStr}`;
+    item.time = L(`Verified by ${state.userProfile.name} · ${nowTimeStr()}`, `Diverifikasi oleh ${state.userProfile.name} · ${nowTimeStr()} WIB`);
     showToast(dict.chkVerifiedToast, 'success');
   } else {
     item.time = null;
     showToast(dict.chkUnverifiedToast, 'info');
   }
 
-  localStorage.setItem('kh_checklist_items', JSON.stringify(state.checklists));
+  persistChecklist();
   renderChecklist();
 }
 
@@ -833,15 +1610,15 @@ function handleSaveNewChecklistItem(e) {
   const textInput = document.getElementById('newChecklistText');
   if (!textInput || !textInput.value.trim()) return;
 
-  const newItem = {
+  state.checklists.push({
     id: `chk-${Date.now()}`,
     text: textInput.value.trim(),
+    status: 'active',
+    source: 'manual',
     verified: false,
     time: null
-  };
-
-  state.checklists.push(newItem);
-  localStorage.setItem('kh_checklist_items', JSON.stringify(state.checklists));
+  });
+  persistChecklist();
   renderChecklist();
   textInput.value = '';
   closeAddChecklistModal();
@@ -851,7 +1628,7 @@ function handleSaveNewChecklistItem(e) {
 
 function deleteChecklistItem(chkId) {
   state.checklists = state.checklists.filter(c => c.id !== chkId);
-  localStorage.setItem('kh_checklist_items', JSON.stringify(state.checklists));
+  persistChecklist();
   renderChecklist();
   const dict = I18N[state.lang] || I18N.en;
   showToast(dict.chkRemovedToast, 'info');
@@ -1019,6 +1796,7 @@ function setDashboardLanguage(lang, suppressToast = false) {
   }
 
   renderEquipmentCards();
+  renderTelemetry();
   renderChecklist();
   showFlowchartDetail(state.currentFlowchartStep || 1);
   renderUnifiedDocsList();
@@ -1311,8 +2089,10 @@ function setupUnifiedCopilot() {
   }
 }
 
-async function sendCriticalChatMessage(query, assetTag) {
+async function sendCriticalChatMessage(query, assetTag, opts = {}) {
   state.isSending = true;
+  state.lastAiQuery = query;
+  if (typeof refreshOpsLink === 'function') refreshOpsLink();
   const sendBtn = document.getElementById('sendChatBtn');
   if (sendBtn) {
     sendBtn.disabled = true;
@@ -1327,12 +2107,12 @@ async function sendCriticalChatMessage(query, assetTag) {
 
   let stageTimer1, stageTimer2;
   if (stageText) {
-    stageText.textContent = 'Tahap 1: Membaca teks dokumen & memverifikasi filter data...';
+    stageText.textContent = state.lang === 'id' ? 'Tahap 1: Membaca teks dokumen & memverifikasi filter data...' : 'Stage 1: Scanning documents and verifying telemetry filters...';
     stageTimer1 = setTimeout(() => {
-      stageText.textContent = 'Tahap 2: Menjalankan pemindaian mendalam & korelasi parameter...';
+      stageText.textContent = state.lang === 'id' ? 'Tahap 2: Menjalankan pemindaian mendalam & korelasi parameter...' : 'Stage 2: Correlating plant parameters with safety SOPs...';
     }, 900);
     stageTimer2 = setTimeout(() => {
-      stageText.textContent = 'Tahap 3: Hootie Frutti AI menyintesis analisis menyeluruh & sitasi...';
+      stageText.textContent = state.lang === 'id' ? 'Tahap 3: Hootie Frutti AI menyintesis analisis menyeluruh & sitasi...' : 'Stage 3: Hootie Frutti AI synthesizing actionable safety guidance...';
     }, 1800);
   }
 
@@ -1344,7 +2124,7 @@ async function sendCriticalChatMessage(query, assetTag) {
       query: query,
       asset_tag: assetTag || '',
       user_id: state.userProfile.empId,
-      grounded_doc: state.activeGroundedDoc || null,
+      grounded_doc: (opts && opts.ignoreGrounding) ? null : (state.activeGroundedDoc || null),
       check_sensitive: state.checkSensitive,
       deep_analysis: state.deepAnalysis
     };
@@ -1373,10 +2153,16 @@ async function sendCriticalChatMessage(query, assetTag) {
     if (loader) loader.style.display = 'none';
 
     if (responseData) {
-      appendChatBubble('bot', responseData.response || responseData.answer, assetTag, responseData.citations || []);
+      const botText = responseData.response || responseData.answer;
+      const botRow = appendChatBubble('bot', botText, assetTag, responseData.citations || []);
+      const activeSite = (opts && opts.site) || state.currentQuerySite || (typeof telemetry !== 'undefined' ? telemetry.selectedSite : 'cilegon');
+      if (typeof attachChecklistHandoff === 'function') {
+        attachChecklistHandoff(botRow, query, assetTag, botText, activeSite);
+      }
     }
 
     state.isSending = false;
+    if (typeof refreshOpsLink === 'function') refreshOpsLink();
     if (sendBtn) {
       sendBtn.disabled = false;
       const dict = I18N[state.lang] || I18N.en;
@@ -1387,7 +2173,7 @@ async function sendCriticalChatMessage(query, assetTag) {
 
 function appendChatBubble(sender, text, assetTag, citations = []) {
   const chatLog = document.getElementById('chatLog');
-  if (!chatLog) return;
+  if (!chatLog) return null;
 
   const row = document.createElement('div');
   row.className = `chat-row ${sender === 'user' ? 'user-row' : 'bot-row'}`;
@@ -1438,6 +2224,7 @@ function appendChatBubble(sender, text, assetTag, citations = []) {
 
   chatLog.appendChild(row);
   chatLog.scrollTop = chatLog.scrollHeight;
+  return row;
 }
 
 function formatBotMarkdown(text) {
@@ -1456,6 +2243,38 @@ function formatBotMarkdown(text) {
 
 function generateLocalSynthesizedResponse(query, assetTag) {
   const isEn = state.lang !== 'id';
+  const qLower = (query || '').toLowerCase();
+
+  // Naphtha leak / chemical spill emergency SOP
+  if (/(bocor|kebocoran|leak|tumpah|spill|naphtha|nafta)/i.test(qLower)) {
+    const title = isEn ? 'Emergency Mitigation Procedure: Naphtha Leak Incident' : 'Prosedur Tanggap Darurat: Mitigasi Kebocoran Naphtha';
+    const content = isEn
+      ? `### ${title}\n**Hootie Frutti AI** retrieved active safety procedures (**CAP-SOP-MECH-P101-STARTUP.pdf**):\n\n- **Immediate Isolation**: Trigger Emergency Shutdown (ESD) for feed pump P-101A and close suction/discharge block valves.\n- **Personnel Evacuation**: Evacuate all personnel in a 50-meter radius upwind from the vapor trail.\n- **Vapor Suppression**: Deploy water curtain and mobile foam monitors to disperse flammable hydrocarbon vapors.\n- **LEL Monitoring**: Continuously test Lower Explosive Limit (LEL) with portable multi-gas detectors before entry.\n- **Seal Barrier Check**: Inspect Plan 53A barrier fluid reservoir and verify zero ignition sources across the plant unit.\n- **Operational Logging**: Record isolation tagout in shift handover log and notify central DCS control room.`
+      : `### ${title}\n**Hootie Frutti AI** memverifikasi SOP operasional keselamatan (**CAP-SOP-MECH-P101-STARTUP.pdf**):\n\n- **Isolasi Aliran**: Segera aktifkan tombol Emergency Shutdown (ESD) pada pompa P-101A dan tutup block valve suction/discharge.\n- **Evakuasi Personil**: Lakukan evakuasi personil non-esensial radius 50 meter ke arah hulu angin (upwind).\n- **Lokalisir Uap Hidrokarbon**: Siapkan dan gelar water curtain / foam monitor untuk meredam uap naphtha yang mudah terbakar.\n- **Deteksi Konsentrasi Gas**: Pantau konsentrasi gas Lower Explosive Limit (LEL) dengan gas detector portabel secara berkala.\n- **Pemeriksaan Barrier Fluid**: Periksa integritas mechanical seal Plan 53A dan pastikan tidak ada sumber percikan api di area sekitar.\n- **Pencatatan & Pelaporan**: Catat status isolasi pada logbook keselamatan dan laporkan ke shift supervisor DCS Cilegon.`;
+
+    return {
+      response: content,
+      citations: [
+        { source: 'CAP-SOP-MECH-P101-STARTUP.pdf', page: 2, revision: 'Rev 4.2 (2025)' }
+      ]
+    };
+  }
+
+  // High Vibration / Compressor incident
+  if (/(vibrasi|vibration|k-102|k102)/i.test(qLower)) {
+    const title = isEn ? 'Vibration Anomaly Diagnostic: Syngas Compressor K-102' : 'Diagnostik Anomali Vibrasi: Kompresor Syngas K-102';
+    const content = isEn
+      ? `### ${title}\n**Hootie Frutti AI** evaluated instrumentation limits (**CAP-INST-K102-VIBRATION-SPEC.pdf**):\n\n- **Verify Vibration Thresholds**: Radial bearing alarm is 48 µm and ESD trip limit is 68 µm.\n- **Stabilize Recycle Gas Temp**: Maintain recycle gas temperature above dew point to prevent liquid droplet carryover.\n- **Inspect Lube Oil Supply**: Check lube oil pressure (min 2.1 bar) and bearing metal temperatures.\n- **Perform Spectral FFT Analysis**: Run vibration spectrum check to identify imbalance, misalignment, or bearing looseness.\n- **Prepare Controlled Turndown**: If vibration remains above 48 µm for >10 minutes, initiate controlled load reduction.`
+      : `### ${title}\n**Hootie Frutti AI** mengevaluasi ambang batas instrumen (**CAP-INST-K102-VIBRATION-SPEC.pdf**):\n\n- **Verifikasi Ambang Batas Vibrasi**: Batas alarm radial bearing adalah 48 µm dan trip otomatis ESD pada 68 µm.\n- **Stabilkan Suhu Gas Recycle**: Jaga temperatur recycle gas di atas titik embun guna mencegah kondensat cairan masuk ke impeller.\n- **Inspeksi Pelumasan Lube Oil**: Periksa tekanan oli pelumas (min 2.1 bar) dan pantau temperatur metal bearing.\n- **Analisis Spektral FFT**: Lakukan pengambilan data spektrum vibrasi untuk memeriksa ketidakseimbangan atau misalignment.\n- **Persiapkan Penurunan Beban**: Jika vibrasi bertahan di atas 48 µm selama >10 menit, lakukan penurunan throughput secara bertahap.`;
+
+    return {
+      response: content,
+      citations: [
+        { source: 'CAP-INST-K102-VIBRATION-SPEC.pdf', page: 1, revision: 'Rev 3.1 (2024)' }
+      ]
+    };
+  }
+
   const title = isEn 
     ? (assetTag ? `Technical Operational Analysis (${assetTag})` : 'Comprehensive Document Verification')
     : (assetTag ? `Analisis Teknis Operasional (${assetTag})` : 'Analisis Menyeluruh Dokumen Terverifikasi');
@@ -1485,16 +2304,17 @@ function executeQuickPrompt(assetTag, query) {
   sendCriticalChatMessage(query, assetTag);
 }
 
-function queryEquipmentCopilot(assetTag, query) {
+function queryEquipmentCopilot(assetTag, query, opts = {}) {
   switchTab('ai-copilot');
   const assetSelect = document.getElementById('assetTagSelect');
   if (assetSelect) {
-    assetSelect.value = assetTag;
-    state.selectedAssetTag = assetTag;
+    assetSelect.value = assetTag || '';
+    state.selectedAssetTag = assetTag || '';
   }
+  if (opts && opts.site) state.currentQuerySite = opts.site;
   const input = document.getElementById('chatInput');
   if (input) input.value = query;
-  sendCriticalChatMessage(query, assetTag);
+  sendCriticalChatMessage(query, assetTag, opts);
 }
 
 // ============================================================================
@@ -1813,8 +2633,21 @@ window.closeAddEquipmentModal = closeAddEquipmentModal;
 window.handleSaveNewEquipment = handleSaveNewEquipment;
 window.deleteEquipment = deleteEquipment;
 window.changeChemicalStream = changeChemicalStream;
-window.switchTelemetryParam = switchTelemetryParam;
-window.adjustTelemetryValue = adjustTelemetryValue;
+window.changeTelemetryParam = changeTelemetryParam;
+window.toggleSiteVisibility = toggleSiteVisibility;
+window.selectTelemetrySite = selectTelemetrySite;
+window.setSiteSetpoint = setSiteSetpoint;
+window.resetSiteSetpoint = resetSiteSetpoint;
+window.askCopilotFromTelemetry = askCopilotFromTelemetry;
+window.toggleLiveTelemetry = toggleLiveTelemetry;
+window.scrollToDashSection = scrollToDashSection;
+window.approveAiSuggestion = approveAiSuggestion;
+window.rejectAiSuggestion = rejectAiSuggestion;
+window.approveAiBatch = approveAiBatch;
+window.rejectAiBatch = rejectAiBatch;
+window.openChecklistFromChat = openChecklistFromChat;
+window.escalateEquipment = escalateEquipment;
+window.askCopilotForEquipment = askCopilotForEquipment;
 window.toggleChecklistItem = toggleChecklistItem;
 window.openAddChecklistModal = openAddChecklistModal;
 window.closeAddChecklistModal = closeAddChecklistModal;

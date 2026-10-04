@@ -521,6 +521,20 @@ def synthesize_factual_response(relevant_chunks: list[dict], query: str) -> str:
             out.append("- **Tindakan Mitigasi**: Periksa kestabilan kompresor dan pertahankan temperatur recycle gas di atas dew point.")
             return "\n".join(out)
 
+    # 3b. Pertanyaan Kebocoran Naphtha / Tanggap Darurat Hidrokarbon
+    if any(k in q_lower for k in ["bocor", "kebocoran", "leak", "tumpah", "spill", "naphtha", "nafta"]):
+        out = [
+            f"### Prosedur Tanggap Darurat: Mitigasi Kebocoran Naphtha (**{src}**)\n",
+            "Berdasarkan standar operasional keselamatan PT Chandra Asri Pacific Tbk, berikut adalah tindakan mitigasi prioritas yang harus dilakukan:\n",
+            "- **Isolasi Aliran**: Segera aktifkan tombol Emergency Shutdown (ESD) pada pompa P-101A dan tutup block valve suction/discharge.",
+            "- **Evakuasi Personil**: Lakukan evakuasi personil non-esensial dalam radius 50 meter ke arah hulu angin (upwind).",
+            "- **Lokalisir Uap Hidrokarbon**: Siapkan dan gelar water curtain / foam monitor untuk meredam uap naphtha yang mudah terbakar.",
+            "- **Deteksi Konsentrasi Gas**: Pantau konsentrasi gas Lower Explosive Limit (LEL) dengan gas detector portabel secara berkala.",
+            "- **Pemeriksaan Barrier Fluid**: Periksa integritas mechanical seal Plan 53A dan pastikan tidak ada sumber percikan api di area sekitar.",
+            "- **Pencatatan & Pelaporan**: Catat status isolasi pada logbook keselamatan dan laporkan ke shift supervisor DCS Cilegon."
+        ]
+        return "\n".join(out)
+
     # 4. Sintesis Umum: Ekstraksi baris-baris kunci yang relevan dari chunk
     out = [f"Berdasarkan dokumen **{src}** (Halaman {p_num}):\n"]
     

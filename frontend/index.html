@@ -118,12 +118,39 @@
           </p>
         </div>
 
-        <!-- 1. Critical Equipment Status (Bisa Dicek Kondisi, Ditambah, & Diubah) -->
+        <!-- Operations Link: Equipment -> Telemetry -> AI Copilot -> Safety Checklist (saling terhubung) -->
+        <nav class="ops-link-strip" id="opsLinkStrip" aria-label="Connected operations flow">
+          <button type="button" class="ops-node" id="opsNodeEquip" onclick="scrollToDashSection('criticalEquipmentSection')">
+            <span class="ops-node-dot blue"></span>
+            <span class="ops-node-label" id="lblOpsEquip">Equipment</span>
+            <span class="ops-node-metric" id="opsMetricEquip">-</span>
+          </button>
+          <span class="ops-link-arrow" aria-hidden="true"></span>
+          <button type="button" class="ops-node" id="opsNodeTele" onclick="scrollToDashSection('telemetrySection')">
+            <span class="ops-node-dot green live-pulse"></span>
+            <span class="ops-node-label" id="lblOpsTele">Live Telemetry</span>
+            <span class="ops-node-metric" id="opsMetricTele">-</span>
+          </button>
+          <span class="ops-link-arrow" aria-hidden="true"></span>
+          <button type="button" class="ops-node" id="opsNodeAi" onclick="switchTab('ai-copilot')">
+            <span class="ops-node-dot violet"></span>
+            <span class="ops-node-label" id="lblOpsAi">AI Copilot</span>
+            <span class="ops-node-metric" id="opsMetricAi">-</span>
+          </button>
+          <span class="ops-link-arrow" aria-hidden="true"></span>
+          <button type="button" class="ops-node" id="opsNodeChk" onclick="scrollToDashSection('checklistSection')">
+            <span class="ops-node-dot amber"></span>
+            <span class="ops-node-label" id="lblOpsChk">Safety Checklist</span>
+            <span class="ops-node-metric" id="opsMetricChk">-</span>
+          </button>
+        </nav>
+
+        <!-- 1. Critical Equipment Status (terhubung ke telemetri live per site) -->
         <div class="stacked-deck-section" id="criticalEquipmentSection">
           <div class="deck-header-row">
             <div>
               <h2 class="section-title" id="lblCriticalEquipTitle">Critical Equipment Status</h2>
-              <p class="section-sub" id="lblCriticalEquipSub">Monitor operational health or consult AI Copilot for specific diagnostics.</p>
+              <p class="section-sub" id="lblCriticalEquipSub">Status follows live telemetry. Abnormal readings can be escalated straight to AI Copilot.</p>
             </div>
             <button type="button" class="pill-btn outline-dark micro-pill" onclick="openAddEquipmentModal()">
               <span id="lblAddEquipBtn">+ Add Equipment</span>
@@ -136,114 +163,83 @@
           </div>
         </div>
 
-        <!-- 2. Telemetry Bento: Terkoneksi dengan Chemical Process & Bisa Diadjust -->
+        <!-- 2. Live Telemetry & Chemical Process: perbandingan antar site petrokimia, bisa diadjust -->
         <div class="telemetry-wrapper-card" id="telemetrySection">
           <div class="telemetry-top-bar">
             <div class="telemetry-title-block">
-              <span class="telemetry-tag-pill" id="lblProcessControlTag">Process Control</span>
               <h3 class="telemetry-heading" id="lblTelemetryHeading">Live Telemetry &amp; Chemical Process</h3>
+              <p class="telemetry-subline">
+                <span class="live-indicator" id="telemetryLiveIndicator"><span class="live-dot"></span><span id="lblLiveState">LIVE</span></span>
+                <span id="lblTelemetrySub">Cross-site comparison of petrochemical complexes</span>
+              </p>
             </div>
 
-            <!-- Chemical Process Stream Selector -->
-            <div class="chemical-selector-wrap">
-              <label for="chemicalStreamSelect" id="lblChemicalStreamSelect">Chemical Stream:</label>
-              <select id="chemicalStreamSelect" class="styled-select-blue" onchange="changeChemicalStream(this.value)">
-                <option value="ethylene" selected>Ethylene Cracker Stream (Olefins)</option>
-                <option value="propylene">Propylene Polymerization Unit</option>
-                <option value="pygas">Pyrolysis Gasoline (PyGas Hydrotreating)</option>
-                <option value="butadiene">Mixed C4 / Butadiene Extraction</option>
-              </select>
+            <div class="telemetry-controls">
+              <div class="chemical-selector-wrap">
+                <label for="chemicalStreamSelect" id="lblChemicalStreamSelect">Chemical Stream:</label>
+                <select id="chemicalStreamSelect" class="styled-select-blue" onchange="changeChemicalStream(this.value)">
+                  <option value="ethylene" selected>Ethylene Cracker Stream (Olefins)</option>
+                  <option value="propylene">Propylene Polymerization Unit</option>
+                  <option value="pygas">Pyrolysis Gasoline (PyGas Hydrotreating)</option>
+                  <option value="butadiene">Mixed C4 / Butadiene Extraction</option>
+                </select>
+              </div>
+              <div class="chemical-selector-wrap">
+                <label for="telemetryParamSelect" id="lblParamSelect">Parameter:</label>
+                <select id="telemetryParamSelect" class="styled-select-blue" onchange="changeTelemetryParam(this.value)">
+                  <!-- Rendered dynamically by app.js -->
+                </select>
+              </div>
+              <button type="button" class="pill-btn outline-dark micro-pill" id="toggleLiveBtn" onclick="toggleLiveTelemetry()">
+                <span id="lblToggleLive">Pause</span>
+              </button>
             </div>
           </div>
 
-          <div class="two-bento-grid">
-            <!-- Bento Box 1: Suction Lube / Parameter 1 (Bisa Diubah & Diadjust) -->
-            <div class="bento-box bento-blue">
-              <div class="bbox-header">
-                <div class="bbox-title-wrap">
-                  <select id="paramSelect1" class="param-switcher-select" onchange="switchTelemetryParam(1, this.value)">
-                    <option value="suction_lube" selected>Suction Lube Oil Pressure</option>
-                    <option value="feed_pressure">Feed Naphtha Pressure</option>
-                    <option value="reactor_temp">Reactor Bed Temp</option>
-                  </select>
-                </div>
-                <span class="status-pill green" id="paramStatus1">Normal</span>
-              </div>
+          <!-- Site toggles: pilih site petrokimia yang ditampilkan -->
+          <div class="site-chips-row" id="siteChipsRow">
+            <!-- Rendered dynamically by app.js -->
+          </div>
 
-              <!-- Animated Micro Bar Chart -->
-              <div class="mini-bar-chart" id="barChart1">
-                <div class="mbar" style="height: 40%"></div>
-                <div class="mbar" style="height: 60%"></div>
-                <div class="mbar" style="height: 52%"></div>
-                <div class="mbar active-green" id="activeBar1" style="height: 75%"></div>
-                <div class="mbar" style="height: 58%"></div>
-                <div class="mbar" style="height: 68%"></div>
+          <div class="telemetry-grid">
+            <!-- Multi-site bar chart -->
+            <div class="site-chart-card">
+              <div class="site-chart-legend">
+                <span><i class="lg-swatch band"></i><span id="lblLegendNormal">Normal band</span></span>
+                <span><i class="lg-swatch alarm"></i><span id="lblLegendAlarm">Alarm limit</span></span>
+                <span><i class="lg-swatch trip"></i><span id="lblLegendTrip">Trip limit</span></span>
               </div>
-
-              <div class="bbox-bottom">
-                <div class="bbox-val" id="paramValDisplay1">2.1 <span class="bbox-unit" id="paramUnit1">bar</span></div>
-                <span class="bbox-note" id="paramNote1">Normal Tolerance: 1.8 - 2.4 bar</span>
-              </div>
-
-              <!-- Adjust Control Slider -->
-              <div class="telemetry-adjust-row">
-                <span class="adjust-label">Adjust:</span>
-                <input type="range" id="paramSlider1" min="1.0" max="3.5" step="0.1" value="2.1" oninput="adjustTelemetryValue(1, this.value)">
-                <span class="slider-val" id="sliderVal1">2.1</span>
+              <div class="site-bar-chart" id="siteBarChart" role="list">
+                <!-- Rendered dynamically by app.js -->
               </div>
             </div>
 
-            <!-- Bento Box 2: Vibration Level / Parameter 2 (Bisa Diubah & Diadjust) -->
-            <div class="bento-box bento-green">
-              <div class="bbox-header">
-                <div class="bbox-title-wrap">
-                  <select id="paramSelect2" class="param-switcher-select" onchange="switchTelemetryParam(2, this.value)">
-                    <option value="vibration" selected>Vibration Level (Radial Bearing)</option>
-                    <option value="delta_p">Column Differential Pressure (&Delta;P)</option>
-                    <option value="bearing_temp">Thrust Bearing Temperature</option>
-                  </select>
-                </div>
-                <span class="status-pill green" id="paramStatus2">Safe</span>
-              </div>
-
-              <!-- Animated Micro Bar Chart -->
-              <div class="mini-bar-chart" id="barChart2">
-                <div class="mbar" style="height: 35%"></div>
-                <div class="mbar" style="height: 48%"></div>
-                <div class="mbar" style="height: 62%"></div>
-                <div class="mbar active-green" id="activeBar2" style="height: 66%"></div>
-                <div class="mbar" style="height: 45%"></div>
-                <div class="mbar" style="height: 32%"></div>
-              </div>
-
-              <div class="bbox-bottom">
-                <div class="bbox-val" id="paramValDisplay2">45 <span class="bbox-unit" id="paramUnit2">&mu;m</span></div>
-                <span class="bbox-note" id="paramNote2">Alarm: 48 &mu;m &middot; Trip: 68 &mu;m</span>
-              </div>
-
-              <!-- Adjust Control Slider -->
-              <div class="telemetry-adjust-row">
-                <span class="adjust-label">Adjust:</span>
-                <input type="range" id="paramSlider2" min="10" max="80" step="1" value="45" oninput="adjustTelemetryValue(2, this.value)">
-                <span class="slider-val" id="sliderVal2">45</span>
-              </div>
+            <!-- Selected site detail & adjust -->
+            <div class="site-detail-panel" id="siteDetailPanel">
+              <!-- Rendered dynamically by app.js -->
             </div>
           </div>
         </div>
 
-        <!-- 3. Checklist Verifikasi Operasi (Daftar yang Bisa Ditambah, Dikurangi, & Dicentang) -->
+        <!-- 3. Plant Operations & Safety Checklist: menerima saran AI, diverifikasi user dulu -->
         <div class="checklist-module-card" id="checklistSection">
           <div class="cmc-header-row">
             <div>
-              <span class="cmc-tag" id="lblChecklistTag">Verification Checklist</span>
               <h3 class="cmc-title" id="lblChecklistTitle">Plant Operations &amp; Safety Checklist</h3>
+              <p class="section-sub" id="lblChecklistSub">AI Copilot recommendations land here first. Nothing runs until you approve it.</p>
             </div>
             <button type="button" class="pill-btn accent-green micro-pill" onclick="openAddChecklistModal()">
               <span id="lblAddChecklistBtn">+ Add Item</span>
             </button>
           </div>
 
-          <!-- Dynamic Checklist Items List -->
+          <!-- AI Suggestions waiting for user approval -->
+          <div class="ai-pending-zone" id="aiPendingZone">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+
+          <!-- Dynamic Checklist Items List (approved / manual) -->
+          <div class="chk-section-label" id="lblActiveChecklist">Active Checklist</div>
           <div class="checklist-items-table" id="checklistContainer">
             <!-- Rendered dynamically by app.js -->
           </div>
@@ -666,12 +662,15 @@
           <input type="text" id="newEquipName" required placeholder="Secondary Feed Pump">
         </div>
         <div class="input-group-minimal">
-          <label id="lblNewEquipStatus">Condition Status:</label>
-          <select id="newEquipStatus" class="styled-select-blue">
-            <option value="Normal">Normal</option>
-            <option value="Safe Limit">Safe Limit</option>
-            <option value="Warning">Warning</option>
-            <option value="Critical">Critical</option>
+          <label id="lblNewEquipSite" for="newEquipSite">Plant Site:</label>
+          <select id="newEquipSite" class="styled-select-blue">
+            <!-- Rendered dynamically by app.js -->
+          </select>
+        </div>
+        <div class="input-group-minimal">
+          <label id="lblNewEquipParam" for="newEquipParam">Linked Telemetry Parameter:</label>
+          <select id="newEquipParam" class="styled-select-blue">
+            <!-- Rendered dynamically by app.js -->
           </select>
         </div>
         <div class="input-group-minimal">
