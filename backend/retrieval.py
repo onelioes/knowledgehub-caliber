@@ -140,18 +140,15 @@ def find_relevant_chunks(
 
     if doc_filter:
         doc_filter_clean = doc_filter.strip().lower()
+        norm_f = re.sub(r'[^a-zA-Z0-9]', '', doc_filter_clean)
         filtered = [
             item for item in store
-            if doc_filter_clean in item.get("source", "").lower()
+            if (doc_filter_clean in item.get("source", "").lower() or item.get("source", "").lower() in doc_filter_clean)
+            or (norm_f and norm_f in re.sub(r'[^a-zA-Z0-9]', '', item.get("source", "").lower()))
         ]
-        if not filtered:
-            norm_f = re.sub(r'[^a-zA-Z0-9]', '', doc_filter_clean)
-            filtered = [
-                item for item in store
-                if norm_f in re.sub(r'[^a-zA-Z0-9]', '', item.get("source", "").lower())
-            ]
-        if filtered:
-            store = filtered
+        store = filtered
+        if not store:
+            return []
 
     is_overview = is_overview_or_summary_query(question)
     client = get_client()
