@@ -743,22 +743,22 @@ function refreshOpsLink() {
   }).length;
   if (eqEl) eqEl.textContent = alarms
     ? `${alarms} ${L(alarms > 1 ? 'alarms' : 'alarm', 'alarm')}`
-    : `${state.equipments.length} ${L('units · normal', 'unit · normal')}`;
+    : `${state.equipments.length} ${L('units', 'unit')}`;
   const eqNode = document.getElementById('opsNodeEquip');
   if (eqNode) eqNode.classList.toggle('has-alert', alarms > 0);
 
-  if (teleEl) teleEl.textContent = `${telemetry.visibleSites.length} ${L('sites', 'site')} · ${telemetry.liveOn ? L('Active', 'Aktif') : L('paused', 'jeda')}`;
+  if (teleEl) teleEl.textContent = `${telemetry.visibleSites.length} ${L('sites', 'site')}`;
 
   if (aiEl) {
     const q = state.lastAiQuery;
-    aiEl.textContent = q ? (q.length > 26 ? `${q.slice(0, 26)}…` : q) : L('Ready', 'Siap');
+    aiEl.textContent = q ? (q.length > 14 ? `${q.slice(0, 14)}…` : q) : L('Ready', 'Siap');
   }
 
   const pending = state.checklists.filter(c => c.status === 'proposed').length;
   const active = state.checklists.filter(c => c.status === 'active').length;
   if (chkEl) chkEl.textContent = pending
-    ? `${pending} ${L('awaiting approval', 'menunggu persetujuan')}`
-    : `${active} ${L('active items', 'item aktif')}`;
+    ? `${pending} ${L('pending', 'menunggu')}`
+    : `${active} ${L('active', 'aktif')}`;
   const chkNode = document.getElementById('opsNodeChk');
   if (chkNode) chkNode.classList.toggle('has-pending', pending > 0);
 }
@@ -2120,7 +2120,7 @@ async function sendCriticalChatMessage(query, assetTag, opts = {}) {
     sendBtn.innerHTML = '<span>...</span>';
   }
 
-  appendChatBubble('user', query, assetTag);
+  appendChatBubble('user', query, assetTag, [], state.activeGroundedDoc);
 
   const loader = document.getElementById('criticalAiLoader');
   const stageText = document.getElementById('criticalStageText');
@@ -2192,7 +2192,7 @@ async function sendCriticalChatMessage(query, assetTag, opts = {}) {
   }, remaining);
 }
 
-function appendChatBubble(sender, text, assetTag, citations = []) {
+function appendChatBubble(sender, text, assetTag, citations = [], groundedDoc = null) {
   const chatLog = document.getElementById('chatLog');
   if (!chatLog) return null;
 
@@ -2200,6 +2200,13 @@ function appendChatBubble(sender, text, assetTag, citations = []) {
   row.className = `chat-row ${sender === 'user' ? 'user-row' : 'bot-row'}`;
 
   if (sender === 'user') {
+    const doc = groundedDoc || state.activeGroundedDoc;
+    const docTagHtml = doc ? `
+        <div class="chat-bubble-doc-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <span>${escapeHtml(doc)}</span>
+        </div>` : '';
+
     const targetBadgeHtml = assetTag ? `
         <div class="bubble-meta">
           <span>Target: <b>${escapeHtml(assetTag)}</b></span>
@@ -2207,6 +2214,7 @@ function appendChatBubble(sender, text, assetTag, citations = []) {
 
     row.innerHTML = `
       <div class="chat-bubble user-bubble-spacious">
+        ${docTagHtml}
         <div class="bubble-text">${escapeHtml(text)}</div>
         ${targetBadgeHtml}
       </div>
@@ -2273,23 +2281,24 @@ function generateLocalSynthesizedResponse(query, assetTag) {
     const mNum = qLower.match(/(\d+(?:[.,]\d+)?)/);
     const numVal = mNum ? parseFloat(mNum[1].replace(',', '.')) : 14.0;
 
+    const isSol = /(solusi|rekomendasi|mitigasi|tindakan|action|harus diapain|harus bagaimana|langkah)/i.test(qLower);
     if (isCelsius && (numVal === 14 || /14/.test(qLower) || /chiller/i.test(qLower))) {
       const title = isEn ? 'Process Parameter Evaluation: Chilling Temperature (14 °C)' : 'Evaluasi Parameter Proses: Suhu Chiller Umpan (14 °C)';
+      const solEn = isSol ? `\n- **Field Actions**: Maintain existing refrigerant control valve (FCV) setpoint and continue standard hourly DCS logging.` : '';
+      const solId = isSol ? `\n- **Rekomendasi Tindakan di Lapangan**: Pertahankan posisi bukaan katup kendali refrigeran (FCV), pantau kestabilan delta-P pada penukar panas, dan lanjutkan pencatatan logbook DCS secara berkala.` : '';
       const content = isEn
         ? `### ${title}\n` +
           `Based on PT Chandra Asri Pacific Tbk process engineering standards:\n\n` +
           `- **Measured Value & Physical Unit**: **14.0 °C** (Degrees Celsius, thermal process parameter — NOT pressure/bar).\n` +
           `- **Process Meaning in Petrochemical Units**: In the chilling train and pre-fractionation cooling loop, **14.0 °C** is the controlled feed pre-cooling temperature. This ensures optimal condensation of heavier hydrocarbons (C5+) while preventing premature hydrate/ice crystallization that occurs below 5 °C.\n` +
           `- **Safe Operating Envelope**: The designated normal operating window for Feed Chiller units is **8.0 °C – 20.0 °C** (Alarm Low: 8.0 °C, Trip Low: 5.0 °C). At **14.0 °C**, the unit operates strictly within the **Safe & Optimal Operating Window**.\n` +
-          `- **Equipment Impact**: Refrigeration compressor power demand is well-balanced, heat exchanger tube thermal stresses are minimal, and vapor-liquid equilibrium (VLE) for downstream columns is preserved.\n` +
-          `- **Field Actions**: Maintain existing refrigerant control valve (FCV) setpoint and continue standard hourly DCS logging.`
+          `- **Equipment Impact**: Refrigeration compressor power demand is well-balanced, heat exchanger tube thermal stresses are minimal, and vapor-liquid equilibrium (VLE) for downstream columns is preserved.${solEn}`
         : `### ${title}\n` +
           `Berdasarkan standar teknik petrokimia PT Chandra Asri Pacific Tbk:\n\n` +
           `- **Nilai Terukur & Satuan Resmi**: **14.0 °C** (Derajat Celsius, satuan temperatur termodinamika — BUKAN satuan tekanan/bar).\n` +
           `- **Makna Fisik & Operasional**: Pada sistem *chilling train* dan pendinginan umpan petrokimia, temperatur **14.0 °C** merupakan suhu operasional ideal untuk mengondensasikan fraksi hidrokarbon berat sebelum masuk ke kolom fraksinasi, sekaligus mencegah pembentukan kristal hidrat/es yang berisiko menyumbat pipa jika suhu turun di bawah 5 °C.\n` +
           `- **Integritas Batas Aman (Safe Operating Envelope)**: Rentang aman normal untuk unit Chiller Umpan adalah **8.0 °C – 20.0 °C** (Batas Alarm Rendah: 8.0 °C, Trip Rendah: 5.0 °C). Nilai **14.0 °C** berada pada status **Normal, Stabil & Optimal** tanpa memicu alarm ataupun trip interlock.\n` +
-          `- **Dampak Terhadap Peralatan & Reaksi**: Pada suhu 14 °C, beban kerja kompresor refrigerasi berjalan efisien, integritas mekanis tabung *heat exchanger* terlindungi dari ekspansi termal berlebih, dan kesetimbangan uap-cair (VLE) umpan hidrokarbon terjaga sempurna.\n` +
-          `- **Rekomendasi Tindakan di Lapangan**: Pertahankan posisi bukaan katup kendali refrigeran (FCV), pantau kestabilan delta-P pada penukar panas, dan lanjutkan pencatatan logbook DCS secara berkala.`;
+          `- **Dampak Terhadap Peralatan & Reaksi**: Pada suhu 14 °C, beban kerja kompresor refrigerasi berjalan efisien, integritas mekanis tabung *heat exchanger* terlindungi dari ekspansi termal berlebih, dan kesetimbangan uap-cair (VLE) umpan hidrokarbon terjaga sempurna.${solId}`;
 
       return {
         response: content,
@@ -2367,9 +2376,12 @@ function generateLocalSynthesizedResponse(query, assetTag) {
     : (assetTag ? `Analisis Teknis Operasional (${assetTag})` : 'Analisis Menyeluruh Dokumen Terverifikasi');
   const docRef = assetTag ? `SOP-CHANDRAASRI-${assetTag}-Rev4.pdf` : 'KnowledgeHub-Repository.pdf';
   
+  const isSol_ = /(solusi|rekomendasi|mitigasi|tindakan|action|harus diapain|harus bagaimana|langkah)/i.test(qLower);
+  const recLineEn = isSol_ ? '\n- **Recommendation**: Cross-check telemetry readings and verify interlock status before initiating plant actions.' : '';
+  const recLineId = isSol_ ? '\n- **Rekomendasi**: Pastikan langkah operasional selalu diverifikasi sebelum aksi lapangan.' : '';
   const content = isEn
-    ? `### ${title}\n**Hootie Frutti AI** has verified official plant documentation:\n\n- **Key Findings**: Query "${query}" evaluated across indexed technical chunks.\n- **Procedural Compliance**: Operational procedures adhere to petrochemical safety specifications.\n- **Recommendation**: Cross-check telemetry readings and verify interlock status before initiating plant actions.`
-    : `### ${title}\n**Hootie Frutti AI** telah memverifikasi isi dokumen resmi Chandra Asri:\n\n- **Parameter Kunci**: Query "${query}" telah dipindai mendalam pada dokumen aktif.\n- **Kepatuhan Prosedur**: Seluruh prosedur operasional dan standar keselamatan sesuai dengan dokumen teknis.\n- **Rekomendasi**: Pastikan langkah operasional selalu diverifikasi sebelum aksi lapangan.`;
+    ? `### ${title}\n**Hootie Frutti AI** has verified official plant documentation:\n\n- **Key Findings**: Query "${query}" evaluated across indexed technical chunks.\n- **Procedural Compliance**: Operational procedures adhere to petrochemical safety specifications.${recLineEn}`
+    : `### ${title}\n**Hootie Frutti AI** telah memverifikasi isi dokumen resmi Chandra Asri:\n\n- **Parameter Kunci**: Query "${query}" telah dipindai mendalam pada dokumen aktif.\n- **Kepatuhan Prosedur**: Seluruh prosedur operasional dan standar keselamatan sesuai dengan dokumen teknis.${recLineId}`;
 
   return {
     response: content,

@@ -853,7 +853,7 @@ body {
 
 .deck-badge.normal { color: var(--green-text); }
 .deck-badge.safe { color: var(--blue-text); }
-.deck-badge.optimal { color: #7C3AED; }
+.deck-badge.optimal { color: #1D4ED8; }
 
 .deck-title {
   font-size: 1.05rem;
@@ -2574,16 +2574,17 @@ body {
 .active-grounding-tag {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  padding: 3px 10px;
+  border: 1px solid #CBD5E1;
+  padding: 4px 12px;
   border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #64748B;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #475569;
   align-self: flex-start;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .grounding-dot {
@@ -3174,8 +3175,8 @@ body {
 }
 
 .checklist-item-row.is-verified {
-  border-color: #BBF7D0;
-  background: #F0FDF4;
+  border-color: #BFDBFE;
+  background: #EFF6FF;
 }
 
 .cir-left {
@@ -3201,8 +3202,8 @@ body {
 }
 
 .checklist-item-row.is-verified .cir-checkbox-indicator {
-  background: var(--green-accent);
-  border-color: var(--green-accent);
+  background: var(--blue-primary);
+  border-color: var(--blue-primary);
 }
 
 .cir-text {
@@ -3242,13 +3243,13 @@ body {
 }
 
 .checklist-check-btn.unverified:hover {
-  background: var(--green-accent);
-  color: #052E16;
+  background: #DBEAFE;
+  color: #1E40AF;
 }
 
 .checklist-check-btn.verified {
-  background: var(--green-accent);
-  color: #052E16;
+  background: var(--blue-primary);
+  color: #fff;
   font-weight: 800;
 }
 
@@ -3698,13 +3699,16 @@ body {
 }
 
 .ops-node {
+  flex: 1 1 0;
+  min-width: 0;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 8px 12px;
   cursor: pointer;
   font-family: var(--font-base);
   font-size: 0.84rem;
@@ -3738,7 +3742,7 @@ body {
 }
 .ops-node-dot.blue { background: var(--blue-primary); }
 .ops-node-dot.green { background: var(--green-accent); }
-.ops-node-dot.violet { background: #8B5CF6; }
+.ops-node-dot.violet { background: var(--blue-primary); }
 .ops-node-dot.amber { background: #F59E0B; }
 
 .live-pulse {
@@ -4300,8 +4304,8 @@ body {
 }
 
 .chk-approve-btn {
-  background: var(--green-accent);
-  color: #052E16;
+  background: var(--blue-primary);
+  color: #fff;
   border: none;
   font-family: var(--font-base);
   font-size: 0.78rem;
@@ -4312,7 +4316,7 @@ body {
   transition: all 0.2s ease;
 }
 .chk-approve-btn:hover {
-  background: var(--green-hover);
+  background: #1E40AF;
   color: #fff;
 }
 .chk-approve-btn.small {
@@ -4356,7 +4360,7 @@ body {
   align-items: center;
   justify-content: space-between;
   background: var(--surface);
-  border: 1px solid #E9D5FF;
+  border: 1px solid #BFDBFE;
   border-radius: 12px;
   padding: 10px 14px;
   gap: 12px;
@@ -4366,7 +4370,8 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #F3E8FF;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
   color: #1D4ED8;
   font-size: 0.74rem;
   font-weight: 800;
@@ -4412,8 +4417,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #F0FDF4;
-  border: 1.5px solid #BBF7D0;
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
   border-radius: 14px;
   padding: 10px 14px;
   margin-top: 14px;
@@ -4423,22 +4428,35 @@ body {
 
 .ai-handoff-text {
   font-size: 0.84rem;
-  color: #14532D;
+  color: #1E40AF;
   font-weight: 600;
   line-height: 1.4;
   flex: 1;
 }
 .ai-handoff-text b {
-  color: #15803D;
+  color: #1D4ED8;
 }
 
-
-  .ops-link-strip {
-    justify-content: flex-start;
-  }
+/* Chat Prompt Document Tag */
+.chat-bubble-doc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.chat-bubble-doc-tag svg {
+  flex-shrink: 0;
+  color: #64748B;
 }
 
-/* Hapus semua titik warna dan teks LIVE sesuai instruksi */
+/* Hide all green dots and live indicator as requested */
 .live-indicator, .live-dot, .live-pulse, .ops-node-dot, .deck-live-row .live-dot, .site-chip .chip-dot {
   display: none !important;
 }

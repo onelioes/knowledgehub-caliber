@@ -63,6 +63,17 @@ def is_overview_or_summary_query(query: str) -> bool:
     return any(t in q for t in triggers)
 
 
+def is_solution_request(query: str) -> bool:
+    """Deteksi apakah pengguna secara eksplisit meminta solusi, rekomendasi, mitigasi, atau langkah perbaikan."""
+    q = query.lower().strip()
+    triggers = [
+        "solusi", "rekomendasi", "mitigasi", "tindakan", "action", "langkah perbaikan",
+        "troubleshoot", "cara mengatasi", "bagaimana mengatasi", "penanganan", "tindak lanjut",
+        "harus diapain", "harus bagaimana", "apa yang harus dilakukan", "how to solve", "mitigation"
+    ]
+    return any(t in q for t in triggers)
+
+
 def cosine_similarity(a: list[float], b: list[float]) -> float:
     """Ukur cosine similarity antara dua vektor."""
     if not a or not b or len(a) != len(b):
@@ -334,30 +345,35 @@ PERTANYAAN MANDIRI HASIL REWRITE:"""
     return question
 
 
-GUARDRAIL_PROMPT_TEMPLATE = """Kamu adalah Hootie Frutti AI, asisten AI analitik dokumen & teknik PT Chandra Asri Pacific Tbk (CALIBER 2026).
-Tugasmu adalah menganalisis isi dokumen konteks di bawah ini dengan teliti, objektif, dan faktual, serta memberikan kesimpulan dan rekomendasi solusi konkret.
+GUARDRAIL_PROMPT_TEMPLATE = """Kamu adalah Hootie Frutti AI, asisten analitik dokumen & operasional PT Chandra Asri Pacific Tbk (CALIBER 2026).
+Tugasmu adalah menganalisis dokumen konteks di bawah ini secara kritis, objektif, tajam, dan 100% bebas bias, persis sesuai dengan pertanyaan yang diajukan pengguna.
 
-PANDUAN ANALISIS & PENYUSUNAN JAWABAN:
-1. Rangkuman & Penjelasan Isi Dokumen:
-   - Jika pengguna menanyakan isi dokumen ("ini isinya apa", "jelaskan dokumen ini", "rangkum", atau meminta analisis & solusi):
-     * Paparkan Identitas & Subjek Dokumen (nama pemohon/mahasiswa/personil, institusi/fakultas/unit, nama berkas, nomor registrasi).
-     * Uraikan Poin Data & Fakta Kunci (lampiran berkas, nomor rekening bank, nominal saldo, IPK, tanggal terbit, pengesahan dekan/kaprodi).
-     * Berikan Analisis Situasi & Solusi / Tindak Lanjut Konkret (misalnya kelayakan pencairan beasiswa, status kelengkapan berkas, verifikasi data, atau mitigasi teknis terkait).
-2. Presisi Faktual (Anti-Halusinasi):
-   - Ambil nilai numerik, nomor rekening, parameter trip, tanggal, batas toleransi, dan nama akun persis seperti yang tertulis pada konteks resmi.
-   - JANGAN mengarang data di luar konteks.
-3. Batasan Informasi:
-   - Hanya katakan "Informasi tidak ditemukan di dokumen yang tersedia." jika pengguna menanyakan data spesifik yang sama sekali tidak ada hubungannya dan tidak tertera di konteks.
-4. Format Jawaban:
-   - Gunakan Markdown yang rapi dengan judul bagian (heading ###), daftar poin (bullet points), dan cetak tebal (bold) pada informasi esensial agar mudah dibaca dan dievaluasi.
+PEDOMAN KETAT ANALISIS & PENYUSUNAN JAWABAN:
+1. Relevansi Eksklusif & Analisis Kritis:
+   - Jawablah HANYA apa yang ditanyakan oleh pengguna. Jangan menyimpang dari inti pertanyaan atau menambahkan topik di luar pertanyaan.
+   - Analisis isi dokumen secara kritis, objektif, dan faktual berdasarkan teks konteks resmi.
 
-KONTEKS RESMI:
+2. ATURAN MUTLAK MENGENAI REKOMENDASI / SOLUSI (DILARANG MEMBERI REKOMENDASI JIKA TIDAK DIMINTA):
+   - JANGAN PERNAH memberikan daftar rekomendasi tindakan, langkah mitigasi, saran operasional, atau solusi jika pengguna HANYA menanyakan fakta, ringkasan, atau analisis isi dokumen (misal: "apa isinya", "ini dokumen apa", "siapa nama pemohon", "berapa nilainya", "apa poin pentingnya").
+   - HANYA sertakan rekomendasi solusi / langkah mitigasi jika pengguna SECARA EKSPLISIT memintanya dalam pertanyaannya (misal: "apa solusinya", "rekomendasi apa", "bagaimana cara mengatasinya", "langkah mitigasi apa yang diperlukan").
+
+3. Presisi Faktual & Data Keras:
+   - Ambil nilai angka, satuan fisik (°C untuk suhu, bar untuk tekanan, µm untuk vibrasi), nomor rekening, nama orang, status dokumen, dan tanggal PERSIS sesuai konteks.
+   - JANGAN mengarang data atau berasumsi tanpa dasar teks konteks.
+
+4. Batasan Fakta:
+   - Jika informasi spesifik yang ditanyakan pengguna tidak tercantum dalam dokumen konteks, katakan secara jujur dan lugas: "Informasi tersebut tidak tercantum dalam dokumen yang tersedia."
+
+5. Format Jawaban:
+   - Gunakan Markdown yang rapi dengan judul bagian (heading ###), daftar poin yang terstruktur, dan cetak tebal (bold) pada fakta-fakta penting.
+
+KONTEKS RESMI DOKUMEN:
 {context}
 
 PERTANYAAN PENGGUNA:
 {question}
 
-HASIL ANALISIS LENGKAP & REKOMENDASI SOLUSI:"""
+HASIL ANALISIS FAKTUAL & JAWABAN KRITIS:"""
 
 
 def synthesize_factual_response(relevant_chunks: list[dict], query: str) -> str:
@@ -535,7 +551,8 @@ def synthesize_factual_response(relevant_chunks: list[dict], query: str) -> str:
                 out.append(f"- **Ambang Peringatan (Alarm)**: **{alarm_val}** pada radial bearing probe X/Y.")
             if trip_val:
                 out.append(f"- **Ambang Trip Otomatis**: **{trip_val}** yang memicu solenoid *Emergency Shutdown* (ESD).")
-            out.append("- **Tindakan Mitigasi**: Periksa kestabilan kompresor dan pertahankan temperatur recycle gas di atas dew point.")
+            if is_solution_request(query):
+                out.append("- **Tindakan Mitigasi**: Periksa kestabilan kompresor dan pertahankan temperatur recycle gas di atas dew point.")
             return "\n".join(out)
 
     # 3b. Pertanyaan Kebocoran Naphtha / Tanggap Darurat Hidrokarbon
