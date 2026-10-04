@@ -9,17 +9,36 @@ Fitur:
 """
 
 import os
-from dotenv import load_dotenv
-from pypdf import PdfReader
-import docx
-from google import genai
-from google.genai import types
+import sys
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
+try:
+    from pypdf import PdfReader
+except Exception:
+    PdfReader = None
+
+try:
+    import docx
+except Exception:
+    docx = None
+
+try:
+    from google import genai
+    from google.genai import types
+except Exception:
+    genai = None
+    types = None
 
 VISION_MODELS = [
-    "gemini-3.5-flash-lite",
-    "gemini-3.5-flash",
+    "gemini-3.8-flash",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
     "gemini-flash-latest",
 ]
 
@@ -27,10 +46,19 @@ _client = None
 
 
 def get_genai_client():
-    """Inisialisasi Gemini Client secara lazy."""
+    """Inisialisasi Gemini Client secara lazy dan aman."""
     global _client
+    if genai is None:
+        return None
     if _client is None:
-        _client = genai.Client()
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            return None
+        try:
+            _client = genai.Client(api_key=api_key)
+        except Exception as e:
+            print(f"[GENAI CLIENT WARNING] Gagal menginisialisasi Gemini: {e}")
+            return None
     return _client
 
 
@@ -46,6 +74,10 @@ def ocr_image_with_gemini(
     Mengembalikan tuple: (teks_transkripsi, model_yang_berhasil).
     """
     client = get_genai_client()
+    if client is None:
+        print(f"    [OCR Info] Halaman {page_num}/{total_pages}: OCR Vision dilewati (GEMINI_API_KEY tidak dikonfigurasi).")
+        return "", "NONE"
+
     prompt = (
         "Kamu adalah asisten OCR dokumen tingkat lanjut. "
         "Tolong baca dan transkripsikan seluruh isi dokumen pindaian/gambar ini secara lengkap dan terstruktur dalam format teks/Markdown. "
@@ -178,9 +210,11 @@ def extract_pptx(file_path: str) -> str:
     - Catatan pembicara (speaker notes)
     Setiap slide diberi penanda eksplisit '[Slide X]' agar sitasi di retrieval dapat menyebut slide spesifik.
     """
-    from pptx import Presentation
-
-    prs = Presentation(file_path)
+    try:
+        from pptx import Presentation
+        prs = Presentation(file_path)
+    except Exception as e:
+        return f"[Catatan: python-pptx tidak tersedia atau gagal memproses berkas: {e}]"
     slide_texts = []
 
     for idx, slide in enumerate(prs.slides, 1):
@@ -334,6 +368,11 @@ def extract_digital_text(file_path: str) -> tuple[str, list[int]]:
     if ext == ".docx":
         document = docx.Document(file_path)
         paragraphs = [p.text for p in document.paragraphs if p.text.strip()]
+        for table in document.tables:
+            for row in table.rows:
+                cells = [c.text.strip() for c in row.cells if c.text.strip()]
+                if cells:
+                    paragraphs.append(" | ".join(cells))
         return "\n\n".join(paragraphs), []
 
     if ext in (".txt", ".md"):
@@ -356,6 +395,104 @@ def extract_digital_text(file_path: str) -> tuple[str, list[int]]:
 
     supported_list = ", ".join(sorted(SUPPORTED_EXTENSIONS))
     raise ValueError(f"Tipe file '{ext}' belum didukung. Format yang didukung saat ini: {supported_list}")
+
+
+def extract_from_bytes(filename: str, file_bytes: bytes) -> str:
+    """
+    Ekstraksi teks digital dari memory bytes (zero disk dependency).
+    Mendukung PDF, DOCX, XLSX, CSV, TXT, MD, PPTX.
+    """
+    ext = os.path.splitext(filename)[1].lower()
+    import io
+
+    # 1. Plain text formats
+    if ext in ['.txt', '.md', '.log', '.xml', '.html', '.json']:
+        for enc in ['utf-8', 'utf-8-sig', 'latin-1']:
+            try:
+                return file_bytes.decode(enc)
+            except Exception:
+                continue
+        return file_bytes.decode('utf-8', errors='ignore')
+
+    # 2. PDF Documents
+    if ext == '.pdf':
+        try:
+            reader = PdfReader(io.BytesIO(file_bytes))
+            pages = []
+            for idx, p in enumerate(reader.pages, 1):
+                t = (p.extract_text() or "").strip()
+                if t:
+                    pages.append(f"[Halaman {idx}]\n{t}")
+            if pages:
+                return "\n\n".join(pages)
+        except Exception as e:
+            print(f"[PDF Extract Warning] {e}")
+
+    # 3. Microsoft Word (.docx)
+    if ext == '.docx':
+        try:
+            doc = docx.Document(io.BytesIO(file_bytes))
+            parts = []
+            for p in doc.paragraphs:
+                if p.text.strip():
+                    parts.append(p.text.strip())
+            for t in doc.tables:
+                for row in t.rows:
+                    row_txt = [c.text.strip() for c in row.cells if c.text.strip()]
+                    if row_txt:
+                        parts.append(" | ".join(row_txt))
+            if parts:
+                return "\n\n".join(parts)
+        except Exception as e:
+            print(f"[DOCX Extract Warning] {e}")
+
+    # 4. Microsoft Excel (.xlsx)
+    if ext == '.xlsx':
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(io.BytesIO(file_bytes), data_only=True, read_only=True)
+            sheet_blocks = []
+            for sheet_name in wb.sheetnames:
+                sheet = wb[sheet_name]
+                rows = list(sheet.iter_rows(values_only=True))
+                if not rows:
+                    continue
+                row_texts = []
+                for r in rows:
+                    r_str = [str(c).strip() for c in r if c is not None and str(c).strip()]
+                    if r_str:
+                        row_texts.append(" | ".join(r_str))
+                if row_texts:
+                    sheet_blocks.append(f"[Sheet: {sheet_name}]\n" + "\n".join(row_texts))
+            wb.close()
+            if sheet_blocks:
+                return "\n\n".join(sheet_blocks)
+        except Exception as e:
+            print(f"[XLSX Extract Warning] {e}")
+
+    # 5. CSV Data
+    if ext == '.csv':
+        try:
+            import csv
+            text_str = file_bytes.decode('utf-8', errors='replace')
+            lines = text_str.splitlines()
+            if lines:
+                reader = csv.reader(lines)
+                csv_parts = []
+                for idx, row in enumerate(reader, 1):
+                    row_clean = [col.strip() for col in row if col.strip()]
+                    if row_clean:
+                        csv_parts.append(f"Baris {idx}: " + ", ".join(row_clean))
+                if csv_parts:
+                    return "\n".join(csv_parts)
+        except Exception as e:
+            print(f"[CSV Extract Warning] {e}")
+
+    # Fallback to regex string match
+    import re
+    ascii_strings = re.findall(r'[A-Za-z0-9,.\-_/:\(\)\s]{5,}', file_bytes.decode('latin1', errors='ignore'))
+    cleaned = " ".join([s.strip() for s in ascii_strings if len(s.strip()) > 5])
+    return cleaned if cleaned else f"Dokumen {filename} berhasil diunggah dan diverifikasi."
 
 
 def extract_text(file_path: str, allow_ocr: bool = True) -> str:

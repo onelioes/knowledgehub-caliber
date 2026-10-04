@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/documents",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/upload/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/upload",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/ask/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/ask",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index.py"
+    }
+  ]
+}

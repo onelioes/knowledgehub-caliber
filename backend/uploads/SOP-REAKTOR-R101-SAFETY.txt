@@ -1,0 +1,4 @@
+SOP Keselamatan Reaktor R-101 Olefins Complex:
+1. Batas suhu kritis zona reaksi adalah 850 C. Jika suhu melebihi 875 C, sistem interlock darurat ESD akan aktif otomatis.
+2. Operator wajib melakukan flushing nitrogen minimal 15 menit sebelum injeksi katalis baru.
+3. Tekanan jaket pendingin dijaga stabil pada 4.2 bar gauge.

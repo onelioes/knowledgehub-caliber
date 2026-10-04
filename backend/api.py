@@ -17,6 +17,7 @@ Fitur & Keamanan:
 
 import os
 import sys
+import re
 import time
 import uuid
 import json
@@ -56,7 +57,7 @@ from embedding_store import (
     list_stored_docs,
     load_store,
 )
-from retrieval import answer_question, find_relevant_chunks
+from retrieval import answer_question, find_relevant_chunks, CHAT_MODELS
 from main import (
     record_consent_audit,
     MAX_ZIP_FILES,
@@ -216,7 +217,12 @@ class ChatAPIRequest(BaseModel):
         description="Tag aset opsional (contoh: P-101A, K-102, F-101, C-201, dll).",
         example="P-101A",
     )
+    grounded_doc: Optional[str] = None
+    user_id: Optional[str] = None
+    check_sensitive: Optional[bool] = False
+    deep_analysis: Optional[bool] = False
     chat_history: Optional[List[List[str]]] = None
+    model_config = {"extra": "ignore"}
 
 
 # --- Endpoints ---
@@ -833,9 +839,11 @@ def chat_api_endpoint(req: ChatAPIRequest):
             if isinstance(turn, (list, tuple)) and len(turn) >= 2
         ]
 
-    # 1. Matching dokumen berdasarkan asset_tag jika ada
+    # 1. Matching dokumen berdasarkan grounded_doc atau asset_tag jika ada
     matched_doc_filter = None
-    if req.asset_tag and req.asset_tag.upper() not in ("GENERAL", "GEN-PLANT", "ALL", ""):
+    if req.grounded_doc and req.grounded_doc.strip():
+        matched_doc_filter = req.grounded_doc.strip()
+    elif req.asset_tag and req.asset_tag.upper() not in ("GENERAL", "GEN-PLANT", "ALL", ""):
         stored_docs = list_stored_docs()
         clean_tag = req.asset_tag.replace("-", "").upper()
         for doc_name in stored_docs.keys():
@@ -844,11 +852,11 @@ def chat_api_endpoint(req: ChatAPIRequest):
                 break
 
     try:
-        # 2. Eksekusi Answer Question via Gemini RAG
+        # 2. Eksekusi Answer Question via Gemini RAG / Factual Synthesizer
         answer, metrics = answer_question(
             question=req.query.strip(),
             top_k=8,
-            similarity_threshold=0.50,
+            similarity_threshold=0.45,
             doc_filter=matched_doc_filter,
             chat_history=formatted_history,
             return_metrics=True,
@@ -859,7 +867,7 @@ def chat_api_endpoint(req: ChatAPIRequest):
             alt_answer, alt_metrics = answer_question(
                 question=req.query.strip(),
                 top_k=8,
-                similarity_threshold=0.50,
+                similarity_threshold=0.45,
                 doc_filter=None,
                 chat_history=formatted_history,
                 return_metrics=True,
@@ -873,21 +881,30 @@ def chat_api_endpoint(req: ChatAPIRequest):
         relevant_chunks = find_relevant_chunks(
             question=req.query.strip(),
             top_k=3,
-            similarity_threshold=0.48,
+            similarity_threshold=0.45,
             doc_filter=matched_doc_filter,
         )
         if not relevant_chunks and matched_doc_filter:
             relevant_chunks = find_relevant_chunks(
                 question=req.query.strip(),
                 top_k=3,
-                similarity_threshold=0.48,
+                similarity_threshold=0.45,
             )
 
         citations = []
         for chk in relevant_chunks:
             src = chk.get("source", "Dokumen Teknis Chandra Asri")
             score = round(float(chk.get("score", 0.92)), 3)
+            txt_content = chk.get("text", "")
+            
+            # Cari nomor halaman asli dari tag [Halaman X]
             page_idx = chk.get("chunk_index", 0) + 1
+            m_pg = re.search(r"\[(?:Halaman|Page)\s*(\d+)\]", txt_content, re.IGNORECASE)
+            if m_pg:
+                try:
+                    page_idx = int(m_pg.group(1))
+                except Exception:
+                    pass
 
             rev = "Rev 1.0"
             if "P101" in src:
@@ -901,7 +918,7 @@ def chat_api_endpoint(req: ChatAPIRequest):
             elif "CALIBER" in src:
                 rev = "Final (2026)"
 
-            clean_snippet = chk.get("text", "").replace("\n", " ").strip()
+            clean_snippet = txt_content.replace("\n", " ").strip()
             if len(clean_snippet) > 175:
                 clean_snippet = clean_snippet[:172] + "..."
 
@@ -924,6 +941,65 @@ def chat_api_endpoint(req: ChatAPIRequest):
         )
 
 
+# --- Settings & API Key Configuration Endpoints ---
+class SettingsUpdateRequest(BaseModel):
+    gemini_api_key: Optional[str] = None
+    user_profile: Optional[Dict[str, Any]] = None
+    model_config = {"extra": "ignore"}
+
+
+@app.get("/api/settings", tags=["Settings"])
+def get_settings():
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    has_key = bool(api_key)
+    masked = f"{api_key[:6]}...{api_key[-4:]}" if len(api_key) > 10 else ("Configured" if has_key else "Not Configured")
+    return {
+        "gemini_configured": has_key,
+        "key_display": masked,
+        "active_models": CHAT_MODELS,
+    }
+
+
+@app.post("/api/settings", tags=["Settings"])
+def update_settings(req: SettingsUpdateRequest):
+    import retrieval, embedding_store
+
+    saved_key = False
+    if req.gemini_api_key is not None:
+        new_key = req.gemini_api_key.strip()
+        os.environ["GEMINI_API_KEY"] = new_key
+
+        env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
+        lines = []
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+        found = False
+        new_lines = []
+        for line in lines:
+            if line.strip().startswith("GEMINI_API_KEY="):
+                new_lines.append(f"GEMINI_API_KEY={new_key}\n")
+                found = True
+            else:
+                new_lines.append(line)
+        if not found:
+            new_lines.append(f"GEMINI_API_KEY={new_key}\n")
+
+        with open(env_path, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+
+        retrieval._client = None
+        embedding_store._client = None
+        saved_key = True
+
+    return {
+        "status": "success",
+        "message": "Settings and Gemini API configuration updated successfully.",
+        "gemini_active": bool(os.environ.get("GEMINI_API_KEY", "").strip()),
+    }
+
+
 # --- Static Frontend Delivery (Chandra Asri Knowledge Hub Web App) ---
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 if not os.path.exists(FRONTEND_DIR):
@@ -932,7 +1008,6 @@ if not os.path.exists(FRONTEND_DIR):
 if os.path.exists(FRONTEND_DIR):
     from fastapi.responses import FileResponse
 
-    # Cegah browser memakai salinan UI lama dari cache setelah frontend diperbarui
     NO_CACHE_HEADERS = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache", "Expires": "0"}
 
     @app.get("/", include_in_schema=False)
@@ -946,6 +1021,13 @@ if os.path.exists(FRONTEND_DIR):
     @app.get("/app.js", include_in_schema=False)
     def serve_app_js():
         return FileResponse(os.path.join(FRONTEND_DIR, "app.js"), headers=NO_CACHE_HEADERS)
+
+    @app.get("/{filename:path}", include_in_schema=False)
+    def serve_static(filename: str):
+        file_path = os.path.join(FRONTEND_DIR, filename)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path, headers=NO_CACHE_HEADERS)
+        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"), headers=NO_CACHE_HEADERS)
 
 
 if __name__ == "__main__":

@@ -452,5 +452,77 @@
     "action": "REJECTED_BY_USER",
     "raw_pii_allowed": false,
     "redacted": false
+  },
+  {
+    "timestamp": "2026-10-03T22:54:34.043558",
+    "file": "SOP-REAKTOR-R101-SAFETY.txt",
+    "chunks_count": 1,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-03T22:56:02.702151",
+    "file": "SOP-EXCHANGER-EX304.docx",
+    "chunks_count": 1,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-03T22:58:39.621763",
+    "file": "(MASTER DATA) REKAP ABSEN & REKAP NILAI EPPS Gel. III 2026  - Copy of Sheet27 (1).csv",
+    "chunks_count": 3,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-03T23:44:41.577963",
+    "file": "(MASTER DATA) REKAP ABSEN & REKAP NILAI EPPS Gel. III 2026  - Copy of Sheet27 (1).csv",
+    "chunks_count": 3,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-04T00:49:43.511020",
+    "file": "Booklet CALIBER 2026 - Registration Extended (2).pdf",
+    "chunks_count": 34,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-04T01:03:43.076551",
+    "file": "Booklet CALIBER 2026 - Registration Extended (3).pdf",
+    "chunks_count": 34,
+    "pii_detected": [],
+    "raw_pii_allowed": false,
+    "redacted": false,
+    "action": "DOCUMENT_INGESTED"
+  },
+  {
+    "timestamp": "2026-10-04T09:30:17.541483",
+    "file": "SOP-PUMP-TURBINE-T202.txt",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
+  },
+  {
+    "timestamp": "2026-10-04T09:36:21.798595",
+    "file": "Why Korean Gen Z Trades 4K for 2012 iPhones.xlsx",
+    "detected_pii": [],
+    "user_consent": true,
+    "action": "NO_PII_DETECTED",
+    "raw_pii_allowed": false,
+    "redacted": false
   }
 ]
