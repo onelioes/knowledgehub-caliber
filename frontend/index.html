@@ -178,6 +178,7 @@
                   <option value="propylene">Propylene Polymerization Unit</option>
                   <option value="pygas">Pyrolysis Gasoline (PyGas Hydrotreating)</option>
                   <option value="butadiene">Mixed C4 / Butadiene Extraction</option>
+                  <option value="hexane_lldpe">Hexane Feed &amp; Purification (LLDPE Area 1200)</option>
                 </select>
               </div>
               <div class="chemical-selector-wrap">
@@ -292,6 +293,7 @@
                 <select id="assetTagSelect" class="styled-select-blue">
                   <option value="" selected id="optNoEquip">No Equipment (Document Only Analysis)</option>
                   <option value="P-101A">P-101A &middot; Naphtha Feed Pump</option>
+                  <option value="GA-1201A">GA-1201A &middot; Hexane Feed Pump</option>
                   <option value="K-102">K-102 &middot; Syngas Compressor</option>
                   <option value="F-101">F-101 &middot; Cracking Furnace</option>
                   <option value="C-201">C-201 &middot; Splitter Column</option>
@@ -329,6 +331,9 @@
               <span class="qp-label">Quick:</span>
               <button type="button" class="quick-prompt-pill" onclick="executeQuickPrompt('P-101A', 'Verify startup sequence and Plan 53A pressure limits for Naphtha pump P-101A')">
                 SOP Startup P-101A
+              </button>
+              <button type="button" class="quick-prompt-pill" onclick="executeQuickPrompt('GA-1201A', 'Jelaskan prosedur start-up priming dan batasan vibrasi alarm VSHH-1201 untuk pompa hexane GA-1201A')">
+                SOP GA-1201A Hexane
               </button>
               <button type="button" class="quick-prompt-pill" onclick="executeQuickPrompt('K-102', 'What are the vibration limits for syngas compressor K-102 and mitigation steps?')">
                 Vibration Limits K-102

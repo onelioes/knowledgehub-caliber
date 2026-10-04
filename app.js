@@ -139,6 +139,26 @@ const state = {
         'Feed Rate': '82.0 Ton/h',
         'Coil Outlet Temp': '835 °C'
       }
+    },
+    {
+      id: 'eq-4',
+      tag: 'GA-1201A',
+      name: 'Hexane Feed Pump',
+      status: 'Normal',
+      badgeClass: 'normal',
+      desc: 'API 610 OH2, LLDPE Unit Area 1200. Plan 11 seal flush active, PSLL-1201 & VSHH-1201 armed.',
+      rev: 'Rev 3.0',
+      site: 'cilegon',
+      link: { stream: 'hexane_lldpe', param: 'vibration' },
+      details: {
+        'Suction Pressure': '2.4 bar (Trip PSLL-1201: < 0.5 bar)',
+        'Discharge Pressure': '14.8 bar (Interlock Valve XV-1201)',
+        'Vibration VT-1201': '2.8 mm/s (Alarm: 4.5, Trip: 7.1 mm/s)',
+        'Motor Rating': '30 kW · 2-Pole · 2950 RPM',
+        'Seal Flush': 'API Plan 11 with Orifice RO-1201',
+        'DE Bearing': '7310 BECBM (ISO VG 68 Oil Bath)',
+        'P&ID Reference': 'TJC-LLD-PID-1201 · SEQ-1201 (SIL 1)'
+      }
     }
   ],
   // Telemetry & Chemical Process Streams
@@ -181,6 +201,15 @@ const state = {
       vibration: { val: 48, unit: 'µm', min: 10, max: 80, step: 1, note: 'Alarm: 52 µm · Trip: 70 µm', status: 'Safe' },
       delta_p: { val: 0.44, unit: 'bar', min: 0.1, max: 0.8, step: 0.05, note: 'Normal Delta P: 0.30 - 0.50 bar', status: 'Safe' },
       bearing_temp: { val: 76, unit: '°C', min: 40, max: 100, step: 1, note: 'Max Limit: 90 °C', status: 'Normal' }
+    },
+    hexane_lldpe: {
+      name: 'Hexane Feed & Purification (LLDPE Area 1200)',
+      suction_lube: { val: 2.2, unit: 'bar', min: 1.0, max: 4.0, step: 0.05, note: 'Plan 11 Flush PDI-1201 dP', status: 'Normal' },
+      feed_pressure: { val: 2.4, unit: 'bar', min: 0.2, max: 5.0, step: 0.05, note: 'Trip PSLL-1201: < 0.5 bar', status: 'Normal' },
+      reactor_temp: { val: 85, unit: '°C', min: 60, max: 110, step: 1, note: 'LLDPE Reactor Loop: 80 - 90 °C', status: 'Normal' },
+      vibration: { val: 2.8, unit: 'mm/s', min: 0.5, max: 10.0, step: 0.1, note: 'Alarm: 4.5 mm/s · Trip: 7.1 mm/s', status: 'Safe' },
+      delta_p: { val: 0.45, unit: 'bar', min: 0.1, max: 1.2, step: 0.02, note: 'RO-1201 Orifice Delta P', status: 'Safe' },
+      bearing_temp: { val: 58, unit: '°C', min: 30, max: 95, step: 1, note: 'DE Bearing TI-1201: < 75 °C', status: 'Normal' }
     }
   },
   // Dynamic Checklist Items
@@ -206,6 +235,18 @@ const state = {
     {
       id: 'chk-4',
       text: 'Verify differential pressure transmitter calibration and nitrogen seal gas purge.',
+      verified: false,
+      time: null
+    },
+    {
+      id: 'chk-5',
+      text: '[OPL-06] GA-1201A: Vent casing air via N5, verify Plan 11 flush PDI-1201 dP & min-flow line FV-1201 open prior to start.',
+      verified: true,
+      time: 'Verified: 07:15 WIB'
+    },
+    {
+      id: 'chk-6',
+      text: '[OPL-07] GA-1201A: Record daily PdM vibration VT-1201; confirm < 4.5 mm/s RMS and PSLL-1201 trip setpoint at 0.5 barg.',
       verified: false,
       time: null
     }
@@ -585,6 +626,19 @@ const PROCESS_STREAMS = {
       delta_p: P('Column Differential Pressure', 'Tekanan Diferensial Kolom', 'bar', 0.1, 0.8, 0.01, 0.4, { alarmHi: 0.5, tripHi: 0.65 }),
       bearing_temp: P('Thrust Bearing Temperature', 'Suhu Thrust Bearing', '°C', 40, 100, 1, 76, { alarmHi: 90, tripHi: 97 })
     }
+  },
+  hexane_lldpe: {
+    name: 'Hexane Feed & Purification (LLDPE Unit Area 1200)',
+    params: {
+      feed_pressure: P('Hexane Suction Pressure', 'Tekanan Suction Hexane', 'bar', 0.2, 5.0, 0.05, 2.4, { alarmLo: 1.0, tripLo: 0.5, alarmHi: 3.5, tripHi: 4.2 }),
+      suction_lube: P('Bearing Oil / Plan 11 Pressure', 'Tekanan Oil Bath / Plan 11', 'bar', 1.0, 4.0, 0.05, 2.2, { alarmLo: 1.5, tripLo: 1.1, alarmHi: 3.0, tripHi: 3.5 }),
+      chiller_temp: P('Hexane Feed Temp', 'Suhu Umpan Hexane', '°C', 20, 90, 0.5, 38.0, { alarmLo: 25, tripLo: 20, alarmHi: 75, tripHi: 80 }),
+      reactor_temp: P('LLDPE Reactor Loop Temp', 'Suhu Loop Reaktor LLDPE', '°C', 60, 110, 1, 85, { alarmLo: 70, tripLo: 65, alarmHi: 95, tripHi: 105 }),
+      vibration: P('Overall Vibration VT-1201', 'Vibrasi Total VT-1201', 'mm/s', 0.5, 10.0, 0.1, 2.8, { alarmHi: 4.5, tripHi: 7.1 }),
+      flow_rate: P('Hexane Feed Flow Rate', 'Laju Alir Umpan Hexane', 'm³/h', 20, 120, 1, 65, { alarmLo: 35, tripLo: 25, alarmHi: 95, tripHi: 110 }),
+      delta_p: P('Seal Flush Orifice Delta P', 'Beda Tekanan Orifice Seal Flush', 'bar', 0.1, 1.2, 0.02, 0.45, { alarmLo: 0.2, tripLo: 0.1, alarmHi: 0.8, tripHi: 1.0 }),
+      bearing_temp: P('DE Bearing Temperature TI-1201', 'Suhu DE Bearing TI-1201', '°C', 30, 95, 1, 58, { alarmHi: 75, tripHi: 85 })
+    }
   }
 };
 
@@ -592,7 +646,8 @@ const PROCESS_STREAMS = {
 const DEFAULT_EQUIP_LINKS = {
   'P-101A': { site: 'cilegon', link: { stream: 'ethylene', param: 'feed_pressure' } },
   'K-102': { site: 'cilegon', link: { stream: 'ethylene', param: 'vibration' } },
-  'F-101': { site: 'cilegon', link: { stream: 'ethylene', param: 'reactor_temp' } }
+  'F-101': { site: 'cilegon', link: { stream: 'ethylene', param: 'reactor_temp' } },
+  'GA-1201A': { site: 'cilegon', link: { stream: 'hexane_lldpe', param: 'vibration' } }
 };
 
 const telemetry = {
@@ -798,7 +853,31 @@ function renderEquipmentCards() {
   const saved = localStorage.getItem('kh_equipment_list');
   if (saved) {
     const parsed = jsonParseSafe(saved);
-    if (Array.isArray(parsed)) state.equipments = parsed;
+    if (Array.isArray(parsed)) {
+      state.equipments = parsed;
+      if (!state.equipments.some(e => e.tag === 'GA-1201A')) {
+        state.equipments.push({
+          id: 'eq-4',
+          tag: 'GA-1201A',
+          name: 'Hexane Feed Pump',
+          status: 'Normal',
+          badgeClass: 'normal',
+          desc: 'API 610 OH2, LLDPE Unit Area 1200. Plan 11 seal flush active, PSLL-1201 & VSHH-1201 armed.',
+          rev: 'Rev 3.0',
+          site: 'cilegon',
+          link: { stream: 'hexane_lldpe', param: 'vibration' },
+          details: {
+            'Suction Pressure': '2.4 bar (Trip PSLL-1201: < 0.5 bar)',
+            'Discharge Pressure': '14.8 bar (Interlock Valve XV-1201)',
+            'Vibration VT-1201': '2.8 mm/s (Alarm: 4.5, Trip: 7.1 mm/s)',
+            'Motor Rating': '30 kW · 2-Pole · 2950 RPM',
+            'Seal Flush': 'API Plan 11 with Orifice RO-1201',
+            'DE Bearing': '7310 BECBM (ISO VG 68 Oil Bath)',
+            'P&ID Reference': 'TJC-LLD-PID-1201 · SEQ-1201 (SIL 1)'
+          }
+        });
+      }
+    }
   }
   state.equipments = state.equipments.map(migrateEquipment);
 

@@ -1,0 +1,16 @@
+P&ID DIAGRAM SPECIFICATION & INSTRUMENTATION MAPPING
+Drawing Ref: TJC-LLD-PID-1201 | Set: Set_01 Chandra Asri LLDPE Expansion
+Asset Tag: GA-1201A (Hexane Feed Pump) / Area 1200 Feed Preparation & Purification
+
+1. PIPING & NOZZLE CONNECTIONS:
+- Suction Line: N1 3"-150# RF with isolation block valve, strainer, and low-low suction pressure switch PSLL-1201 (Trip setpoint < 0.5 barg).
+- Discharge Line: N2 2"-300# RF with automated fail-close emergency isolation valve XV-1201, check valve, and pressure transmitter PIC-1201.
+- Seal Flush: N3 1/2" SW API Plan 11 with Restriction Orifice RO-1201 and Differential Pressure Indicator PDI-1201.
+- Minimum Flow Recycle: Line with pneumatic control valve FV-1201 leading back to feed suction vessel to prevent deadheading.
+- Casing Drain (N4 3/4" SW) and Casing Vent (N5 1/2" SW) to closed hydrocarbon flare/drain header.
+
+2. INSTRUMENTATION & INTERLOCK MAPPING (SEQ-1201 / SIL 1):
+- PSLL-1201: Low-Low Suction Pressure Trip (< 0.5 barg) -> Initiates immediate pump motor trip (EFF-1) & closes discharge XV-1201 (EFF-2) to prevent cavitation and dry running.
+- VSHH-1201: High-High Vibration Switch / Transmitter on pump bearing bracket (Alarm @ 4.5 mm/s RMS, Trip @ 7.1 mm/s RMS).
+- TI-1201: DE Bearing Temperature transmitter (Alarm @ 75 °C, Trip @ 85 °C).
+- PDI-1201: Seal flush differential pressure indicator across RO-1201 orifice.
